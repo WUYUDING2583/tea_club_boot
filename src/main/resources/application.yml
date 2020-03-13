@@ -1,0 +1,18 @@
+# datasource info
+spring:
+  datasource:
+    url: jdbc:mysql://120.79.130.100:3306/tea_club
+    username: root
+    password: Family123@foxmail.com
+    # 配置redis主机地址
+  redis:
+    host: 120.79.130.100
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.yuyi.tea.mapper: debug
+
