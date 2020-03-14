@@ -1,9 +1,4 @@
-SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for department
--- ----------------------------
-DROP TABLE IF EXISTS `department`;
+DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
                             `uid` int(11) NOT NULL AUTO_INCREMENT,
                             `companyName` varchar(255) DEFAULT NULL,

@@ -3,7 +3,7 @@ package com.yuyi.tea.mapper;
 import com.yuyi.tea.bean.Employee;
 import org.apache.ibatis.annotations.*;
 
-@Mapper
+//@Mapper
 public interface EmployeeMapper {
 
     @Select("select * from employee where id=#{id}")

@@ -22,7 +22,7 @@ public class CompanyController {
     }
 
     @PutMapping("/company")
-    public Company updateCompany(@RequestBody Company company){//TODO no value in parameter company
+    public Company updateCompany(@RequestBody Company company){
         System.out.println("update company"+company);
         companyService.updateCompany(company);
         return company;
