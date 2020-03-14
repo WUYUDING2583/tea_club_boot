@@ -12,6 +12,18 @@ public class Company implements Serializable {
     private String weChatOfficialAccount;
     private String address;
 
+    @Override
+    public String toString() {
+        return "Company{" +
+                "uid=" + uid +
+                ", companyName='" + companyName + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", contact='" + contact + '\'' +
+                ", websiteName='" + websiteName + '\'' +
+                ", weChatOfficialAccount='" + weChatOfficialAccount + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 
     public int getUid() {
         return uid;

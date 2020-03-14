@@ -26,8 +26,9 @@ public class CompanyService {
 
 
     @CachePut(key = "1")
-    public void updateCompany(Company company) {
+    public Company updateCompany(Company company) {
         System.out.println("update company info");
         companyMapper.updateCompany(company);
+        return company;
     }
 }

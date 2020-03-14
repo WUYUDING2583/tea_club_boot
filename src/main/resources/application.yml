@@ -7,6 +7,10 @@ spring:
     # 配置redis主机地址
   redis:
     host: 120.79.130.100
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
 mybatis:
   configuration:
