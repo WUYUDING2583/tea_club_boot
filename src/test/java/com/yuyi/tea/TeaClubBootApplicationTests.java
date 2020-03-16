@@ -1,7 +1,10 @@
 package com.yuyi.tea;
 
 import com.yuyi.tea.bean.Employee;
+import com.yuyi.tea.bean.Shop;
 import com.yuyi.tea.mapper.EmployeeMapper;
+import com.yuyi.tea.mapper.ShopMapper;
+import com.yuyi.tea.service.ShopService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +21,9 @@ class TeaClubBootApplicationTests {
     EmployeeMapper employeeMapper;
 
     @Autowired
+    ShopService shopService;
+
+    @Autowired
     StringRedisTemplate stringRedisTemplate;//k-v都是字符串
 
 //    @Autowired
@@ -25,6 +31,16 @@ class TeaClubBootApplicationTests {
 
     @Autowired
     RedisTemplate<Object, Object> redisTemplate;//经过配置可将对象以json形式存入redis
+
+    /**
+     * 测试mybatis
+     */
+    @Test
+    public void testMybatis(){
+//        List<Shop> shopList = shopService.getShopList();
+        Shop shopByUid = shopService.getShopByUid(1);
+        System.out.println(shopByUid);
+    }
 
     /**
      * 测试字符串

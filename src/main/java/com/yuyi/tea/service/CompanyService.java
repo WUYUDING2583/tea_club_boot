@@ -15,7 +15,7 @@ import java.util.List;
 public class CompanyService {
 
     @Autowired
-    CompanyMapper companyMapper;
+    private CompanyMapper companyMapper;
 
     @Cacheable(key = "1")
     public Company getCompanyInfo(){

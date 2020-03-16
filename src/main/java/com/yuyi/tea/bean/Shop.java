@@ -23,6 +23,19 @@ public class Shop implements Serializable {
         return photos;
     }
 
+    public Shop() {
+    }
+
+    public Shop(int uid, String name, String address, String description, String contact, List<OpenHour> openHours, List<Photo> photos) {
+        this.uid = uid;
+        this.name = name;
+        this.address = address;
+        this.description = description;
+        this.contact = contact;
+        this.openHours = openHours;
+        this.photos = photos;
+    }
+
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
     }
@@ -41,6 +54,11 @@ public class Shop implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Shop(int uid, String name) {
+        this.uid = uid;
+        this.name = name;
     }
 
     public String getDescription() {

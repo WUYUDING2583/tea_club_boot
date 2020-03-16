@@ -8,21 +8,31 @@ import java.util.List;
  */
 public class OpenHour implements Serializable {
 
+    private int uid;
     private String startTime;
     private String endTime;
+    private List<Integer> date;
+    private int shopId;
 
-    @Override
-    public String toString() {
-        return "OpenHour{" +
-                "startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", repeat=" + repeat +
-                ", shopId=" + shopId +
-                '}';
+
+    public OpenHour() {
     }
 
-    private List<Integer> repeat;
-    private int shopId;
+    public OpenHour(int uid, String startTime, String endTime, List<Integer> date, int shopId) {
+        this.uid = uid;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+        this.shopId = shopId;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 
     public int getShopId() {
         return shopId;
@@ -32,13 +42,23 @@ public class OpenHour implements Serializable {
         this.shopId = shopId;
     }
 
-    public OpenHour(String startTime, String endTime, List<Integer> repeat) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.repeat = repeat;
+    @Override
+    public String toString() {
+        return "OpenHour{" +
+                "uid=" + uid +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", date=" + date +
+                ", shopId=" + shopId +
+                '}';
     }
 
-    public OpenHour() {
+    public List<Integer> getDate() {
+        return date;
+    }
+
+    public void setDate(List<Integer> date) {
+        this.date = date;
     }
 
     public String getStartTime() {
@@ -55,13 +75,5 @@ public class OpenHour implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public List<Integer> getRepeat() {
-        return repeat;
-    }
-
-    public void setRepeat(List<Integer> repeat) {
-        this.repeat = repeat;
     }
 }

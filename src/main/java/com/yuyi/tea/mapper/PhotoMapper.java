@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 
-//@Mapper
+@Mapper
 public interface PhotoMapper {
 
     @Insert("insert into photo(photo) values(#{photo})")
