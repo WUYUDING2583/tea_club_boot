@@ -4,6 +4,25 @@ import java.io.Serializable;
 
 public class Photo implements Serializable {
 
+
+    private int uid;
+    private byte[] photo;
+    private int shopId;
+
+    public Photo(int uid, byte[] photo, int shopId) {
+        this.uid = uid;
+        this.photo = photo;
+        this.shopId = shopId;
+    }
+
+    public int getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
+    }
+
     public int getUid() {
         return uid;
     }
@@ -16,16 +35,13 @@ public class Photo implements Serializable {
         this.photo = photo;
     }
 
-    public void setUid(int uid) {
+    public Photo(int uid) {
         this.uid = uid;
     }
 
-    private int uid;
-
-
-    private byte[] photo;
-
-
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 
     public byte[] getPhoto() {
         return photo;

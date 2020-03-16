@@ -5,12 +5,6 @@ import java.util.List;
 
 public class Shop implements Serializable {
 
-//    `uid` int(11) NOT NULL AUTO_INCREMENT,
-//     `name` varchar(255) DEFAULT NULL,
-//     `address` varchar(255) DEFAULT NULL,
-//     `description` varchar(255) DEFAULT NULL,
-//     `contact` varchar(20) DEFAULT NULL,
-
     private int uid;
     private String name;
     private String address;

@@ -18,13 +18,6 @@ public class OpenHour implements Serializable {
     public OpenHour() {
     }
 
-    public OpenHour(int uid, String startTime, String endTime, List<Integer> date, int shopId) {
-        this.uid = uid;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.date = date;
-        this.shopId = shopId;
-    }
 
     public int getUid() {
         return uid;
@@ -51,6 +44,14 @@ public class OpenHour implements Serializable {
                 ", date=" + date +
                 ", shopId=" + shopId +
                 '}';
+    }
+
+    public OpenHour(int uid, String startTime, String endTime, List<Integer> date, int shopId) {
+        this.uid = uid;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+        this.shopId = shopId;
     }
 
     public List<Integer> getDate() {

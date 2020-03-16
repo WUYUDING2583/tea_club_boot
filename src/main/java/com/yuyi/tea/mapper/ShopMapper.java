@@ -1,5 +1,6 @@
 package com.yuyi.tea.mapper;
 
+import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.bean.Shop;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
@@ -20,16 +21,10 @@ public interface ShopMapper {
     })
     Shop getShopByUid(int uid);
 
-//    @Update("update Shop set lastName=#{lastName},email=#{email},gender=#{gender},d_uid=#{duid} where uid=#{uid}")
-//     void updateEmp(Shop Shop);
-//
-//    @Delete("delete from Shop where uid=#{uid}")
-//     void deleteEmp(int uid);
-//
     @Insert("insert into shop(name,address,description,contact) values(#{name},#{address},#{description},#{contact}) ")
     @Options(useGeneratedKeys=true, keyProperty="uid")
-     void insertShop(Shop shop);
-//
-//    @Select("select * from Shop where lastName=#{lastName}")
-//     Shop getEmpByLastName(String lastName);
+     void saveShop(Shop shop);
+
+    @Update("update photo set shopId=#{shopId} where uid=#{uid}")
+    void saveShopPhotos(Photo photo);
 }

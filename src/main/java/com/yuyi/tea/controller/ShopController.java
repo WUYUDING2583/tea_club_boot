@@ -26,7 +26,7 @@ public class ShopController {
     }
 
     @PostMapping("/shop")
-    public Shop addShop(@RequestBody Shop shop){
+    public Shop saveShop(@RequestBody Shop shop){
         shopService.saveShop(shop);
         System.out.println("add shop"+shop);
         return shop;
