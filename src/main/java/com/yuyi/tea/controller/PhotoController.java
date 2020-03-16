@@ -3,6 +3,7 @@ package com.yuyi.tea.controller;
 import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ public class PhotoController {
     private PhotoService photoService;
 
     @PostMapping(value = "savephoto")
+    @Transactional(rollbackFor = Exception.class)
     public Photo searchMember( HttpServletRequest request){
         // 得到文件
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");

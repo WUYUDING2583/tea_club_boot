@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface ShopMapper {
 
-    @Select("select uid,name from shop")
+    @Select("select * from shop")
     List<Shop> getShopList();
 
     @Select("select * from shop where uid=#{uid}")
@@ -27,4 +27,7 @@ public interface ShopMapper {
 
     @Update("update photo set shopId=#{shopId} where uid=#{uid}")
     void saveShopPhotos(Photo photo);
+
+    @Delete("delete from shop where uid=#{uid}")
+    void deleteShop(int uid);
 }

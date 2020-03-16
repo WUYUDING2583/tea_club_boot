@@ -1,6 +1,7 @@
 package com.yuyi.tea.config;
 
 
+import com.google.gson.Gson;
 import com.yuyi.tea.component.Result;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
@@ -19,17 +20,22 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @Configuration
 public class GlobalReturnConfig {
 
+    static Gson gson=new Gson();
+
     @RestControllerAdvice
     static class ResultResponseAdvice implements ResponseBodyAdvice<Object> {
         @Override
-        public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
+        public boolean supports(MethodParameter methodParameter, Class converterType) {
             return true;
         }
 
         @Override
-        public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+        public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class selectedConverterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
             if (body instanceof Result) {
                 return body;
+            }
+            if (body instanceof String) {
+                return gson.toJson(new Result(body)).toString();
             }
             return new Result(body);
         }

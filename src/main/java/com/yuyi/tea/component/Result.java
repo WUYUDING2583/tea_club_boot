@@ -10,6 +10,7 @@ public class Result<T> {
     // 需要传递的数据
     private T data;
 
+
     public Result(T data) {
         this.data = data;
     }
@@ -44,5 +45,15 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "code=" + code +
+                ", error='" + error + '\'' +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

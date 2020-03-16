@@ -35,7 +35,6 @@ public class ShopService {
         return shop;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void saveShop(Shop shop){
         shopMapper.saveShop(shop);
         for(OpenHour openHour:shop.getOpenHours()){
@@ -49,5 +48,9 @@ public class ShopService {
             photo.setShopId(shop.getUid());
             shopMapper.saveShopPhotos(photo);
         }
+    }
+
+    public void deleteShop(int uid){
+        shopMapper.deleteShop(uid);
     }
 }

@@ -4,7 +4,7 @@ CREATE TABLE `openHour` (
                        `startTime` varchar(10) DEFAULT NULL,
                        `endTime`  varchar(10) DEFAULT NULL,
                        `shopId`int(11),
-                       FOREIGN KEY (shopId) REFERENCES shop(uid),
+                       FOREIGN KEY (shopId) REFERENCES shop(uid) ON DELETE CASCADE ON UPDATE CASCADE,
                        PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

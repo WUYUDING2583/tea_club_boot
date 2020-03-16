@@ -3,6 +3,7 @@ package com.yuyi.tea.controller;
 import com.yuyi.tea.bean.Shop;
 import com.yuyi.tea.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,9 +27,22 @@ public class ShopController {
     }
 
     @PostMapping("/shop")
+    @Transactional(rollbackFor = Exception.class)
     public Shop saveShop(@RequestBody Shop shop){
         shopService.saveShop(shop);
         System.out.println("add shop"+shop);
         return shop;
+    }
+
+    @DeleteMapping("/shop/{uid}")
+    @Transactional(rollbackFor = Exception.class)
+    public String deleteShop(@PathVariable int uid){
+        shopService.deleteShop(uid);
+        return "Success";
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "success";
     }
 }
