@@ -1,6 +1,9 @@
 package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Shop;
+import com.yuyi.tea.common.CommConstants;
+import com.yuyi.tea.exception.ShopNotExistException;
+import com.yuyi.tea.exception.UserException;
 import com.yuyi.tea.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +26,11 @@ public class ShopController {
     @GetMapping("/shop/{uid}")
     public Shop getShopByUid(@PathVariable int uid){
         Shop shop = shopService.getShopByUid(uid);
-        return shop;
+        System.out.println("query shop "+uid+" "+shop);
+        if(shop==null){
+            throw new ShopNotExistException();
+        }
+        return new Shop();
     }
 
     @PostMapping("/shop")

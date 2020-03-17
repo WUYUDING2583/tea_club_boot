@@ -1,7 +1,10 @@
 package com.yuyi.tea.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(value = { "handler" })
 public class Photo implements Serializable {
 
 

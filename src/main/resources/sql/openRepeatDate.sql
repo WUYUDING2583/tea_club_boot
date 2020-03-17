@@ -1,3 +1,4 @@
+# 门店开发日期表
 DROP TABLE IF EXISTS `openRepeatDate`;
 CREATE TABLE `openRepeatDate` (
                           `uid` int(11) NOT NULL AUTO_INCREMENT,

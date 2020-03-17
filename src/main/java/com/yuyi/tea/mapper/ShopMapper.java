@@ -15,6 +15,7 @@ public interface ShopMapper {
 
     @Select("select * from shop where uid=#{uid}")
     @Results({
+            @Result(id = true,column = "uid",property = "uid"),
             @Result(column="uid",property="openHours",
                     many=@Many(select="com.yuyi.tea.mapper.OpenHourMapper.getOpenHoursByShopId",
                             fetchType= FetchType.LAZY))

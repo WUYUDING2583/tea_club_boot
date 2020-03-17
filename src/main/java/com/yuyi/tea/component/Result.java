@@ -10,6 +10,16 @@ public class Result<T> {
     // 需要传递的数据
     private T data;
 
+    public Result() {
+    }
+
+
+
+    public Result(Integer code, String error, String msg) {
+        this.code = code;
+        this.error = error;
+        this.msg = msg;
+    }
 
     public Result(T data) {
         this.data = data;

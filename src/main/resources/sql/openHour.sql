@@ -1,3 +1,4 @@
+# 门店开放时间段表
 DROP TABLE IF EXISTS `openHour`;
 CREATE TABLE `openHour` (
                        `uid` int(11) NOT NULL AUTO_INCREMENT,

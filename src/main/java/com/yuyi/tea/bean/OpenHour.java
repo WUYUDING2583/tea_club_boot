@@ -1,11 +1,14 @@
 package com.yuyi.tea.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * 门店营业时间类
  */
+@JsonIgnoreProperties(value = { "handler" })
 public class OpenHour implements Serializable {
 
     private int uid;
