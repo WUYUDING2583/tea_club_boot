@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface ShopMapper {
 
+
     @Select("select * from shop")
     List<Shop> getShopList();
 
@@ -18,6 +19,15 @@ public interface ShopMapper {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="uid",property="openHours",
                     many=@Many(select="com.yuyi.tea.mapper.OpenHourMapper.getOpenHoursByShopId",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="photos",
+                    many=@Many(select="com.yuyi.tea.mapper.PhotoMapper.getPhotosByShopId",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="clerks",
+                    many=@Many(select="com.yuyi.tea.mapper.ClerkMapper.getClerksByShopId",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="shopBoxes",
+                    many=@Many(select="com.yuyi.tea.mapper.ShopBoxMapper.getShopBoxByShopId",
                             fetchType= FetchType.LAZY))
     })
     Shop getShopByUid(int uid);
@@ -31,4 +41,5 @@ public interface ShopMapper {
 
     @Delete("delete from shop where uid=#{uid}")
     void deleteShop(int uid);
+
 }

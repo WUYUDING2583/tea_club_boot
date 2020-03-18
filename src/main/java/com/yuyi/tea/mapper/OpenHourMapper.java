@@ -2,6 +2,7 @@ package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.OpenHour;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
 
@@ -9,9 +10,14 @@ import java.util.List;
 public interface OpenHourMapper {
 
     @Select("select * from openHour where shopId=#{shopId}")
+    @Results({
+            @Result(id = true,column = "uid",property = "uid"),
+            @Result(column="uid",property="date",
+                    many=@Many(select="com.yuyi.tea.mapper.OpenHourMapper.getRepeatDateByOpenHourId",
+                            fetchType= FetchType.LAZY))
+    })
     List<OpenHour> getOpenHoursByShopId(int shopId);
 
-//    @Insert("insert into openHour(startTime,endTime,shopId) values(#{startTime},#{endTime},#{shopId})")
     @Insert({
             "<script>",
             "insert into openHour(startTime,endTime,shopId) values ",
@@ -29,4 +35,7 @@ public interface OpenHourMapper {
     @Insert("insert into openHour(startTime,endTime,shopId) values(#{startTime},#{endTime},#{shopId})")
     @Options(useGeneratedKeys = true,keyProperty = "uid")
     void insertOpenHour(OpenHour openHour);
+
+    @Select("select date from openRepeatDate where openHourId=#{openHourId}")
+    List<Integer> getRepeatDateByOpenHourId(int openHourId);
 }

@@ -1,6 +1,8 @@
 package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Photo;
+import com.yuyi.tea.exception.PhotoTooBigException;
+import com.yuyi.tea.exception.UserException;
 import com.yuyi.tea.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ public class PhotoController {
     public Photo searchMember( HttpServletRequest request){
         // 得到文件
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
+        if(file.getSize()>1024*1024*1024){
+            throw new PhotoTooBigException();
+        }
         Photo photo = new Photo();
         try {
             byte[] data;
@@ -32,6 +37,7 @@ public class PhotoController {
             photoService.insertPhoto(photo);
         }catch (Exception e){
             e.printStackTrace();
+            throw new UserException(e.getMessage(),e.getMessage());
         }
         return photo;
     }

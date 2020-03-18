@@ -8,6 +8,7 @@ import com.yuyi.tea.mapper.ShopMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,6 @@ public class ShopService {
 
     @Autowired
     private OpenHourMapper openHourMapper;
-
 
     public List<Shop> getShopList(){
         List<Shop> shopList = shopMapper.getShopList();
@@ -53,4 +53,5 @@ public class ShopService {
     public void deleteShop(int uid){
         shopMapper.deleteShop(uid);
     }
+
 }

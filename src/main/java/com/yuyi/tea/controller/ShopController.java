@@ -25,12 +25,13 @@ public class ShopController {
 
     @GetMapping("/shop/{uid}")
     public Shop getShopByUid(@PathVariable int uid){
+//        throw new ShopNotExistException();
         Shop shop = shopService.getShopByUid(uid);
         System.out.println("query shop "+uid+" "+shop);
         if(shop==null){
             throw new ShopNotExistException();
         }
-        return new Shop();
+        return shop;
     }
 
     @PostMapping("/shop")
@@ -48,8 +49,10 @@ public class ShopController {
         return "Success";
     }
 
+
     @GetMapping("/test")
     public String test(){
         return "success";
     }
+
 }
