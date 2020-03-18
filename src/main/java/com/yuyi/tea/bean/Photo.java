@@ -11,11 +11,35 @@ public class Photo implements Serializable {
     private int uid;
     private byte[] photo;
     private int shopId;
+    private int shopBoxId;
+    private int clerkId;
 
-    public Photo(int uid, byte[] photo, int shopId) {
+    public Photo() {
+    }
+
+    public Photo(int uid) {
+        this.uid = uid;
+    }
+
+    public Photo(int uid, byte[] photo) {
         this.uid = uid;
         this.photo = photo;
-        this.shopId = shopId;
+    }
+
+    public int getShopBoxId() {
+        return shopBoxId;
+    }
+
+    public void setShopBoxId(int shopBoxId) {
+        this.shopBoxId = shopBoxId;
+    }
+
+    public int getClerkId() {
+        return clerkId;
+    }
+
+    public void setClerkId(int clerkId) {
+        this.clerkId = clerkId;
     }
 
     public int getShopId() {
@@ -28,18 +52,6 @@ public class Photo implements Serializable {
 
     public int getUid() {
         return uid;
-    }
-
-    public Photo() {
-    }
-
-    public Photo(int uid, byte[] photo) {
-        this.uid = uid;
-        this.photo = photo;
-    }
-
-    public Photo(int uid) {
-        this.uid = uid;
     }
 
     public void setUid(int uid) {

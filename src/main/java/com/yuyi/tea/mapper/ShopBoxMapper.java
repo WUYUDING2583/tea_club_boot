@@ -13,7 +13,7 @@ public interface ShopBoxMapper {
     List<ShopBox> getShopBoxByShopId(int shopId);
 
     @Insert("insert into shopBox(uid,name,description,shopId,boxNum,price,duration) " +
-            "values(#{uid},#{name},#{description},#{shopId},#{boxNum},#{price},#{duration}")
+            "values(#{uid},#{name},#{description},#{shopId},#{boxNum},#{price},#{duration})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveShopBox(ShopBox shopBox);
 }

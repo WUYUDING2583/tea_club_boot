@@ -36,8 +36,6 @@ public interface ShopMapper {
     @Options(useGeneratedKeys=true, keyProperty="uid")
      void saveShop(Shop shop);
 
-    @Update("update photo set shopId=#{shopId} where uid=#{uid}")
-    void saveShopPhotos(Photo photo);
 
     @Delete("delete from shop where uid=#{uid}")
     void deleteShop(int uid);

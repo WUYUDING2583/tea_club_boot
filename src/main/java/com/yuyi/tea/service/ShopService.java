@@ -4,6 +4,7 @@ import com.yuyi.tea.bean.OpenHour;
 import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.bean.Shop;
 import com.yuyi.tea.mapper.OpenHourMapper;
+import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.ShopMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ShopService {
 
     @Autowired
     private OpenHourMapper openHourMapper;
+
+    @Autowired
+    private PhotoMapper photoMapper;
 
     public List<Shop> getShopList(){
         List<Shop> shopList = shopMapper.getShopList();
@@ -46,7 +50,7 @@ public class ShopService {
         }
         for(Photo photo:shop.getPhotos()){
             photo.setShopId(shop.getUid());
-            shopMapper.saveShopPhotos(photo);
+            photoMapper.saveShopPhotos(photo);
         }
     }
 
