@@ -33,4 +33,10 @@ public class ShopBoxController {
         shopBoxService.deleteShopBoxByUid(uid);
         return "Success";
     }
+
+    @GetMapping("/shopBox/{uid}")
+    public ShopBox getShopBoxByUid(@PathVariable int uid){
+        ShopBox shopBoxByUid = shopBoxService.getShopBoxByUid(uid);
+        return shopBoxByUid;
+    }
 }

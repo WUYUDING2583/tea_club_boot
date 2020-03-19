@@ -13,14 +13,14 @@ public class ShopBox implements Serializable {
     private String description;
     private Shop shop;
     private String boxNum;
-    private float price;
+    private Price price;
     private List<Photo> photos;
     private int duration;//每泡茶时间
 
     public ShopBox() {
     }
 
-    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, float price, List<Photo> photos, int duration) {
+    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, Price price, List<Photo> photos, int duration) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -93,11 +93,11 @@ public class ShopBox implements Serializable {
         this.boxNum = boxNum;
     }
 
-    public float getPrice() {
+    public Price getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Price price) {
         this.price = price;
     }
 

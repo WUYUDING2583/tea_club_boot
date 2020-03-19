@@ -11,8 +11,8 @@ public interface ShopBoxMapper {
     @Select("select * from shopBox where shopId=#{shopId}")
     List<ShopBox> getShopBoxByShopId(int shopId);
 
-    @Insert("insert into shopBox(uid,name,description,shopId,boxNum,price,duration) " +
-            "values(#{uid},#{name},#{description},#{shop.uid},#{boxNum},#{price},#{duration})")
+    @Insert("insert into shopBox(uid,name,description,shopId,boxNum,priceId,duration) " +
+            "values(#{uid},#{name},#{description},#{shop.uid},#{boxNum},#{price.uid},#{duration})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveShopBox(ShopBox shopBox);
 
@@ -27,4 +27,19 @@ public interface ShopBoxMapper {
 
     @Delete("delete from shopBox where uid=#{uid}")
     void deleteShopBoxByUid(int uid);
+
+    @Select("select * from shopBox where uid=#{uid}")
+    @Results({
+            @Result(id = true,column = "uid",property = "uid"),
+            @Result(column="shopId",property="shop",
+                    many=@Many(select="com.yuyi.tea.mapper.ShopMapper.getShopOfShopBox",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="priceId",property="price",
+                    many=@Many(select="com.yuyi.tea.mapper.PriceMapper.getPrice",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="photos",
+                    many=@Many(select="com.yuyi.tea.mapper.PhotoMapper.getPhotosByShopBoxId",
+                            fetchType= FetchType.LAZY))
+    })
+    ShopBox getShopBoxByUid(int uid);
 }
