@@ -11,7 +11,7 @@ public class ShopBox implements Serializable {
     private int uid;
     private String name;
     private String description;
-    private int shopId;
+    private Shop shop;
     private String boxNum;
     private float price;
     private List<Photo> photos;
@@ -20,11 +20,11 @@ public class ShopBox implements Serializable {
     public ShopBox() {
     }
 
-    public ShopBox(int uid, String name, String description, int shopId, String boxNum, float price, List<Photo> photos, int duration) {
+    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, float price, List<Photo> photos, int duration) {
         this.uid = uid;
         this.name = name;
         this.description = description;
-        this.shopId = shopId;
+        this.shop = shop;
         this.boxNum = boxNum;
         this.price = price;
         this.photos = photos;
@@ -37,7 +37,7 @@ public class ShopBox implements Serializable {
                 "uid=" + uid +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", shopId=" + shopId +
+                ", shop=" + shop +
                 ", boxNum='" + boxNum + '\'' +
                 ", price=" + price +
                 ", photos=" + photos +
@@ -77,12 +77,12 @@ public class ShopBox implements Serializable {
         this.description = description;
     }
 
-    public int getShopId() {
-        return shopId;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setShopId(int shopId) {
-        this.shopId = shopId;
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public String getBoxNum() {

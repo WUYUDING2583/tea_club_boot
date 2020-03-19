@@ -8,6 +8,8 @@ import com.yuyi.tea.mapper.ShopMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ShopBoxService {
 
@@ -23,5 +25,14 @@ public class ShopBoxService {
             photo.setShopBoxId(shopBox.getUid());
             photoMapper.saveShopBoxPhotos(photo);
         }
+    }
+
+    public List<ShopBox> getShopBoxes(){
+        List<ShopBox> shopBoxes = shopBoxMapper.getShopBoxes();
+        return shopBoxes;
+    }
+
+    public void deleteShopBoxByUid(int uid){
+        shopBoxMapper.deleteShopBoxByUid(uid);
     }
 }

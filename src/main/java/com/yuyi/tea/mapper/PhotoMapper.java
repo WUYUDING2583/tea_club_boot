@@ -16,6 +16,9 @@ public interface PhotoMapper {
     @Select("select * from photo where shopId=#{shopId}")
     List<Photo> getPhotosByShopId(int shopId);
 
+    @Select("select * from photo where shopBoxId=#{shopBoxId}")
+    List<Photo> getPhotosByShopBoxId(int shopBoxId);
+
 
     @Update("update photo set shopId=#{shopId} where uid=#{uid}")
     void saveShopPhotos(Photo photo);

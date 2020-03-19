@@ -4,9 +4,9 @@ import com.yuyi.tea.bean.ShopBox;
 import com.yuyi.tea.service.ShopBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ShopBoxController {
@@ -19,5 +19,18 @@ public class ShopBoxController {
     ShopBox saveShopBox(@RequestBody ShopBox shopBox){
         shopBoxService.saveShopBox(shopBox);
         return shopBox;
+    }
+
+    @GetMapping("/shopBoxes")
+    List<ShopBox> getShopBoxes(){
+        List<ShopBox> shopBoxes = shopBoxService.getShopBoxes();
+        return shopBoxes;
+    }
+
+    @DeleteMapping("/shopBox/{uid}")
+    @Transactional(rollbackFor = Exception.class)
+    public String deleteShopBox(@PathVariable int uid){
+        shopBoxService.deleteShopBoxByUid(uid);
+        return "Success";
     }
 }
