@@ -14,4 +14,8 @@ public class PhotoService {
     public void insertPhoto(Photo photo){
         photoMapper.insertPhoto(photo);
     }
+
+    public void deletePhoto(int uid){
+        photoMapper.deletePhoto(uid);
+    }
 }

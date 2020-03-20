@@ -42,4 +42,9 @@ public interface ShopBoxMapper {
                             fetchType= FetchType.LAZY))
     })
     ShopBox getShopBoxByUid(int uid);
+
+    @Update("update shopBox set name=#{name},description=#{description},priceId=#{price.uid},duration=#{duration},boxNum=#{boxNum},shopId=#{shop.uid} where uid=#{uid}")
+    void updateShopBox(ShopBox shopBox);
 }
+
+

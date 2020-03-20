@@ -39,4 +39,11 @@ public class ShopBoxController {
         ShopBox shopBoxByUid = shopBoxService.getShopBoxByUid(uid);
         return shopBoxByUid;
     }
+
+    @PutMapping("/shopBox")
+    @Transactional(rollbackFor = Exception.class)
+    public ShopBox updateShopBox(@RequestBody ShopBox shopBox){
+        shopBoxService.updateShopBox(shopBox);
+        return shopBox;
+    }
 }

@@ -26,4 +26,7 @@ public interface PhotoMapper {
     @Update("update photo set shopBoxId=#{shopBoxId} where uid=#{uid}")
     void saveShopBoxPhotos(Photo photo);
 
+    @Delete("delete from photo where uid=#{uid}")
+    void deletePhoto(int uid);
+
 }
