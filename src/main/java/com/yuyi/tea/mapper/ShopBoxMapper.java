@@ -45,6 +45,12 @@ public interface ShopBoxMapper {
 
     @Update("update shopBox set name=#{name},description=#{description},priceId=#{price.uid},duration=#{duration},boxNum=#{boxNum},shopId=#{shop.uid} where uid=#{uid}")
     void updateShopBox(ShopBox shopBox);
+
+    @Update("update shopBox set shopId=#{shopId} where uid=#{uid}")
+    void updateShopBoxShopId(int uid, int shopId);
+
+    @Update("update shopBox set shopId=null where uid=#{uid}")
+    void setShopIdNull(int uid);
 }
 
 

@@ -3,6 +3,7 @@ package com.yuyi.tea.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 @JsonIgnoreProperties(value = { "handler" })
 public class Photo implements Serializable {
@@ -64,5 +65,16 @@ public class Photo implements Serializable {
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
+    }
+
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "uid=" + uid +
+                ", photo=" + Arrays.toString(photo) +
+                ", shopId=" + shopId +
+                ", shopBoxId=" + shopBoxId +
+                ", clerkId=" + clerkId +
+                '}';
     }
 }

@@ -20,6 +20,10 @@ public class Clerk implements Serializable {
     public Clerk() {
     }
 
+    public Clerk(int uid) {
+        this.uid = uid;
+    }
+
     public Clerk(int uid, String name, Position position) {
         this.uid = uid;
         this.name = name;

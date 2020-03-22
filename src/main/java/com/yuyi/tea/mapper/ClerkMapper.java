@@ -21,4 +21,19 @@ public interface ClerkMapper {
 
     @Select("select * from position where uid=#{uid}")
     Position getPosition(int uid);
+
+    @Select("select * from clerk")
+    @Results({
+            @Result(id = true,column = "uid",property = "uid"),
+            @Result(column="positionId",property="position",
+                    one=@One(select="com.yuyi.tea.mapper.ClerkMapper.getPosition",
+                            fetchType= FetchType.LAZY))
+    })
+    List<Clerk> getAllClerks();
+
+    @Update("update clerk set shopId=#{shopId} where uid=#{uid}")
+    void updateClerkShopId(int uid, int shopId);
+
+    @Delete("delete from clerk where uid=#{uid}")
+    void deleteClerk(int uid);
 }

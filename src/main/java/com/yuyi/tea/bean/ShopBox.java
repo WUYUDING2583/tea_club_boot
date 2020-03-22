@@ -20,6 +20,10 @@ public class ShopBox implements Serializable {
     public ShopBox() {
     }
 
+    public ShopBox(int uid) {
+        this.uid = uid;
+    }
+
     public ShopBox(int uid, String name, String description, Shop shop, String boxNum, Price price, List<Photo> photos, int duration) {
         this.uid = uid;
         this.name = name;

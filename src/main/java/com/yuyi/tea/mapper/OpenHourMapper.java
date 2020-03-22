@@ -30,12 +30,15 @@ public interface OpenHourMapper {
     void insertOpenHours(@Param(value = "openHours") List<OpenHour> openHours);
 
     @Insert("insert into openRepeatDate(date,openHourId) values(#{date},#{openHourId})")
-    void insertOpenHourRepeat(int date,int openHourId);
+    void insertOpenHourRepeat(String date,int openHourId);
 
     @Insert("insert into openHour(startTime,endTime,shopId) values(#{startTime},#{endTime},#{shopId})")
     @Options(useGeneratedKeys = true,keyProperty = "uid")
     void insertOpenHour(OpenHour openHour);
 
     @Select("select date from openRepeatDate where openHourId=#{openHourId}")
-    List<Integer> getRepeatDateByOpenHourId(int openHourId);
+    List<String> getRepeatDateByOpenHourId(int openHourId);
+
+    @Delete("delete from openHour where shopId=#{shopId}")
+    void deleteOpenHourByShop(int shopId);
 }

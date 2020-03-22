@@ -14,13 +14,31 @@ public class OpenHour implements Serializable {
     private int uid;
     private String startTime;
     private String endTime;
-    private List<Integer> date;
+    private List<String> date;
     private int shopId;
 
 
     public OpenHour() {
     }
 
+    public OpenHour(int uid, String startTime, String endTime, List<String> date, int shopId) {
+        this.uid = uid;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+        this.shopId = shopId;
+    }
+
+    @Override
+    public String toString() {
+        return "OpenHour{" +
+                "uid=" + uid +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", date=" + date +
+                ", shopId=" + shopId +
+                '}';
+    }
 
     public int getUid() {
         return uid;
@@ -38,30 +56,11 @@ public class OpenHour implements Serializable {
         this.shopId = shopId;
     }
 
-    @Override
-    public String toString() {
-        return "OpenHour{" +
-                "uid=" + uid +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", date=" + date +
-                ", shopId=" + shopId +
-                '}';
-    }
-
-    public OpenHour(int uid, String startTime, String endTime, List<Integer> date, int shopId) {
-        this.uid = uid;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.date = date;
-        this.shopId = shopId;
-    }
-
-    public List<Integer> getDate() {
+    public List<String> getDate() {
         return date;
     }
 
-    public void setDate(List<Integer> date) {
+    public void setDate(List<String> date) {
         this.date = date;
     }
 

@@ -49,10 +49,12 @@ public class ShopController {
         return "Success";
     }
 
-
-    @GetMapping("/test")
-    public String test(){
-        return "success";
+    @PutMapping("/shop")
+    @Transactional(rollbackFor = Exception.class)
+    public Shop updateShop(@RequestBody Shop shop){
+        System.out.println("update shop "+shop);
+        shopService.updateShop(shop);
+        return shop;
     }
 
 }

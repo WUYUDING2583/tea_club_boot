@@ -43,4 +43,6 @@ public interface ShopMapper {
     @Delete("delete from shop where uid=#{uid}")
     void deleteShop(int uid);
 
+    @Update("update shop set name=#{name},address=#{address},description=#{description},contact=#{contact} where uid=#{uid}")
+    void updateShop(Shop shop);
 }

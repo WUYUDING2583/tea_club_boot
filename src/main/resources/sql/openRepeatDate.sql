@@ -2,7 +2,7 @@
 DROP TABLE IF EXISTS `openRepeatDate`;
 CREATE TABLE `openRepeatDate` (
                           `uid` int(11) NOT NULL AUTO_INCREMENT,
-                          `date` int DEFAULT NULL,
+                          `date` varchar(2) DEFAULT NULL,
                           `openHourId` int(11),
                           FOREIGN KEY (`openHourId`) REFERENCES openHour(uid) ON DELETE CASCADE ON UPDATE CASCADE,
                           PRIMARY KEY (`uid`)

@@ -9,6 +9,6 @@ CREATE TABLE `clerk` (
                        `address` varchar(200) default null,
                        `shopId` int(11) default null,
                        FOREIGN KEY (`positionId`) REFERENCES position(uid),
-                       FOREIGN KEY (`shopId`) REFERENCES shop(uid),
+                       FOREIGN KEY (`shopId`) REFERENCES shop(uid) ON DELETE CASCADE ON UPDATE CASCADE,
                        PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
