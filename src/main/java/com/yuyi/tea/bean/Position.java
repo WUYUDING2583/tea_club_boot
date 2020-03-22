@@ -18,6 +18,10 @@ public class Position implements Serializable {
     public Position() {
     }
 
+    public Position(int uid) {
+        this.uid = uid;
+    }
+
     public int getUid() {
         return uid;
     }

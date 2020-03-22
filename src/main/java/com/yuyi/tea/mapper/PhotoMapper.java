@@ -20,6 +20,10 @@ public interface PhotoMapper {
     List<Photo> getPhotosByShopBoxId(int shopBoxId);
 
 
+    @Select("select * from photo where clerkId=#{clerkId} limit 1")
+    Photo getAvatarByClerkId(int clerkId);
+
+
     @Update("update photo set shopId=#{shopId} where uid=#{uid}")
     void saveShopPhotos(Photo photo);
 
@@ -29,4 +33,6 @@ public interface PhotoMapper {
     @Delete("delete from photo where uid=#{uid}")
     void deletePhoto(int uid);
 
+    @Update("update photo set clerkId=#{clerkId} where uid=#{uid}")
+    void saveClerkAvatar(Photo avatar);
 }

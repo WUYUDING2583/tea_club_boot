@@ -45,4 +45,7 @@ public interface ShopMapper {
 
     @Update("update shop set name=#{name},address=#{address},description=#{description},contact=#{contact} where uid=#{uid}")
     void updateShop(Shop shop);
+
+    @Select("select uid,name from shop where uid=#{uid}")
+    Shop getShopOfClerk(int uid);
 }

@@ -29,6 +29,9 @@ public class Shop implements Serializable {
     public Shop() {
     }
 
+    public Shop(int uid) {
+        this.uid = uid;
+    }
 
     public Shop(int uid, String name, String address, String description, String contact, List<OpenHour> openHours, List<Photo> photos) {
         this.uid = uid;

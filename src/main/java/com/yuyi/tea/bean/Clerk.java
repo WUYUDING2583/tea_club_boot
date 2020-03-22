@@ -15,7 +15,7 @@ public class Clerk implements Serializable {
     private int sex;
     private Photo avatar;
     private String address;
-    private int shopId;
+    private Shop shop;
 
     public Clerk() {
     }
@@ -30,7 +30,7 @@ public class Clerk implements Serializable {
         this.position = position;
     }
 
-    public Clerk(int uid, String name, Position position, String contact, String identityId, int sex, Photo avatar, String address, int shopId) {
+    public Clerk(int uid, String name, Position position, String contact, String identityId, int sex, Photo avatar, String address, Shop shop) {
         this.uid = uid;
         this.name = name;
         this.position = position;
@@ -39,7 +39,7 @@ public class Clerk implements Serializable {
         this.sex = sex;
         this.avatar = avatar;
         this.address = address;
-        this.shopId = shopId;
+        this.shop = shop;
     }
 
     public int getUid() {
@@ -106,12 +106,12 @@ public class Clerk implements Serializable {
         this.address = address;
     }
 
-    public int getShopId() {
-        return shopId;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setShopId(int shopId) {
-        this.shopId = shopId;
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class Clerk implements Serializable {
                 ", sex=" + sex +
                 ", avatar=" + avatar +
                 ", address='" + address + '\'' +
-                ", shopId=" + shopId +
+                ", shop=" + shop +
                 '}';
     }
 }
