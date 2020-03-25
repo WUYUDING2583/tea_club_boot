@@ -14,6 +14,7 @@ public class Photo implements Serializable {
     private int shopId;
     private int shopBoxId;
     private int clerkId;
+    private int activityId;
 
     public Photo() {
     }
@@ -67,6 +68,14 @@ public class Photo implements Serializable {
         this.photo = photo;
     }
 
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +
@@ -75,6 +84,7 @@ public class Photo implements Serializable {
                 ", shopId=" + shopId +
                 ", shopBoxId=" + shopBoxId +
                 ", clerkId=" + clerkId +
+                ", activityId=" + activityId +
                 '}';
     }
 }

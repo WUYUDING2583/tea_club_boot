@@ -8,6 +8,6 @@ CREATE TABLE `shopBox` (
                       `priceId` int(11) default NULL,
                       `duration` int DEFAULT NULL,
                       FOREIGN KEY (`shopId`) REFERENCES shop(uid) ON DELETE CASCADE ON UPDATE CASCADE,
-                      FOREIGN KEY (`priceId`) REFERENCES price(uid) ON DELETE CASCADE ON UPDATE CASCADE,
+                      FOREIGN KEY (`priceId`) REFERENCES price(uid),
                       PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

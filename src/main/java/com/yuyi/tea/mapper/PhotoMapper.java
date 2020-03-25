@@ -35,4 +35,7 @@ public interface PhotoMapper {
 
     @Update("update photo set clerkId=#{clerkId} where uid=#{uid}")
     void saveClerkAvatar(Photo avatar);
+
+    @Update("update photo set activityId=#{activityId} where uid=#{uid}")
+    void saveActivityPhoto(Photo photo);
 }
