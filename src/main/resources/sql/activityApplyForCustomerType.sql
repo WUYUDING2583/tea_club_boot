@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `activityApplyForCustomerTypes`;
-CREATE TABLE `activityApplyForCustomerTypes` (
+DROP TABLE IF EXISTS `activityApplyForCustomerType`;
+CREATE TABLE `activityApplyForCustomerType` (
                                          `uid` int(11) NOT NULL AUTO_INCREMENT,
                                          `activityRuleId` int(11) default null,
                                          `customerTypeId` int(11) default null,

@@ -19,6 +19,9 @@ public interface PhotoMapper {
     @Select("select * from photo where shopBoxId=#{shopBoxId}")
     List<Photo> getPhotosByShopBoxId(int shopBoxId);
 
+    @Select("select * from photo where activityId=#{activityId}")
+    List<Photo> getPhotosByActivityId(int activityId);
+
 
     @Select("select * from photo where clerkId=#{clerkId} limit 1")
     Photo getAvatarByClerkId(int clerkId);

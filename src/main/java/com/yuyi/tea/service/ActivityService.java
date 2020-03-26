@@ -46,6 +46,7 @@ public class ActivityService {
         }
         //TODO 存储优惠规则
         for(ActivityRule activityRule:activity.getActivityRules()){
+            activityRule.setActivityId(activity.getUid());
             saveActivityRule(activityRule);
         }
     }
@@ -59,8 +60,25 @@ public class ActivityService {
         }
         for(CustomerType customerType:activityRule.getActivityApplyForCustomerTypes()){
             customerType.getActivityRules().add(activityRule);
-            activityMapper.saveActivityApplyForCustomerTypes(customerType,activityRule.getUid());
+            activityMapper.saveActivityApplyForCustomerType(customerType,activityRule.getUid());
         }
         activityMapper.saveActivityRule2(activityRule.getActivityRule2(),activityRule.getUid());
+    }
+
+    //获取活动列表
+    public List<Activity> getActivities() {
+        List<Activity> activities = activityMapper.getActivities();
+        return activities;
+    }
+
+    //终止活动
+    public void terminalActivity(int uid) {
+        activityMapper.terminalActivity(uid);
+    }
+
+    //根据uid获取活动详细信息
+    public Activity getActivity(int uid) {
+        Activity activity = activityMapper.getActivity(uid);
+        return activity;
     }
 }

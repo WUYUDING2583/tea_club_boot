@@ -26,6 +26,11 @@ public class Activity implements Serializable {
         this.uid = uid;
     }
 
+    public Activity(int uid, String name) {
+        this.uid = uid;
+        this.name = name;
+    }
+
     public Activity(int uid, String name, String description, long startTime, long endTime, boolean enforceTerminal, List<Photo> photos, List<Activity> mutexActivities, List<ActivityRule> activityRules) {
         this.uid = uid;
         this.name = name;
