@@ -17,9 +17,6 @@ public class ActivityRule implements Serializable {
 
     public ActivityRule() {
     }
-
-
-
     public ActivityRule(int uid) {
         this.uid = uid;
     }

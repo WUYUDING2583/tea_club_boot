@@ -3,6 +3,7 @@ package com.yuyi.tea.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(value = { "handler" })
@@ -16,6 +17,7 @@ public class Product implements Serializable {
     private int storage;
     private String status;
     private List<Photo> photos;
+    private List<ActivityRule> activityRules=new ArrayList<>();
 
     public Product() {
     }
@@ -30,7 +32,7 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, String status, List<Photo> photos) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, String status, List<Photo> photos, List<ActivityRule> activityRules) {
         this.uid = uid;
         this.name = name;
         this.type = type;
@@ -39,6 +41,30 @@ public class Product implements Serializable {
         this.storage = storage;
         this.status = status;
         this.photos = photos;
+        this.activityRules = activityRules;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "uid=" + uid +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", storage=" + storage +
+                ", status='" + status + '\'' +
+                ", photos=" + photos +
+                ", activityRules=" + activityRules +
+                '}';
+    }
+
+    public List<ActivityRule> getActivityRules() {
+        return activityRules;
+    }
+
+    public void setActivityRules(List<ActivityRule> activityRules) {
+        this.activityRules = activityRules;
     }
 
     public int getUid() {
@@ -105,17 +131,4 @@ public class Product implements Serializable {
         this.photos = photos;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "uid=" + uid +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", storage=" + storage +
-                ", status='" + status + '\'' +
-                ", photos=" + photos +
-                '}';
-    }
 }

@@ -38,7 +38,7 @@ public class ActivityController {
     public String saveActivity(@RequestBody Activity activity){
         System.out.println("save activity "+activity);
         activityService.saveActivity(activity);
-        throw new ShopNotExistException();
-//        return "success";
+//        throw new ShopNotExistException();
+        return "success";
     }
 }

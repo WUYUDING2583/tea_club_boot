@@ -1,8 +1,6 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.Activity;
-import com.yuyi.tea.bean.ActivityRuleType;
-import com.yuyi.tea.bean.Photo;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.ActivityMapper;
 import com.yuyi.tea.mapper.PhotoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,7 @@ public class ActivityService {
         return activityRuleTypes;
     }
 
+    //存储新增活动
     public void saveActivity(Activity activity) {
         activityMapper.saveActivity(activity);
         for(Photo photo:activity.getPhotos()){
@@ -46,5 +45,22 @@ public class ActivityService {
             activityMapper.saveMutexActivity(mutexActivity.getUid(),activity.getUid());
         }
         //TODO 存储优惠规则
+        for(ActivityRule activityRule:activity.getActivityRules()){
+            saveActivityRule(activityRule);
+        }
+    }
+
+    //存储活动规则
+    public void saveActivityRule(ActivityRule activityRule){
+        activityMapper.saveActivityRule(activityRule);
+        for(Product product:activityRule.getActivityApplyForProduct()){
+            product.getActivityRules().add(activityRule);
+            activityMapper.saveActivityApplyForProduct(product,activityRule.getUid());
+        }
+        for(CustomerType customerType:activityRule.getActivityApplyForCustomerTypes()){
+            customerType.getActivityRules().add(activityRule);
+            activityMapper.saveActivityApplyForCustomerTypes(customerType,activityRule.getUid());
+        }
+        activityMapper.saveActivityRule2(activityRule.getActivityRule2(),activityRule.getUid());
     }
 }
