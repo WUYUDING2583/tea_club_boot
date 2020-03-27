@@ -61,4 +61,10 @@ public class ActivityController {
         Activity activity = activityService.getActivity(uid);
         return activity;
     }
+
+    @PutMapping("/activity")
+    @Transactional(rollbackFor = Exception.class)
+    public Activity updateActivity(@RequestBody Activity activity){
+        return activityService.updateActivity(activity);
+    }
 }

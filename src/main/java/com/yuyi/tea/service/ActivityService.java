@@ -8,7 +8,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CacheConfig(cacheNames = "activity")
 @Service
@@ -40,18 +42,15 @@ public class ActivityService {
             photo.setActivityId(activity.getUid());
             photoMapper.saveActivityPhoto(photo);
         }
-        for(Activity mutexActivity:activity.getMutexActivities()){
-            activityMapper.saveMutexActivity(activity.getUid(),mutexActivity.getUid());
-            activityMapper.saveMutexActivity(mutexActivity.getUid(),activity.getUid());
-        }
-        //TODO 存储优惠规则
+        saveMutexActivity(activity);
+        // 存储优惠规则
         for(ActivityRule activityRule:activity.getActivityRules()){
             activityRule.setActivityId(activity.getUid());
             saveActivityRule(activityRule);
         }
     }
 
-    //存储活动规则
+    //存储并返回活动规则
     public void saveActivityRule(ActivityRule activityRule){
         activityMapper.saveActivityRule(activityRule);
         for(Product product:activityRule.getActivityApplyForProduct()){
@@ -81,4 +80,54 @@ public class ActivityService {
         Activity activity = activityMapper.getActivity(uid);
         return activity;
     }
+
+    public Activity updateActivity(Activity activity) {
+        activityMapper.updateActivity(activity);
+        //更新照片
+        ArrayList<Integer> photosUid=new ArrayList<>();
+        for(Photo photo:activity.getPhotos()){
+            photosUid.add(photo.getUid());
+            photo.setActivityId(activity.getUid());
+            photoMapper.saveActivityPhoto(photo);
+        }
+        List<Photo> originPhotos=photoMapper.getPhotosByActivityId(activity.getUid());
+        List<Photo> needDeletePhotos=originPhotos.stream()
+                .filter((Photo photo)->!photosUid.contains(photo.getUid()))
+                .collect(Collectors.toList());
+        //删除这些照片
+        for(Photo photo:needDeletePhotos){
+            photoMapper.deletePhoto(photo.getUid());
+        }
+        List<Photo> updatePhotos=originPhotos.stream()
+                .filter((Photo photo)->photosUid.contains(photo.getUid()))
+                .collect(Collectors.toList());
+        activity.setPhotos(updatePhotos);
+        //更新互斥活动
+        activityMapper.deleteMutexActivity(activity.getUid());
+        List<Activity> mutexActivities = saveMutexActivity(activity);
+        activity.setMutexActivities(mutexActivities);
+        //更新活动规则
+        //删除该活动当前所有规则
+        activityMapper.deleteActivityRules(activity.getUid());
+        //保存所有规则
+        for(ActivityRule activityRule:activity.getActivityRules()) {
+            activityRule.setActivityId(activity.getUid());
+            saveActivityRule(activityRule);
+        }
+        List<ActivityRule> activityRules = activityMapper.getActivityRules(activity.getUid());
+        activity.setActivityRules(activityRules);
+        return activity;
+    }
+
+    //插入并返回互斥活动
+    public List<Activity> saveMutexActivity(Activity activity){
+        for(Activity mutexActivity:activity.getMutexActivities()){
+            activityMapper.saveMutexActivity(activity.getUid(),mutexActivity.getUid());
+            activityMapper.saveMutexActivity(mutexActivity.getUid(),activity.getUid());
+        }
+        List<Activity> mutexActivities = activityMapper.getMutexActivities(activity.getUid());
+        return mutexActivities;
+    }
+
+
 }

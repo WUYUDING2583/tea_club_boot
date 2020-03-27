@@ -106,4 +106,15 @@ public interface ActivityMapper {
     //根据活动规则uid获取第二规则
     @Select("select uid,number,currency,operation from activityRule2 where activityRuleId=#{activityRuleId}")
     ActivityRule2 getActivityRule2(int activityRuleId);
+
+    @Update("update activity set name=#{name},description=#{description},startTime=#{startTime},endTime=#{endTime} where uid=#{uid}")
+    void updateActivity(Activity activity);
+
+    //根据uid删除该活动所有互斥活动
+    @Delete("delete from mutexActivity where activityId=#{uid}")
+    void deleteMutexActivity(int uid);
+
+    //根据uid删除该活动所有活动规则
+    @Delete("delete from activityRule where activityId=#{uid}")
+    void deleteActivityRules(int uid);
 }
