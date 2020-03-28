@@ -6,7 +6,7 @@ CREATE TABLE `product` (
                        `description` varchar(200) default null,
                        `priceId` int(11) default null,
                        `storage` int default null,
-                       `status` varchar(10) default null,
+                       `enforceTerminal` bool default false,
                        FOREIGN KEY (`type`) REFERENCES productType(uid),
                        FOREIGN KEY (`priceId`) REFERENCES price(uid),
                        PRIMARY KEY (`uid`)

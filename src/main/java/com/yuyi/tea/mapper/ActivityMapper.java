@@ -117,4 +117,12 @@ public interface ActivityMapper {
     //根据uid删除该活动所有活动规则
     @Delete("delete from activityRule where activityId=#{uid}")
     void deleteActivityRules(int uid);
+
+    //根据产品uid获取该产品适用的活动
+    @Select("select * from activity where enforceTerminal=false and uid in (" +
+            "select activityId from activityRule where uid in (" +
+                "select activityRuleId from activityApplyForProduct where productId=#{productId}" +
+                ")" +
+            ")")
+    List<Activity> getActivitiesByProduct(int productId);
 }

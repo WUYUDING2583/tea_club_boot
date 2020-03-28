@@ -26,6 +26,8 @@ public interface PhotoMapper {
     @Select("select * from photo where clerkId=#{clerkId} limit 1")
     Photo getAvatarByClerkId(int clerkId);
 
+    @Select("select * from photo where productId=#{productId}")
+    List<Photo> getPhotosByProductId(int productId);
 
     @Update("update photo set shopId=#{shopId} where uid=#{uid}")
     void saveShopPhotos(Photo photo);
@@ -41,4 +43,7 @@ public interface PhotoMapper {
 
     @Update("update photo set activityId=#{activityId} where uid=#{uid}")
     void saveActivityPhoto(Photo photo);
+
+    @Update("update photo set productId=#{productId} where uid=#{uid}")
+    void saveProductPhoto(Photo photo);
 }

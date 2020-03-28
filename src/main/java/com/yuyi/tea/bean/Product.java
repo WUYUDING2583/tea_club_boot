@@ -15,9 +15,10 @@ public class Product implements Serializable {
     private String description;
     private Price price;
     private int storage;
-    private String status;
+    private boolean enforceTerminal;
     private List<Photo> photos;
-    private List<ActivityRule> activityRules=new ArrayList<>();
+    private List<ActivityRule> activityRules;
+    private List<Activity> activities;
 
     public Product() {
     }
@@ -32,16 +33,17 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, String status, List<Photo> photos, List<ActivityRule> activityRules) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities) {
         this.uid = uid;
         this.name = name;
         this.type = type;
         this.description = description;
         this.price = price;
         this.storage = storage;
-        this.status = status;
+        this.enforceTerminal = enforceTerminal;
         this.photos = photos;
         this.activityRules = activityRules;
+        this.activities = activities;
     }
 
     @Override
@@ -53,10 +55,19 @@ public class Product implements Serializable {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", storage=" + storage +
-                ", status='" + status + '\'' +
+                ", enforceTerminal=" + enforceTerminal +
                 ", photos=" + photos +
                 ", activityRules=" + activityRules +
+                ", activities=" + activities +
                 '}';
+    }
+
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
     }
 
     public List<ActivityRule> getActivityRules() {
@@ -115,12 +126,12 @@ public class Product implements Serializable {
         this.storage = storage;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean isEnforceTerminal() {
+        return enforceTerminal;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setEnforceTerminal(boolean enforceTerminal) {
+        this.enforceTerminal = enforceTerminal;
     }
 
     public List<Photo> getPhotos() {
