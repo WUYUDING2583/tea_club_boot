@@ -1,9 +1,10 @@
 package com.yuyi.tea.service;
 
+import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.bean.EnterpriseCustomerApplication;
 import com.yuyi.tea.bean.Photo;
-import com.yuyi.tea.common.TimeUtils;
+import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -32,7 +33,7 @@ public class CustomerService {
         if(isFetchAll){
             applications = customerMapper.getAllEnterpriseCustomerApplications();
         }else{
-            applications = customerMapper.getLast3MonthsEnterpriseCustomerApplications(TimeUtils.getCurrentTimestamp() - (long) 1000 * 60 * 60 * 24 * 90);
+            applications = customerMapper.getLast3MonthsEnterpriseCustomerApplications(TimeUtil.getCurrentTimestamp() - (long) 1000 * 60 * 60 * 24 * 90);
          }
         for(EnterpriseCustomerApplication enterpriseCustomerApplication:applications){
             enterpriseCustomerApplication.getEnterprise().setBusinessLicense(new Photo());
@@ -60,4 +61,26 @@ public class CustomerService {
     public void rejectEnterpriseCustomerApplication(int uid) {
         customerMapper.rejectEnterpriseCustomerApplication(uid);
     }
+
+    //获取客户列表
+    public List<Customer> getCustomers() {
+        List<Customer> customers = customerMapper.getCustomers();
+        for(Customer customer:customers){
+            customer.setPassword(null);
+            customer.setAvatar(null);
+        }
+        return customers;
+    }
+
+    //将客户升级为超级vip
+    public Customer setSuperVIP(int uid) {
+        customerMapper.setSuperVIP(uid);
+        Customer customer = customerMapper.getCustomerByUid(uid);
+        customer.setAvatar(null);
+        customer.setPassword(null);
+        return customer;
+    }
+
+
+
 }

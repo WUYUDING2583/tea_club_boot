@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ProductMapper {
 
+    //获取产品类型列表
     @Select("select * from productType")
     List<ProductType> getProductTypes();
 
@@ -68,6 +69,9 @@ public interface ProductMapper {
                             fetchType= FetchType.LAZY)),
             @Result(column="uid",property="activities",
                     one=@One(select="com.yuyi.tea.mapper.ActivityMapper.getActivitiesByProduct",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="activityRules",
+                    one=@One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRulesByProduct",
                             fetchType= FetchType.LAZY))
     })
     Product getProduct(int uid);

@@ -33,6 +33,9 @@ public interface CustomerMapper {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column = "uid",property = "avatar",
                     one = @One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByCustomerId",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "type",property = "customerType",
+                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerType",
                             fetchType = FetchType.LAZY))
     })
     Customer getCustomerByUid(int uid);
@@ -74,4 +77,25 @@ public interface CustomerMapper {
     //拒绝企业客户申请
     @Update("update enterpriseCustomerApplication set status='reject' where uid=#{uid}")
     void rejectEnterpriseCustomerApplication(int uid);
+
+    //获取客户列表
+    @Select("select * from customer")
+    @Results({
+            @Result(id = true,column = "uid",property = "uid"),
+            @Result(column = "uid",property = "avatar",
+                    one = @One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByCustomerId",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "type",property = "customerType",
+                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerType",
+                            fetchType = FetchType.LAZY))
+    })
+    List<Customer> getCustomers();
+
+    //根据uid获取客户类型
+    @Select("select * from customerType where uid=#{uid}")
+    CustomerType getCustomerType(int uid);
+
+    //将客户升级为超级vip
+    @Update("update customer set type=3 where uid=#{uid}")
+    void setSuperVIP(int uid);
 }

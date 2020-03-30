@@ -1,13 +1,12 @@
 package com.yuyi.tea.controller;
 
+import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.bean.EnterpriseCustomerApplication;
 import com.yuyi.tea.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,6 +59,21 @@ public class CustomerController {
     public String rejectEnterpriseCustomerApplication(@PathVariable int uid){
         customerService.rejectEnterpriseCustomerApplication(uid);
         return "success";
+    }
+
+    //获取客户列表
+    @GetMapping("/customers")
+    public List<Customer> getCustomers(){
+        List<Customer> customers = customerService.getCustomers();
+        return customers;
+    }
+
+    //将客户升级为超级vip
+    @GetMapping("/setSupervip/{uid}")
+    @Transactional(rollbackFor = Exception.class)
+    public Customer setSuperVIP(@PathVariable int uid){
+        Customer customer = customerService.setSuperVIP(uid);
+        return customer;
     }
 
 }

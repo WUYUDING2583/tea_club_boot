@@ -15,6 +15,7 @@ public class ActivityRule implements Serializable {
     private float activityRule1;
     private ActivityRule2 activityRule2;//活动规则的详细增减信息
     private int activityId;
+    private Activity activity;
 
     public ActivityRule() {
     }
@@ -22,7 +23,7 @@ public class ActivityRule implements Serializable {
         this.uid = uid;
     }
 
-    public ActivityRule(int uid, ActivityRuleType activityRuleType, List<Product> activityApplyForProduct, List<CustomerType> activityApplyForCustomerTypes, float activityRule1, ActivityRule2 activityRule2, int activityId) {
+    public ActivityRule(int uid, ActivityRuleType activityRuleType, List<Product> activityApplyForProduct, List<CustomerType> activityApplyForCustomerTypes, float activityRule1, ActivityRule2 activityRule2, int activityId, Activity activity) {
         this.uid = uid;
         this.activityRuleType = activityRuleType;
         this.activityApplyForProduct = activityApplyForProduct;
@@ -30,6 +31,7 @@ public class ActivityRule implements Serializable {
         this.activityRule1 = activityRule1;
         this.activityRule2 = activityRule2;
         this.activityId = activityId;
+        this.activity = activity;
     }
 
     @Override
@@ -42,7 +44,16 @@ public class ActivityRule implements Serializable {
                 ", activityRule1=" + activityRule1 +
                 ", activityRule2=" + activityRule2 +
                 ", activityId=" + activityId +
+                ", activity=" + activity +
                 '}';
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
     public int getActivityId() {

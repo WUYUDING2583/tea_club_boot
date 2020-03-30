@@ -16,6 +16,7 @@ public class Clerk implements Serializable {
     private Photo avatar;
     private String address;
     private Shop shop;
+    private String passwrod;
 
     public Clerk() {
     }
@@ -30,7 +31,7 @@ public class Clerk implements Serializable {
         this.position = position;
     }
 
-    public Clerk(int uid, String name, Position position, String contact, String identityId, int sex, Photo avatar, String address, Shop shop) {
+    public Clerk(int uid, String name, Position position, String contact, String identityId, int sex, Photo avatar, String address, Shop shop, String passwrod) {
         this.uid = uid;
         this.name = name;
         this.position = position;
@@ -40,6 +41,15 @@ public class Clerk implements Serializable {
         this.avatar = avatar;
         this.address = address;
         this.shop = shop;
+        this.passwrod = passwrod;
+    }
+
+    public String getPasswrod() {
+        return passwrod;
+    }
+
+    public void setPasswrod(String passwrod) {
+        this.passwrod = passwrod;
     }
 
     public int getUid() {
@@ -126,6 +136,7 @@ public class Clerk implements Serializable {
                 ", avatar=" + avatar +
                 ", address='" + address + '\'' +
                 ", shop=" + shop +
+                ", passwrod='" + passwrod + '\'' +
                 '}';
     }
 }
