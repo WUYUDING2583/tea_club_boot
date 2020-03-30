@@ -23,4 +23,19 @@ public class OrderController {
         List<Order> ordersByCustomer = orderService.getOrdersByCustomer(customerId, timeRange);
         return ordersByCustomer;
     }
+
+    //获取未完成的订单列表
+    @GetMapping("/uncompleteOrders")
+    public List<Order> getUncompleteOrders(){
+        List<Order> uncompleteOrders = orderService.getUncompleteOrders();
+        return uncompleteOrders;
+    }
+
+    //根据条件获取订单列表
+    @GetMapping("/orders/{status}/{startDate}/{endDate}")
+    public List<Order> getOrders(@PathVariable String status,@PathVariable long startDate,@PathVariable long endDate){
+        TimeRange timeRange=new TimeRange(startDate,endDate);
+        List<Order> orders = orderService.getOrders(status, timeRange);
+        return orders;
+    }
 }

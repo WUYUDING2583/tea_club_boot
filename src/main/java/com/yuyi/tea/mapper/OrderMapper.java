@@ -18,7 +18,7 @@ public interface OrderMapper {
     @Select("<script>" +
             "select * from orders where customerId=#{customerId} and " +
             "<if test='timeRange.startDate!=-1'> <![CDATA[orderTime>= #{timeRange.startDate}]]> and </if>" +
-            "<![CDATA[orderTime<=#{timeRange.endDate}]]>" +
+            "<![CDATA[orderTime<=#{timeRange.endDate}]]> order by orderTime desc" +
             "</script>")
     @Results({
             @Result(id = true,column = "uid",property = "uid"),
@@ -51,4 +51,46 @@ public interface OrderMapper {
     List<OrderProduct> getOrderProducts(int orderId);
 
 
+    //获取未完成的订单列表
+    @Select("select * from orders where status!='complete' order by orderTime desc")
+    @Results({
+            @Result(id = true,column = "uid",property = "uid"),
+            @Result(column = "customerId",property = "customer",
+                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerByUid",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "clerkId",property = "clerk",
+                    one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getClerk",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "uid",property = "products",
+                    one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderProducts",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "uid",property = "activityRule",
+                    one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRule",
+                            fetchType = FetchType.LAZY))
+    })
+    List<Order> getUncompleteOrders();
+
+    //根据条件获取订单列表
+    @Select("<script>" +
+            "select * from orders where " +
+            "<if test='status!=\"all\"'>status=#{status} and</if>" +
+            "<if test='timeRange.startDate!=-1'> <![CDATA[orderTime>= #{timeRange.startDate}]]> and </if>" +
+            "<![CDATA[orderTime<=#{timeRange.endDate}]]> order by orderTime desc" +
+            "</script>")
+    @Results({
+            @Result(id = true,column = "uid",property = "uid"),
+            @Result(column = "customerId",property = "customer",
+                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerByUid",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "clerkId",property = "clerk",
+                    one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getClerk",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "uid",property = "products",
+                    one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderProducts",
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "uid",property = "activityRule",
+                    one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRule",
+                            fetchType = FetchType.LAZY))
+    })
+    List<Order> getOrders(String status, TimeRange timeRange);
 }

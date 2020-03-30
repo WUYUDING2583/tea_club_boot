@@ -1,9 +1,6 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.Activity;
-import com.yuyi.tea.bean.ActivityRule;
-import com.yuyi.tea.bean.Order;
-import com.yuyi.tea.bean.OrderProduct;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.utils.AmountUtil;
 import com.yuyi.tea.component.TimeRange;
 import com.yuyi.tea.mapper.OrderMapper;
@@ -22,35 +19,69 @@ public class OrderService {
     //获取客户的订单列表
     public List<Order> getOrdersByCustomer(int customerId, TimeRange timeRange){
         List<Order> ordersByCustomer = orderMapper.getOrdersByCustomer(customerId, timeRange);
-        for(Order order:ordersByCustomer){
+        clearOrderList(ordersByCustomer);
+//        for(Order order:ordersByCustomer){
+//            order.setAmount(AmountUtil.computeAmount(order));
+//            order.getCustomer().setPassword(null);
+//            order.getClerk().setAvatar(null);
+//            order.getClerk().setPasswrod(null);
+//            for(OrderProduct orderProduct:order.getProducts()){
+//                orderProduct.getProduct().setActivities(null);
+//                orderProduct.getProduct().setActivityRules(null);
+//                orderProduct.getProduct().setPhotos(null);
+//                orderProduct.getProduct().setType(null);
+//                if(orderProduct.getActivityRule()!=null) {
+//                    orderProduct.getActivityRule().setActivityApplyForProduct(null);
+//                    orderProduct.getActivityRule().setActivity(null);
+//                }
+//            }
+//        }
+        return ordersByCustomer;
+    }
+
+    //获取未完成的订单列表
+    public List<Order> getUncompleteOrders() {
+        List<Order> uncompleteOrders = orderMapper.getUncompleteOrders();
+        clearOrderList(uncompleteOrders);
+//        for(Order order:uncompleteOrders){
+//            order.setAmount(AmountUtil.computeAmount(order));
 //            order.getCustomer().setAvatar(null);
+//            order.getCustomer().setPassword(null);
+//            order.getClerk().setAvatar(null);
+//            for(OrderProduct orderProduct:order.getProducts()){
+//                Product product = orderProduct.getProduct();
+//                product.setPhotos(null);
+//                product.setActivityRules(null);
+//                product.setActivities(null);
+//                orderProduct.getActivityRule().setActivityApplyForProduct(null);
+//                orderProduct.getActivityRule().setActivity(null);
+//            }
+//        }
+        return uncompleteOrders;
+    }
+
+    //根据条件获取订单列表
+    public List<Order> getOrders(String status, TimeRange timeRange) {
+        List<Order> orders = orderMapper.getOrders(status, timeRange);
+        clearOrderList(orders);
+        return orders;
+    }
+
+    //清除订单列表中不必要项
+    private void clearOrderList(List<Order> orders){
+        for(Order order:orders){
+            order.setAmount(AmountUtil.computeAmount(order));
+            order.getCustomer().setAvatar(null);
             order.getCustomer().setPassword(null);
             order.getClerk().setAvatar(null);
-            order.getClerk().setPasswrod(null);
             for(OrderProduct orderProduct:order.getProducts()){
-//                orderProduct.getProduct().setActivityRules(null);
-                orderProduct.getProduct().setActivities(null);
-                orderProduct.getProduct().setActivityRules(null);
-                orderProduct.getProduct().setPhotos(null);
-                if(orderProduct.getActivityRule()!=null) {
-                    orderProduct.getActivityRule().setActivityApplyForProduct(null);
-                    orderProduct.getActivityRule().setActivity(null);
-                }
-//                for(ActivityRule activityRule:orderProduct.getProduct().getActivityRules()){
-//                    activityRule.setActivityApplyForProduct(null);
-//                    activityRule.setActivity(null);
-//                }
+                Product product = orderProduct.getProduct();
+                product.setPhotos(null);
+                product.setActivityRules(null);
+                product.setActivities(null);
+                orderProduct.getActivityRule().setActivityApplyForProduct(null);
+                orderProduct.getActivityRule().setActivity(null);
             }
-//            order.setActivityRules(null);
-//            for(ActivityRule activityRule:order.getActivityRules()){
-////                activityRule.setActivityApplyForCustomerTypes(null);
-//                activityRule.setActivityApplyForProduct(null);
-//                activityRule.getActivity().setActivityRules(null);
-//                activityRule.getActivity().setPhotos(null);
-//                activityRule.getActivity().setMutexActivities(null);
-//            }
-            order.setAmount(AmountUtil.computeAmount(order));
         }
-        return ordersByCustomer;
     }
 }
