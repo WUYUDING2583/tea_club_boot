@@ -13,11 +13,15 @@ public class Order implements Serializable {
     private long orderTime;
     private Customer customer;
     private Clerk clerk;
-    private String status;
+    private OrderStatus status;
+    private List<OrderStatus> orderStatusHistory;
     private List<OrderProduct> products;
     private ActivityRule activityRule;//全局购物满减活动规则
     private List<Activity> activities;
     private Amount amount;
+    private String buyerPs;
+    private String sellerPs;
+    private TrackInfo trackInfo;
 
     public Order() {
     }
@@ -26,16 +30,52 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, Customer customer, Clerk clerk, String status, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount) {
+    public Order(int uid, long orderTime, Customer customer, Clerk clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String sellerPs, TrackInfo trackInfo) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
         this.clerk = clerk;
         this.status = status;
+        this.orderStatusHistory = orderStatusHistory;
         this.products = products;
         this.activityRule = activityRule;
         this.activities = activities;
         this.amount = amount;
+        this.buyerPs = buyerPs;
+        this.sellerPs = sellerPs;
+        this.trackInfo = trackInfo;
+    }
+
+    public List<OrderStatus> getOrderStatusHistory() {
+        return orderStatusHistory;
+    }
+
+    public void setOrderStatusHistory(List<OrderStatus> orderStatusHistory) {
+        this.orderStatusHistory = orderStatusHistory;
+    }
+
+    public TrackInfo getTrackInfo() {
+        return trackInfo;
+    }
+
+    public void setTrackInfo(TrackInfo trackInfo) {
+        this.trackInfo = trackInfo;
+    }
+
+    public String getBuyerPs() {
+        return buyerPs;
+    }
+
+    public void setBuyerPs(String buyerPs) {
+        this.buyerPs = buyerPs;
+    }
+
+    public String getSellerPs() {
+        return sellerPs;
+    }
+
+    public void setSellerPs(String sellerPs) {
+        this.sellerPs = sellerPs;
     }
 
     public Amount getAmount() {
@@ -94,11 +134,11 @@ public class Order implements Serializable {
         this.clerk = clerk;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -117,11 +157,15 @@ public class Order implements Serializable {
                 ", orderTime=" + orderTime +
                 ", customer=" + customer +
                 ", clerk=" + clerk +
-                ", status='" + status + '\'' +
+                ", status=" + status +
+                ", orderStatusHistory=" + orderStatusHistory +
                 ", products=" + products +
                 ", activityRule=" + activityRule +
                 ", activities=" + activities +
                 ", amount=" + amount +
+                ", buyerPs='" + buyerPs + '\'' +
+                ", sellerPs='" + sellerPs + '\'' +
+                ", trackInfo=" + trackInfo +
                 '}';
     }
 }

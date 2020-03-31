@@ -4,9 +4,8 @@ import com.yuyi.tea.bean.Order;
 import com.yuyi.tea.component.TimeRange;
 import com.yuyi.tea.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,4 +37,20 @@ public class OrderController {
         List<Order> orders = orderService.getOrders(status, timeRange);
         return orders;
     }
+
+    //根据uid获取订单详细信息
+    @GetMapping("/order/{uid}")
+    public Order getOrder(@PathVariable int uid){
+        Order order = orderService.getOrder(uid);
+        return order;
+    }
+
+    //将订单状态更新为已发货
+    @PutMapping("/ordershipped")
+    @Transactional(rollbackFor = Exception.class)
+    public Order updateOrderShipped(@RequestBody Order order){
+        Order updatedOrder = orderService.updateOrderShipped(order);
+        return updatedOrder;
+    }
+
 }
