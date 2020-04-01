@@ -44,25 +44,9 @@ public class OrderService {
     }
 
     //获取未完成的订单列表
-    @Cacheable(cacheNames = "orders")
     public List<Order> getUncompleteOrders() {
         List<Order> uncompleteOrders = orderMapper.getUncompleteOrders();
-//        System.out.println(uncompleteOrders);
         clearOrderList(uncompleteOrders);
-//        for(Order order:uncompleteOrders){
-//            order.setAmount(AmountUtil.computeAmount(order));
-//            order.getCustomer().setAvatar(null);
-//            order.getCustomer().setPassword(null);
-//            order.getClerk().setAvatar(null);
-//            for(OrderProduct orderProduct:order.getProducts()){
-//                Product product = orderProduct.getProduct();
-//                product.setPhotos(null);
-//                product.setActivityRules(null);
-//                product.setActivities(null);
-//                orderProduct.getActivityRule().setActivityApplyForProduct(null);
-//                orderProduct.getActivityRule().setActivity(null);
-//            }
-//        }
         return uncompleteOrders;
     }
 

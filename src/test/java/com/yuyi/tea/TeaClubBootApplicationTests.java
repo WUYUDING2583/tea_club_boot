@@ -1,11 +1,14 @@
 package com.yuyi.tea;
 
+import com.yuyi.tea.bean.Company;
 import com.yuyi.tea.bean.OrderStatus;
 import com.yuyi.tea.mapper.*;
+import com.yuyi.tea.service.RedisService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -21,15 +24,15 @@ class TeaClubBootApplicationTests {
     CustomerMapper customerMapper;
 
     @Autowired
-    OrderMapper orderMapper;
+    CompanyMapper companyMapper;
+
+    @Autowired
+    RedisService redisService;
     @Test
     void contextLoads() {
-        List<OrderStatus> orderStatusHistory = orderMapper.getOrderStatusHistory(2);
-        System.out.println(orderStatusHistory);
-        OrderStatus orderCurrentStatus = orderMapper.getOrderCurrentStatus(2);
-        System.out.println(orderCurrentStatus);
-//        List<ActivityRule> activityRulesByProduct = activityMapper.getActivityRulesByProduct(1);
-//        System.out.println(activityRulesByProduct);
+//        List<Company> companies= (List<Company>) redisService.get("companys");
+//        System.out.println(companies);
+
     }
 
 }

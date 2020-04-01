@@ -2,8 +2,10 @@ package com.yuyi.tea.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 @JsonIgnoreProperties(value = { "handler" })
-public class Price {
+public class Price implements Serializable {
 
     private int uid;
     private float ingot;//元宝

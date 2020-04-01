@@ -12,6 +12,13 @@ public class Company implements Serializable {
     private String weChatOfficialAccount;
     private String address;
 
+    public Company() {
+    }
+
+    public Company(int uid) {
+        this.uid = uid;
+    }
+
     public Company(int uid, String companyName, String postCode, String contact, String websiteName, String weChatOfficialAccount, String address) {
         this.uid = uid;
         this.companyName = companyName;
