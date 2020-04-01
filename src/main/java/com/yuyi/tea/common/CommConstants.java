@@ -9,4 +9,13 @@ public class CommConstants {
             public static final String msg="门店信息不存在";
         }
     }
+
+    public static class OrderStatus{
+        public static final String SHIPPED="shipped";
+        public static final String PATED="payed";
+        public static final String UNPAY="unpay";
+        public static  final String COMPLETE="complete";
+        public static final String REQUESTREFUND="requestRefund";
+        public static final String REFUND="refunded";
+    }
 }

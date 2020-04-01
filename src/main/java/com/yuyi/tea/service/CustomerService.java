@@ -6,6 +6,8 @@ import com.yuyi.tea.bean.EnterpriseCustomerApplication;
 import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.CustomerMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,8 +20,13 @@ import java.util.List;
 @CacheConfig(cacheNames = "customer")
 public class CustomerService {
 
+    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     @Cacheable(key = "'customerTypes'")
     public List<CustomerType> getCustomerTypes(){
@@ -81,6 +88,24 @@ public class CustomerService {
         return customer;
     }
 
+    //从redis中获取客户信息
+    public Customer getRedisCustomer(int uid){
+        Customer customer=null;
+        boolean hasKey = redisService.exists("customers:customer:"+uid);
+        if(hasKey){
+            //获取缓存
+            customer= (Customer) redisService.get("customers:customer:"+uid);
+            log.info("从缓存获取的数据"+ customer);
+        }else{
+            //从数据库中获取信息
+            log.info("从数据库中获取数据");
+            customer = customerMapper.getCustomerByUid(uid);
+            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
+            redisService.set("customers:customer:"+uid,customer);
+            log.info("数据插入缓存" + customer);
+        }
+        return customer;
+    }
 
 
 }

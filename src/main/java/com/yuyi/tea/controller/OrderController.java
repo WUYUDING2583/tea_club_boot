@@ -33,21 +33,7 @@ public class OrderController {
     //获取未完成的订单列表
     @GetMapping("/uncompleteOrders")
     public List<Order> getUncompleteOrders(){
-        //查询缓存中是否存在
-        boolean hasKey = redisService.exists("order:uncompleteOrders");
-        List<Order> uncompleteOrders=null;
-        if(hasKey){
-            //获取缓存
-            uncompleteOrders= (List<Order>) redisService.get("order:uncompleteOrders");
-            log.info("从缓存获取的数据"+ uncompleteOrders);
-        }else{
-            //从数据库中获取信息
-            log.info("从数据库中获取数据");
-            uncompleteOrders = orderService.getUncompleteOrders();
-            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
-            redisService.set("order:uncompleteOrders",uncompleteOrders);
-            log.info("数据插入缓存" + uncompleteOrders);
-        }
+        List<Order> uncompleteOrders = orderService.getUncompleteOrders();
         return uncompleteOrders;
     }
 
@@ -72,6 +58,14 @@ public class OrderController {
     public Order updateOrderShipped(@RequestBody Order order){
         Order updatedOrder = orderService.updateOrderShipped(order);
         return updatedOrder;
+    }
+
+    //卖家主动退款
+    @PutMapping("/orderrefunded")
+    @Transactional(rollbackFor = Exception.class)
+    public Order updateOrderRefunded(@RequestBody Order order){
+        Order updateOrderRefunded = orderService.updateOrderRefunded(order);
+        return updateOrderRefunded;
     }
 
 }

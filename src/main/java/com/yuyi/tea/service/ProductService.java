@@ -1,12 +1,11 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.Photo;
-import com.yuyi.tea.bean.Price;
-import com.yuyi.tea.bean.Product;
-import com.yuyi.tea.bean.ProductType;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.PriceMapper;
 import com.yuyi.tea.mapper.ProductMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,6 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
+    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+
     @Autowired
     private ProductMapper productMapper;
 
@@ -28,6 +29,12 @@ public class ProductService {
 
     @Autowired
     private PhotoMapper photoMapper;
+
+    @Autowired
+    private RedisService redisService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @Cacheable(key = "'productTypes'")
     public List<ProductType> getProductTypes(){
@@ -98,6 +105,35 @@ public class ProductService {
                 .filter((Photo photo)->photosUid.contains(photo.getUid()))
                 .collect(Collectors.toList());
         product.setPhotos(currentPhotos);
+        return product;
+    }
+
+    //从缓存中获取产品信息
+    public Product getRedisProduct(int uid){
+        boolean hasKey = redisService.exists("products:product:"+uid);
+        Product product=null;
+        if(hasKey){
+            //获取缓存
+            product= (Product) redisService.get("products:product:"+uid);
+            log.info("从缓存获取的数据"+ product);
+        }else{
+            //从数据库中获取信息
+            log.info("从数据库中获取数据");
+            product = productMapper.getProduct(uid);
+            activityService.clearActivityRules(product.getActivityRules());
+//            for(ActivityRule activityRule:product.getActivityRules()){
+//                ActivityService.clearActivityRule(activityRule);
+//            }
+            activityService.clearActivities(product.getActivities());
+//            for(Activity activity:product.getActivities()){
+//                activity.setPhotos(null);
+//                activity.setMutexActivities(null);
+//                activity.setActivityRules(null);
+//            }
+            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
+            redisService.set("products:product:"+uid,product);
+            log.info("数据插入缓存" + product);
+        }
         return product;
     }
 }

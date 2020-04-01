@@ -3,6 +3,8 @@ package com.yuyi.tea.service;
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.ActivityMapper;
 import com.yuyi.tea.mapper.PhotoMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,11 +18,16 @@ import java.util.stream.Collectors;
 @Service
 public class ActivityService {
 
+    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+
     @Autowired
     private ActivityMapper activityMapper;
 
     @Autowired
     private PhotoMapper photoMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     //获取所有活动的名称和描述
 //    @Cacheable(key = "'acitvitiesNameDesc'")
@@ -129,5 +136,57 @@ public class ActivityService {
         return mutexActivities;
     }
 
+    //获取redis中存储的activityRule
+    public ActivityRule getRedisActivityRule(int uid){
+        ActivityRule activityRule=null;
+        if(uid==0){
+            return null;
+        }
+         boolean hasKey = redisService.exists("activityRules:activityRule:"+uid);
+        if(hasKey){
+            //获取缓存
+            activityRule= (ActivityRule) redisService.get("activityRules:activityRule:"+uid);
+            log.info("从缓存获取的数据"+ activityRule);
+        }else{
+            //从数据库中获取信息
+            log.info("从数据库中获取数据");
+            activityRule = activityMapper.getActivityRule(uid);
+            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
+            redisService.set("activityRules:activityRule:"+uid,activityRule);
+            log.info("数据插入缓存" + activityRule);
+        }
+        return activityRule;
+    }
 
+
+    //清除前端不需要的activityRule的内容
+    public static void clearActivityRule(ActivityRule activityRule){
+        if(activityRule!=null) {
+            activityRule.setActivityApplyForProduct(null);
+            activityRule.getActivity().setPhotos(null);
+            activityRule.getActivity().setActivityRules(null);
+            activityRule.getActivity().setMutexActivities(null);
+        }
+    }
+
+    //清除前端不需要的activityRules中的内容
+    public static void clearActivityRules(List<ActivityRule> activityRules){
+        for(ActivityRule activityRule:activityRules){
+            ActivityService.clearActivityRule(activityRule);
+        }
+    }
+
+    //清除前端不需要的activities中的内容
+    public static void clearActivities(List<Activity> activities) {
+        for(Activity activity:activities){
+            clearActivity(activity);
+        }
+    }
+
+    //清除前端不需要的activity中的内容
+    public static void clearActivity(Activity activity){
+        activity.setPhotos(null);
+        activity.setMutexActivities(null);
+        activity.setActivityRules(null);
+    }
 }

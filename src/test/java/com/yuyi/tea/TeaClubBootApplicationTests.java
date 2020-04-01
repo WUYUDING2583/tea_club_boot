@@ -1,7 +1,6 @@
 package com.yuyi.tea;
 
-import com.yuyi.tea.bean.Company;
-import com.yuyi.tea.bean.OrderStatus;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.*;
 import com.yuyi.tea.service.RedisService;
 import org.junit.jupiter.api.Test;
@@ -27,12 +26,15 @@ class TeaClubBootApplicationTests {
     CompanyMapper companyMapper;
 
     @Autowired
+    OrderMapper orderMapper;
+
+    @Autowired
     RedisService redisService;
+
     @Test
     void contextLoads() {
-//        List<Company> companies= (List<Company>) redisService.get("companys");
-//        System.out.println(companies);
-
+        Customer customerByUid = customerMapper.getCustomerByUid(1);
+        System.out.println(customerByUid);
     }
 
 }
