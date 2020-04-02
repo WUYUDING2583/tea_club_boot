@@ -23,7 +23,7 @@ public class ClerkController {
     }
 
     @GetMapping("/positions")
-    @Cacheable(cacheNames = "position")
+//    @Cacheable(cacheNames = "position")
     public List<Position> getPositions(){
         List<Position> positions = clerkService.getPositions();
         return positions;

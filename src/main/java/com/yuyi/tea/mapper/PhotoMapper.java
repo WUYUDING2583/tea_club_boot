@@ -1,5 +1,6 @@
 package com.yuyi.tea.mapper;
 
+import com.yuyi.tea.bean.Article;
 import com.yuyi.tea.bean.Photo;
 import org.apache.ibatis.annotations.*;
 
@@ -12,6 +13,9 @@ public interface PhotoMapper {
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void insertPhoto(Photo photo);
 
+    //获取文章照片
+    @Select("select * from photo where articleId=#{articleId} limit 1")
+    Photo getPhotoByArticleId(int articleId);
 
     @Select("select * from photo where shopId=#{shopId}")
     List<Photo> getPhotosByShopId(int shopId);
@@ -53,4 +57,8 @@ public interface PhotoMapper {
 
     @Update("update photo set productId=#{productId} where uid=#{uid}")
     void saveProductPhoto(Photo photo);
+
+    //保存文章图片
+    @Update("update photo set articleId=#{articleId} where uid=#{uid}")
+    void saveArticlePhoto(Photo photo);
 }
