@@ -223,6 +223,32 @@ public class OrderService {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
         OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REFUND,time);
+        Order redisOrder = updateRedisOrderRefundStatus(order, status);
+//        orderMapper.saveOrderStatus(status);
+//        //更新卖家留言
+//        orderMapper.saveSellerPs(order);
+//        //从缓存中获取该订单信息
+//        Order redisOrder = getRedisOrder(order.getUid());
+//        log.info("从缓存中获取订单信息"+redisOrder);
+//        redisOrder.setStatus(status);
+//        redisOrder.getOrderStatusHistory().add(status);
+//        redisOrder.setSellerPs(order.getSellerPs());
+//        //更新redis数据
+//        redisService.set("orders:order:"+order.getUid(),redisOrder);
+//        log.info("更新缓存中的订单信息"+redisOrder);
+        return redisOrder;
+    }
+
+    //卖家拒绝买家申请退款
+    public Order updateOrderRejectRefunded(Order order) {
+        //在orderStatus表插入最新状态
+        long time=TimeUtil.getCurrentTimestamp();
+        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REJECT_REFUND,time);
+        Order redisOrder = updateRedisOrderRefundStatus(order, status);
+        return redisOrder;
+    }
+
+    private Order updateRedisOrderRefundStatus(Order order,OrderStatus status){
         orderMapper.saveOrderStatus(status);
         //更新卖家留言
         orderMapper.saveSellerPs(order);

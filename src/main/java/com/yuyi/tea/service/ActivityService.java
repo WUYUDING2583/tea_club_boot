@@ -36,7 +36,7 @@ public class ActivityService {
         return activitiesNameDesc;
     }
 
-    @Cacheable(key = "'activityRuleTypes'")
+//    @Cacheable(key = "'activityRuleTypes'")
     public List<ActivityRuleType> getActivityRuleTypes() {
         List<ActivityRuleType> activityRuleTypes = activityMapper.getActivityRuleTypes();
         return activityRuleTypes;

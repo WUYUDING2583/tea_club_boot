@@ -18,6 +18,14 @@ public class RedisService {
     private RedisTemplate redisTemplate;
 
     /**
+     * 清空缓存
+     */
+    public void clearRedis(){
+        Set<String> keys = redisTemplate.keys("*");
+        redisTemplate.delete(keys);
+    }
+
+    /**
      * 写入缓存
      *
      * @param key

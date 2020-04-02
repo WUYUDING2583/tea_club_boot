@@ -19,8 +19,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class CompanyController {
 
-    private final Logger log = LoggerFactory.getLogger(CompanyController.class);
-
     @Autowired
     CompanyService companyService;
 
@@ -29,21 +27,7 @@ public class CompanyController {
 
     @GetMapping("/company")
     public Company getCompany(){
-        //查询缓存中是否存在
-        boolean hasKey = redisService.exists("company:company");
-        Company companyInfo=null;
-        if(hasKey){
-            //获取缓存
-            companyInfo= (Company) redisService.get("company:company");
-            log.info("从缓存获取的数据"+ companyInfo);
-        }else{
-            //从数据库中获取信息
-            log.info("从数据库中获取数据");
-            companyInfo = companyService.getCompanyInfo();
-            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
-            redisService.set("company:company",companyInfo);
-            log.info("数据插入缓存" + companyInfo);
-        }
+       Company companyInfo = companyService.getCompanyInfo();
         return companyInfo;
     }
 

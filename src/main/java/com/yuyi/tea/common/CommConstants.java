@@ -15,7 +15,8 @@ public class CommConstants {
         public static final String PATED="payed";
         public static final String UNPAY="unpay";
         public static  final String COMPLETE="complete";
-        public static final String REQUESTREFUND="requestRefund";
+        public static final String REQUEST_REFUND="requestRefund";
         public static final String REFUND="refunded";
+        public static final String REJECT_REFUND="rejectRefund";
     }
 }

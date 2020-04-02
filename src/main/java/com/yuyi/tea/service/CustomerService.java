@@ -28,7 +28,7 @@ public class CustomerService {
     @Autowired
     private RedisService redisService;
 
-    @Cacheable(key = "'customerTypes'")
+//    @Cacheable(key = "'customerTypes'")
     public List<CustomerType> getCustomerTypes(){
         List<CustomerType> customerTypes = customerMapper.getCustomerTypes();
         return customerTypes;

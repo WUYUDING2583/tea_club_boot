@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CacheConfig(cacheNames = "product")
+//@CacheConfig(cacheNames = "product")
 @Service
 public class ProductService {
 
@@ -36,14 +36,14 @@ public class ProductService {
     @Autowired
     private ActivityService activityService;
 
-    @Cacheable(key = "'productTypes'")
+//    @Cacheable(key = "'productTypes'")
     public List<ProductType> getProductTypes(){
         List<ProductType> productTypes = productMapper.getProductTypes();
         return productTypes;
     }
 
     //获取所有产品的名称
-    @Cacheable(key = "'productsName'")
+//    @Cacheable(key = "'productsName'")
     public List<Product> getProductsNameAndType() {
         List<Product> productsNameByType = productMapper.getProductsNameAndType();
         return productsNameByType;

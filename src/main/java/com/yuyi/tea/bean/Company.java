@@ -11,6 +11,7 @@ public class Company implements Serializable {
     private String websiteName;
     private String weChatOfficialAccount;
     private String address;
+    private float rechargeRate;
 
     public Company() {
     }
@@ -19,7 +20,7 @@ public class Company implements Serializable {
         this.uid = uid;
     }
 
-    public Company(int uid, String companyName, String postCode, String contact, String websiteName, String weChatOfficialAccount, String address) {
+    public Company(int uid, String companyName, String postCode, String contact, String websiteName, String weChatOfficialAccount, String address, float rechargeRate) {
         this.uid = uid;
         this.companyName = companyName;
         this.postCode = postCode;
@@ -27,6 +28,7 @@ public class Company implements Serializable {
         this.websiteName = websiteName;
         this.weChatOfficialAccount = weChatOfficialAccount;
         this.address = address;
+        this.rechargeRate = rechargeRate;
     }
 
     @Override
@@ -39,7 +41,16 @@ public class Company implements Serializable {
                 ", websiteName='" + websiteName + '\'' +
                 ", weChatOfficialAccount='" + weChatOfficialAccount + '\'' +
                 ", address='" + address + '\'' +
+                ", rechargeRate=" + rechargeRate +
                 '}';
+    }
+
+    public float getRechargeRate() {
+        return rechargeRate;
+    }
+
+    public void setRechargeRate(float rechargeRate) {
+        this.rechargeRate = rechargeRate;
     }
 
     public int getUid() {

@@ -60,12 +60,21 @@ public class OrderController {
         return updatedOrder;
     }
 
-    //卖家主动退款
+    //卖家退款
     @PutMapping("/orderrefunded")
     @Transactional(rollbackFor = Exception.class)
     public Order updateOrderRefunded(@RequestBody Order order){
         Order updateOrderRefunded = orderService.updateOrderRefunded(order);
         return updateOrderRefunded;
     }
+
+    //卖家拒绝买家申请退款
+    @PutMapping("/orderrejectRefund")
+    @Transactional(rollbackFor = Exception.class)
+    public Order updateOrderRejectRefunded(@RequestBody Order order){
+        Order updatedOrder = orderService.updateOrderRejectRefunded(order);
+        return updatedOrder;
+    }
+
 
 }

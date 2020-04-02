@@ -7,6 +7,7 @@ CREATE TABLE `company` (
                             `websiteName`varchar(100),
                             `weChatOfficialAccount` varchar(50),
                             `address` varchar(255),
+                            `rechargeRate` float,
                             PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

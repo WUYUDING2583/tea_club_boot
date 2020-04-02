@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CacheConfig(cacheNames = "shop")//抽取缓存的公共配置
+//@CacheConfig(cacheNames = "shop")//抽取缓存的公共配置
 @Service
 public class ShopService {
 
