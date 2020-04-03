@@ -28,9 +28,9 @@ public class LoginService {
     private static final String REDIS_AUTHORITY_NAME="authorities";
 
     /**
-     * token过期时间，1小时
+     * token过期时间，20 分钟
      */
-    public static final int TOKEN_EXPIRE = 3600;
+    public static final int TOKEN_EXPIRE = 60*20;
 
     @Autowired
     private LoginMapper loginMapper;
@@ -56,7 +56,7 @@ public class LoginService {
             //生成cookie
             log.info("登陆成功");
             String token = UUID.randomUUID().toString().replace("-", "");
-            clerk.setAvatar(null);
+//            clerk.setAvatar(null);
             clerk.setPassword(null);
             addCookie(response,token,clerk);
             List<AuthorityDetail> authorities = getAuthorities();
@@ -106,7 +106,7 @@ public class LoginService {
                 log.info("登陆成功");
                 User clerk = clerkMapper.getClerkByContact(contact);
                 String token = TokenUtil.getToken();
-                clerk.setAvatar(null);
+//                clerk.setAvatar(null);
                 clerk.setPassword(null);
                 addCookie(response,token,clerk);
                 List<AuthorityDetail> authorities = getAuthorities();

@@ -14,6 +14,7 @@ public class AuthorityDetail implements Serializable {
     private String title;
     private String description;
     private Authority belong;
+    private boolean auth=true;
 
     public AuthorityDetail() {
     }
@@ -22,13 +23,22 @@ public class AuthorityDetail implements Serializable {
         this.uid = uid;
     }
 
-    public AuthorityDetail(int uid, String name, String component, String title, String description, Authority belong) {
+    public AuthorityDetail(int uid, String name, String component, String title, String description, Authority belong, boolean auth) {
         this.uid = uid;
         this.name = name;
         this.component = component;
         this.title = title;
         this.description = description;
         this.belong = belong;
+        this.auth = auth;
+    }
+
+    public boolean isAuth() {
+        return auth;
+    }
+
+    public void setAuth(boolean auth) {
+        this.auth = auth;
     }
 
     public int getUid() {
@@ -88,6 +98,7 @@ public class AuthorityDetail implements Serializable {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", belong=" + belong +
+                ", auth=" + auth +
                 '}';
     }
 }

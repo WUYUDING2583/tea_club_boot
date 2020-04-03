@@ -3,12 +3,16 @@ package com.yuyi.tea.controller;
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.User;
 import com.yuyi.tea.service.LoginService;
+import com.yuyi.tea.service.RedisService;
 import com.yuyi.tea.service.SMSService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -18,6 +22,9 @@ public class LoginController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private RedisService redisService;
 
 
     //职员通过身份证密码登陆
@@ -42,5 +49,20 @@ public class LoginController {
         log.info("职员短信验证码登陆phone:"+contact+" otp:"+otp);
         User clerk= loginService.otpLogin(response,contact,otp);
         return clerk;
+    }
+
+    //用户刷新页面后验证是否登陆
+    @GetMapping("/verifyLogin")
+    public String verifyLogin(HttpServletResponse response, HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null && cookies.length >0) {
+            for (Cookie cookie : cookies) {
+                log.info("name:"+cookie.getName());
+                log.info("value:"+cookie.getValue());
+                User user= (User) redisService.get(LoginService.REDIS_COOKIE_NAME_TOKEN+":"+cookie.getValue());
+                log.info("reids value:"+user);
+            }
+        }
+        return "success";
     }
 }
