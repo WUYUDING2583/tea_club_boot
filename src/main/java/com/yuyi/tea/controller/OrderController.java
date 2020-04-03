@@ -1,7 +1,7 @@
 package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Order;
-import com.yuyi.tea.component.TimeRange;
+import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.service.OrderService;
 import com.yuyi.tea.service.RedisService;
 import org.slf4j.Logger;

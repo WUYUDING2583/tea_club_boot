@@ -4,16 +4,13 @@ import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.common.utils.AmountUtil;
 import com.yuyi.tea.common.utils.TimeUtil;
-import com.yuyi.tea.component.TimeRange;
+import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -99,7 +96,7 @@ public class OrderService {
             order.getCustomer().setAvatar(null);
             order.getCustomer().setPassword(null);
             order.getClerk().setAvatar(null);
-            order.getClerk().setPasswrod(null);
+            order.getClerk().setPassword(null);
             for(OrderProduct orderProduct:order.getProducts()){
                 Product product = orderProduct.getProduct();
                 product.setPhotos(null);
@@ -127,7 +124,7 @@ public class OrderService {
         order.getCustomer().setAvatar(null);
         order.getCustomer().setPassword(null);
         order.getClerk().setAvatar(null);
-        order.getClerk().setPasswrod(null);
+        order.getClerk().setPassword(null);
     }
 
 
@@ -192,7 +189,7 @@ public class OrderService {
         order.setCustomer(redisCustomer);
         //查询服务员信息
         Clerk redisClerk = clerkService.getRedisClerk(order.getClerk().getUid());
-        redisClerk.setPasswrod(null);
+        redisClerk.setPassword(null);
         redisClerk.setAvatar(null);
         order.setClerk(redisClerk);
         //查询产品信息

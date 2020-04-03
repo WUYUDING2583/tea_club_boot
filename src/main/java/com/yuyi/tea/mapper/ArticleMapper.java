@@ -2,6 +2,7 @@ package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.Article;
 import com.yuyi.tea.bean.Tag;
+import com.yuyi.tea.common.TimeRange;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -28,7 +29,15 @@ public interface ArticleMapper {
     void saveArticleTag(int tagId, int articleId);
 
     //获取文章列表
-    @Select("select * from article")
+    @Select("<script>" +
+            "select * from article where " +
+            "<if test='status!=\"all\"'>" +
+                "<if test='status==\"valid\"'>enforceTerminal=false and </if>" +
+                "<if test='status==\"invalid\"'>enforceTerminal=true and </if>" +
+            "</if>" +
+            "<if test='timeRange.startDate!=-1'> <![CDATA[time>= #{timeRange.startDate}]]> and </if>" +
+            "<![CDATA[time<=#{timeRange.endDate}]]> order by time desc" +
+            "</script>")
     @Results(id="article",
             value = {
                     @Result(id = true,column = "uid",property = "uid"),
@@ -41,7 +50,7 @@ public interface ArticleMapper {
 
             }
     )
-    List<Article> getArticles();
+    List<Article> getArticles(String status, TimeRange timeRange);
 
     //根据uid获取该文章的标签
     @Select("select * from tag where uid in (" +

@@ -3,6 +3,7 @@ package com.yuyi.tea.service;
 import com.yuyi.tea.bean.Article;
 import com.yuyi.tea.bean.Tag;
 import com.yuyi.tea.common.utils.TimeUtil;
+import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.mapper.ArticleMapper;
 import com.yuyi.tea.mapper.PhotoMapper;
 import org.slf4j.Logger;
@@ -67,8 +68,8 @@ public class ArticleService {
     }
 
     //获取文章列表
-    public List<Article> getArticles() {
-        List<Article> articles = articleMapper.getArticles();
+    public List<Article> getArticles(String status, TimeRange timeRange) {
+        List<Article> articles = articleMapper.getArticles(status,timeRange);
         for(Article article:articles){
             article.setPhoto(null);
         }

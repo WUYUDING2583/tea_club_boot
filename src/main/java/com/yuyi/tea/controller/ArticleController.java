@@ -2,6 +2,7 @@ package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Article;
 import com.yuyi.tea.bean.Tag;
+import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +40,10 @@ public class ArticleController {
     }
 
     //获取文章列表
-    @GetMapping("/articles")
-    public List<Article> getArticles(){
-        List<Article> articles = articleService.getArticles();
+    @GetMapping("/articles/{status}/{startDate}/{endDate}")
+    public List<Article> getArticles(@PathVariable String status,@PathVariable long startDate,@PathVariable long endDate){
+        TimeRange timeRange=new TimeRange(startDate,endDate);
+        List<Article> articles = articleService.getArticles(status,timeRange);
         return articles;
     }
 

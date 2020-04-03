@@ -1,7 +1,7 @@
 package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.*;
-import com.yuyi.tea.component.TimeRange;
+import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.typehandler.ActivityRuleTypeHandler;
 import com.yuyi.tea.typehandler.ClerkTypeHandler;
 import com.yuyi.tea.typehandler.CustomerTypeHandler;

@@ -1,7 +1,7 @@
 package com.yuyi.tea.common.utils;
 
 import com.yuyi.tea.bean.*;
-import com.yuyi.tea.component.Amount;
+import com.yuyi.tea.common.Amount;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.yuyi.tea.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.yuyi.tea.component.Amount;
+import com.yuyi.tea.common.Amount;
 
 import java.io.Serializable;
 import java.util.List;

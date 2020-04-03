@@ -2,6 +2,7 @@ package com.yuyi.tea;
 
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.*;
+import com.yuyi.tea.service.LoginService;
 import com.yuyi.tea.service.RedisService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,15 @@ class TeaClubBootApplicationTests {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    LoginService loginService;
+
+    @Autowired
+    LoginMapper loginMapper;
+
     @Test
     void contextLoads() {
-        Customer customerByUid = customerMapper.getCustomerByUid(1);
-        System.out.println(customerByUid);
+
     }
 
 }

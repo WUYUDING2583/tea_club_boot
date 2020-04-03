@@ -5,67 +5,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 
 @JsonIgnoreProperties(value = { "handler" })
-public class Clerk implements Serializable {
+public class Clerk  extends User{
 
-    private int uid;
-    private String name;
     private Position position;
-    private String contact;
-    private String identityId;
-    private int sex;
-    private Photo avatar;
-    private String address;
     private Shop shop;
-    private String passwrod;
 
     public Clerk() {
     }
 
     public Clerk(int uid) {
-        this.uid = uid;
+        super(uid);
     }
 
-    public Clerk(int uid, String name, Position position) {
-        this.uid = uid;
-        this.name = name;
+    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, Position position, Shop shop) {
+        super(uid, name, contact, identityId, gender, address, avatar, password);
         this.position = position;
-    }
-
-    public Clerk(int uid, String name, Position position, String contact, String identityId, int sex, Photo avatar, String address, Shop shop, String passwrod) {
-        this.uid = uid;
-        this.name = name;
-        this.position = position;
-        this.contact = contact;
-        this.identityId = identityId;
-        this.sex = sex;
-        this.avatar = avatar;
-        this.address = address;
         this.shop = shop;
-        this.passwrod = passwrod;
-    }
-
-    public String getPasswrod() {
-        return passwrod;
-    }
-
-    public void setPasswrod(String passwrod) {
-        this.passwrod = passwrod;
-    }
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Position getPosition() {
@@ -74,46 +29,6 @@ public class Clerk implements Serializable {
 
     public void setPosition(Position position) {
         this.position = position;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getIdentityId() {
-        return identityId;
-    }
-
-    public void setIdentityId(String identityId) {
-        this.identityId = identityId;
-    }
-
-    public int getSex() {
-        return sex;
-    }
-
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
-
-    public Photo getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(Photo avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public Shop getShop() {
@@ -127,16 +42,8 @@ public class Clerk implements Serializable {
     @Override
     public String toString() {
         return "Clerk{" +
-                "uid=" + uid +
-                ", name='" + name + '\'' +
-                ", position=" + position +
-                ", contact='" + contact + '\'' +
-                ", identityId='" + identityId + '\'' +
-                ", sex=" + sex +
-                ", avatar=" + avatar +
-                ", address='" + address + '\'' +
+                "position=" + position +
                 ", shop=" + shop +
-                ", passwrod='" + passwrod + '\'' +
                 '}';
     }
 }

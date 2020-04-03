@@ -51,7 +51,7 @@ public class RedisService {
      * @param value
      * @return
      */
-    public boolean set(final String key, Object value, Long expireTime, TimeUnit timeUnit) {
+    public boolean set(final String key, Object value, int expireTime, TimeUnit timeUnit) {
         boolean result = false;
         try {
             ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();

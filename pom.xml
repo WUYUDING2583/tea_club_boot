@@ -76,6 +76,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--腾讯云短信业务-->
+        <dependency>
+            <groupId>com.github.qcloudsms</groupId>
+            <artifactId>qcloudsms</artifactId>
+            <version>1.0.6</version>
+        </dependency>
     </dependencies>
 
     <build>

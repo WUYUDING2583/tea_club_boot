@@ -1,10 +1,8 @@
-package com.yuyi.tea.component;
+package com.yuyi.tea.common;
 
 public class Result<T> {
     // 接口调用成功或者失败
     private Integer code = 200;
-    // 失败的具体code
-    private String error ;
     // 需要传递的信息，例如错误信息
     private String msg;
     // 需要传递的数据
@@ -15,9 +13,8 @@ public class Result<T> {
 
 
 
-    public Result(Integer code, String error, String msg) {
+    public Result(Integer code,  String msg) {
         this.code = code;
-        this.error = error;
         this.msg = msg;
     }
 
@@ -33,13 +30,6 @@ public class Result<T> {
         this.code = code;
     }
 
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
 
     public String getMsg() {
         return msg;
@@ -61,7 +51,6 @@ public class Result<T> {
     public String toString() {
         return "Result{" +
                 "code=" + code +
-                ", error='" + error + '\'' +
                 ", msg='" + msg + '\'' +
                 ", data=" + data +
                 '}';

@@ -1,4 +1,4 @@
-package com.yuyi.tea.component;
+package com.yuyi.tea.common;
 
 import java.io.Serializable;
 

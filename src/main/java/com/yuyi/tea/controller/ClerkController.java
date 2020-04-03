@@ -1,5 +1,6 @@
 package com.yuyi.tea.controller;
 
+import com.yuyi.tea.bean.AuthorityDetail;
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.Position;
 import com.yuyi.tea.service.ClerkService;
@@ -16,6 +17,7 @@ public class ClerkController {
     @Autowired
     ClerkService clerkService;
 
+    //获取职员列表
     @GetMapping("/clerks")
     public List<Clerk> getAllClerks(){
         List<Clerk> clerks = clerkService.getAllClerks();

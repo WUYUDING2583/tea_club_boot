@@ -1,9 +1,6 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.Clerk;
-import com.yuyi.tea.bean.Photo;
-import com.yuyi.tea.bean.Position;
-import com.yuyi.tea.bean.Shop;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.ClerkMapper;
 import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.ShopMapper;
@@ -92,4 +89,5 @@ public class ClerkService {
         }
         return clerk;
     }
+
 }
