@@ -36,37 +36,35 @@ public class SMSService {
     private final int TEMPLATE_ID = 397475; // NOTE: 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
     // 签名
     private final String SMS_SIGN = "活趣公众号"; // NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`。这里的签名"腾讯云"只是示例，真实的签名需要在短信控制台申请
-    //验证码过期时间1分钟
+    //验证码过期时间5分钟
     private final int SMS_EXPIRE=5;
     //缓存名称
-    private final String OTP_TOKEN_NAME="otp";
+    public static final String OTP_TOKEN_NAME="otp";
 
     /**
      * 发送短信验证码
-     * @param contact
+     * @param phone
      * @return
      */
-    public String sendOTP(String contact,String token){
+    public void sendOTP(String phone){
 //        try {
             String otp=null;
             //查看五分钟内是否已经发送过验证码
-            boolean hasKey=redisService.exists(OTP_TOKEN_NAME+":"+token);
+            boolean hasKey=redisService.exists(OTP_TOKEN_NAME+":"+phone);
             if(hasKey){
-                otp= (String) redisService.get(OTP_TOKEN_NAME+":"+token);
+                otp= (String) redisService.get(OTP_TOKEN_NAME+":"+phone);
                 log.info("五分钟内发送过验证码，从缓存中获取："+otp);
             }else{
                 otp= NumberUtil.RandomNumber(6);
                 log.info("未发送验证码，创建验证码:"+otp);
                 //生成token并存入缓存
-                token = UUID.randomUUID().toString().replace("-", "");
-                log.info("短信验证码token存入缓存"+token);
-                redisService.set(OTP_TOKEN_NAME+":"+token,otp,SMS_EXPIRE, TimeUnit.MINUTES);
+                log.info("短信验证码存入缓存");
+                redisService.set(OTP_TOKEN_NAME+":"+phone,otp,SMS_EXPIRE, TimeUnit.MINUTES);
             }
 //            String[] params = {otp,String.valueOf(SMS_EXPIRE)};
 //            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
 //            SmsSingleSenderResult result = ssender.sendWithParam("86", contact,
 //                    TEMPLATE_ID, params, SMS_SIGN, "", "");
-            return token;
 //        } catch (HTTPException e) {
 //            // HTTP 响应码错误
 //            e.printStackTrace();

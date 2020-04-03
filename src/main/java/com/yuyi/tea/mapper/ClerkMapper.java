@@ -19,6 +19,10 @@ public interface ClerkMapper {
     })
     List<Clerk> getClerksByShopId(int shopId);
 
+    //根据员工提供的身份证号获取员工信息
+    @Select("select * from clerk where identityId=#{identityId}")
+    @ResultMap("clerk")
+    Clerk getClerkByIdentityId(String identityId);
 
     //根据uid获取职位信息
     @Select("select * from position where uid=#{uid}")
@@ -26,15 +30,7 @@ public interface ClerkMapper {
 
     //获取职员列表
     @Select("select * from clerk")
-    @Results({
-            @Result(id = true,column = "uid",property = "uid"),
-            @Result(column="positionId",property="position",
-                    one=@One(select="com.yuyi.tea.mapper.ClerkMapper.getPosition",
-                            fetchType= FetchType.LAZY)),
-            @Result(column="shopId",property="shop",
-                    one=@One(select="com.yuyi.tea.mapper.ShopMapper.getShopOfClerk",
-                            fetchType= FetchType.LAZY))
-    })
+   @ResultMap("clerk")
     List<Clerk> getAllClerks();
 
     //跟新职员所属门店
@@ -57,7 +53,8 @@ public interface ClerkMapper {
 
     //获取职员信息
     @Select("select * from clerk where uid=#{uid}")
-    @Results({
+    @Results(id = "clerk",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="positionId",property="position",
                     one=@One(select="com.yuyi.tea.mapper.ClerkMapper.getPosition",
@@ -75,4 +72,9 @@ public interface ClerkMapper {
     @Update("update clerk set name=#{name},positionId=#{position.uid},contact=#{contact}," +
             "identityId=#{identityId},sex=#{sex},address=#{address},shopId=#{shop.uid} where uid=#{uid}")
     void updateClerk(Clerk clerk);
+
+    //通过手机号获取职员信息
+    @Select("select * from clerk where contact=#{contact}")
+    @ResultMap("clerk")
+    Clerk getClerkByContact(String contact);
 }

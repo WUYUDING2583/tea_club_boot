@@ -40,7 +40,8 @@ class TeaClubBootApplicationTests {
 
     @Test
     void contextLoads() {
-
+        List<AuthorityDetail> authorities = loginMapper.getAuthorities();
+        System.out.println(authorities);
     }
 
 }

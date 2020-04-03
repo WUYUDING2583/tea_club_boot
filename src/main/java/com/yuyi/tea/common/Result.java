@@ -4,7 +4,7 @@ public class Result<T> {
     // 接口调用成功或者失败
     private Integer code = 200;
     // 需要传递的信息，例如错误信息
-    private String msg;
+    private String error;
     // 需要传递的数据
     private T data;
 
@@ -13,9 +13,9 @@ public class Result<T> {
 
 
 
-    public Result(Integer code,  String msg) {
+    public Result(Integer code,  String error) {
         this.code = code;
-        this.msg = msg;
+        this.error = error;
     }
 
     public Result(T data) {
@@ -31,12 +31,12 @@ public class Result<T> {
     }
 
 
-    public String getMsg() {
-        return msg;
+    public String getError() {
+        return error;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setError(String msg) {
+        this.error = msg;
     }
 
     public T getData() {
@@ -51,7 +51,7 @@ public class Result<T> {
     public String toString() {
         return "Result{" +
                 "code=" + code +
-                ", msg='" + msg + '\'' +
+                ", error='" + error + '\'' +
                 ", data=" + data +
                 '}';
     }
