@@ -54,31 +54,30 @@ public class TokenFilter implements Filter {
                         String token=cookie.getValue();
                         if (token == null) {
                             log.info("token不存在");
-                            throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
+                            break;
                         }
 
                         Map<String, Claim> userData = JwtUtil.verifyToken(token);
                         if (userData == null) {
                             log.info("token无效");
-                            throw new GlobalException(CodeMsg.TOKEN_INVALID);
+                            break;
+                        }else {
+                            Integer uid = userData.get("uid").asInt();
+                            String name = userData.get("name").asString();
+                            String type = userData.get("type").asString();
+                            //拦截器 拿到用户信息，放到request中
+                            req.setAttribute("uid", uid);
+                            req.setAttribute("name", name);
+                            req.setAttribute("type", type);
+                            log.info("更新token时间");
+                            token = JwtUtil.createToken(uid, type, name);
+                            cookie = new Cookie(COOKIE_NAME_TOKEN, token);
+                            cookie.setMaxAge((int) JwtUtil.EXPIRATION);
+                            cookie.setPath("/");
+                            response.addCookie(cookie);
                         }
-                        Integer uid = userData.get("uid").asInt();
-                        String name = userData.get("name").asString();
-                        String type = userData.get("type").asString();
-                        //拦截器 拿到用户信息，放到request中
-                        req.setAttribute("uid", uid);
-                        req.setAttribute("name", name);
-                        req.setAttribute("type", type);
-                        log.info("更新token时间");
-                        token=JwtUtil.createToken(uid,type,name);
-                        cookie = new Cookie(COOKIE_NAME_TOKEN, token);
-                        cookie.setMaxAge((int)JwtUtil.EXPIRATION);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
                     }
                 }
-            }else{//需要校验的路由但无cookie
-                throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
             }
         }
         chain.doFilter(req, res);

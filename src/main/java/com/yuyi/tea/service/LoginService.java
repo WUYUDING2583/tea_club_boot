@@ -176,23 +176,23 @@ public class LoginService {
      * @return
      */
     public User verifyToken(HttpServletResponse response, HttpServletRequest request) {
-        int uid = (int) request.getAttribute("uid");
-        String type=(String) request.getAttribute("type");
-        log.info("验证token信息，uid："+uid+"type："+type);
-        if(type==null){
-            log.info("token无效");
-            throw new GlobalException(CodeMsg.TOKEN_INVALID);
-        }
-        User user=null;
-        if(type.equals("customer")){
+        User user = null;
+        try {
+            int uid = (int) request.getAttribute("uid");
+            String type = (String) request.getAttribute("type");
+            log.info("验证token信息，uid：" + uid + "type：" + type);
+            if (type.equals("customer")) {
 
-        }else{
-            user=clerkService.getClerk(uid);
-            clearClerk((Clerk)user);
-            List<AuthorityDetail> authorities = getAuthorities();
-            ((Clerk) user).setAuthorities(authorities);
+            } else {
+                user = clerkService.getClerk(uid);
+                clearClerk((Clerk) user);
+                List<AuthorityDetail> authorities = getAuthorities();
+                ((Clerk) user).setAuthorities(authorities);
+            }
+            log.info("获取token用户信息" + user);
+        }catch (NullPointerException e){
+            throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
         }
-        log.info("获取token用户信息"+user);
         return user;
     }
 }

@@ -15,12 +15,12 @@ public class CodeMsg {
     public static final CodeMsg ACCESS_LIMIT_REACHED = new CodeMsg(500103, "访问太频繁！");
     //登录模块 5002XX
     public static final CodeMsg USER_NOT_LOGIN = new CodeMsg(500200, "用户未登录");
-    public static final CodeMsg TOKEN_INVALID = new CodeMsg(500201, "token无效");
+    public static final CodeMsg TOKEN_INVALID = new CodeMsg(500201, "无效token，请重新登陆");
     public static final CodeMsg USERNAME_NOT_EXIST = new CodeMsg(500202, "用户名不存在");
     public static final CodeMsg PASSWORD_ERROR = new CodeMsg(500203, "密码错误");
     public static final CodeMsg IDENTITYID_NOT_EXIST=new CodeMsg(500204,"该身份信息不存在");
     public static final CodeMsg CONTACT_NOT_EXIST=new CodeMsg(500204,"该手机信息不存在");
-    public static final CodeMsg TOKEN_NOT_EXIST = new CodeMsg(500205,"token不存在");
+    public static final CodeMsg TOKEN_NOT_EXIST = new CodeMsg(500205,"token不存在，请重新登陆");
     //短信验证码模块 5003xx
     public static final CodeMsg SMS_SEND_ERROR=new CodeMsg(500300,"验证码发送失败");
     public static final CodeMsg OTP_INVALID = new CodeMsg(500301,"验证码失效请重新获取");
