@@ -30,7 +30,7 @@ public interface ClerkMapper {
 
     //获取职员列表
     @Select("select * from clerk")
-   @ResultMap("clerk")
+    @ResultMap("clerk")
     List<Clerk> getAllClerks();
 
     //跟新职员所属门店
@@ -60,7 +60,7 @@ public interface ClerkMapper {
                     one=@One(select="com.yuyi.tea.mapper.ClerkMapper.getPosition",
                             fetchType= FetchType.LAZY)),
             @Result(column="shopId",property="shop",
-                    one=@One(select="com.yuyi.tea.mapper.ShopMapper.getShopOfClerk",
+                    one=@One(select="com.yuyi.tea.mapper.ShopMapper.getShopByUid",
                             fetchType= FetchType.LAZY)),
             @Result(column="uid",property="avatar",
                     one=@One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByClerkId",

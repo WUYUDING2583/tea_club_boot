@@ -1,15 +1,19 @@
 package com.yuyi.tea;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.utils.JwtUtil;
 import com.yuyi.tea.mapper.*;
 import com.yuyi.tea.service.LoginService;
 import com.yuyi.tea.service.RedisService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.servlet.support.JstlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class TeaClubBootApplicationTests {
@@ -40,8 +44,10 @@ class TeaClubBootApplicationTests {
 
     @Test
     void contextLoads() {
-        List<AuthorityDetail> authorities = loginMapper.getAuthorities();
-        System.out.println(authorities);
+        String token = JwtUtil.createToken(new User());
+        System.out.println("token:"+token);
+        Map<String, Claim> stringClaimMap = JwtUtil.verifyToken(token);
+        System.out.println("value:"+stringClaimMap.get("id").asInt());
     }
 
 }

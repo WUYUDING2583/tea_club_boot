@@ -25,13 +25,13 @@ public class CompanyController {
     @Autowired
     RedisService redisService;
 
-    @GetMapping("/company")
+    @GetMapping("/admin/company")
     public Company getCompany(){
        Company companyInfo = companyService.getCompanyInfo();
         return companyInfo;
     }
 
-    @PutMapping("/company")
+    @PutMapping("/admin/company")
     @Transactional(rollbackFor = Exception.class)
     public Company updateCompany(@RequestBody Company company){
         System.out.println("update company"+company);

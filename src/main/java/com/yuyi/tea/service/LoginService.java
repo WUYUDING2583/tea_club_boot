@@ -4,6 +4,7 @@ import com.yuyi.tea.bean.AuthorityDetail;
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.User;
 import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.common.utils.JwtUtil;
 import com.yuyi.tea.common.utils.TokenUtil;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.ClerkMapper;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +26,7 @@ public class LoginService {
 
     private final Logger log = LoggerFactory.getLogger(OrderService.class);
 
-    public static final String REDIS_COOKIE_NAME_TOKEN = "token";
+    public static final String COOKIE_NAME_TOKEN = "token";
     private static final String REDIS_AUTHORITY_NAME="authorities";
 
     /**
@@ -44,38 +46,41 @@ public class LoginService {
     @Autowired
     private SMSService smsService;
 
+    @Autowired
+    private ClerkService clerkService;
 
-    //判断员工身份证密码登陆是否正确
+
+    /**
+     * 判断员工身份证密码登陆是否正确
+     * @param response
+     * @param identityId
+     * @param password
+     * @return
+     */
     public User loginByIdPsw(HttpServletResponse response, String identityId, String password) {
         User clerk = clerkMapper.getClerkByIdentityId(identityId);
         if(clerk==null){
             throw new GlobalException(CodeMsg.IDENTITYID_NOT_EXIST);
         }else if(!clerk.getPassword().equals(password)){
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
-        }else{//密码正确，将员工id存入缓存
+        }else{//密码正确，生成token
             //生成cookie
             log.info("登陆成功");
-            String token = UUID.randomUUID().toString().replace("-", "");
-//            clerk.setAvatar(null);
-            clerk.setPassword(null);
-            addCookie(response,token,clerk);
+            String token = JwtUtil.createToken(clerk);
+            addCookie(response,token);
+            clearClerk((Clerk) clerk);
             List<AuthorityDetail> authorities = getAuthorities();
             ((Clerk) clerk).setAuthorities(authorities);
             return clerk;
         }
     }
 
-    //获取员工信息并生成对应toke存入缓存
-//    private User getUserToken()
 
-    //将职员会话token存入缓存
-    private void addCookie(HttpServletResponse response, String token, User user) {
-        log.info("将token存入缓存");
-        //将token存入到redis
-        redisService.set(REDIS_COOKIE_NAME_TOKEN + ":" + token, user,TOKEN_EXPIRE, TimeUnit.SECONDS );
-        //将token写入cookie
-        Cookie cookie = new Cookie(REDIS_COOKIE_NAME_TOKEN, token);
-        cookie.setMaxAge(TOKEN_EXPIRE);
+    //将token存入cookie
+    private void addCookie(HttpServletResponse response, String token) {
+        log.info("将token存入cookie");
+        Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
+        cookie.setMaxAge((int)JwtUtil.EXPIRATION);
         cookie.setPath("/");
         response.addCookie(cookie);
     }
@@ -108,7 +113,7 @@ public class LoginService {
                 String token = TokenUtil.getToken();
 //                clerk.setAvatar(null);
                 clerk.setPassword(null);
-                addCookie(response,token,clerk);
+                addCookie(response,token);
                 List<AuthorityDetail> authorities = getAuthorities();
                 ((Clerk) clerk).setAuthorities(authorities);
                 return clerk;
@@ -132,5 +137,44 @@ public class LoginService {
         }
         //发送短信验证码
         smsService.sendOTP(contact);
+    }
+
+    /**
+     * 将登陆返回的职员信息内不需要的去除
+     * @param clerk
+     */
+    private void clearClerk(Clerk clerk){
+        clerk.setPassword(null);
+        clerk.getShop().setPhotos(null);
+        clerk.getShop().setShopBoxes(null);
+        clerk.getShop().setClerks(null);
+        clerk.getShop().setOpenHours(null);
+    }
+
+    /**
+     * 用户刷新页面后验证是否登陆
+     * @param response
+     * @param request
+     * @return
+     */
+    public User verifyLogin(HttpServletResponse response, HttpServletRequest request) {
+        int uid = (int) request.getAttribute("uid");
+        String type=(String) request.getAttribute("type");
+        log.info("验证token信息，uid："+uid+"type："+type);
+        if(type==null){
+            log.info("token无效");
+            throw new GlobalException(CodeMsg.TOKEN_INVALID);
+        }
+        User user=null;
+        if(type.equals("customer")){
+
+        }else{
+            user=clerkService.getClerk(uid);
+            clearClerk((Clerk)user);
+            List<AuthorityDetail> authorities = getAuthorities();
+            ((Clerk) user).setAuthorities(authorities);
+        }
+        log.info("获取token用户信息"+user);
+        return user;
     }
 }

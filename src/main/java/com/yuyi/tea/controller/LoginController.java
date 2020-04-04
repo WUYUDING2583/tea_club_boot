@@ -2,23 +2,21 @@ package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.User;
+import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.exception.GlobalException;
+import com.yuyi.tea.service.ClerkService;
 import com.yuyi.tea.service.LoginService;
 import com.yuyi.tea.service.RedisService;
-import com.yuyi.tea.service.SMSService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Slf4j
 @RestController
 public class LoginController {
-
-    private final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private LoginService loginService;
@@ -26,9 +24,11 @@ public class LoginController {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private ClerkService clerkService;
 
     //职员通过身份证密码登陆
-    @PostMapping("/clerk/idLogin")
+    @PostMapping("/admin/idLogin")
     public User clerkIdLogin(HttpServletResponse response,@RequestBody Clerk loginClerk){
         log.info("职员身份证密码登陆id:"+loginClerk.getIdentityId()+" psw:"+loginClerk.getPassword());
         User clerk= loginService.loginByIdPsw(response, loginClerk.getIdentityId(), loginClerk.getPassword());
@@ -36,14 +36,14 @@ public class LoginController {
     }
 
     //发送短信验证码
-    @PostMapping("/clerk/sms")
+    @PostMapping("/sms")
     public String clerkSms(@RequestParam("contact") String contact){
         loginService.clerkSms(contact);
         return "success";
     }
 
     //短信验证码登陆
-    @PostMapping("/clerk/otpLogin")
+    @PostMapping("/admin/otpLogin")
     public User clerkOtpLogin(HttpServletResponse response,@RequestParam("contact") String contact,
                               @RequestParam("otp") String otp){
         log.info("职员短信验证码登陆phone:"+contact+" otp:"+otp);
@@ -51,18 +51,15 @@ public class LoginController {
         return clerk;
     }
 
-    //用户刷新页面后验证是否登陆
+    /**
+     * 用户刷新页面后验证是否登陆
+     * @param response
+     * @param request
+     * @return
+     */
     @GetMapping("/verifyLogin")
-    public String verifyLogin(HttpServletResponse response, HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length >0) {
-            for (Cookie cookie : cookies) {
-                log.info("name:"+cookie.getName());
-                log.info("value:"+cookie.getValue());
-                User user= (User) redisService.get(LoginService.REDIS_COOKIE_NAME_TOKEN+":"+cookie.getValue());
-                log.info("reids value:"+user);
-            }
-        }
-        return "success";
+    public User verifyLogin(HttpServletResponse response, HttpServletRequest request){
+        User user = loginService.verifyLogin(response, request);
+        return user;
     }
 }
