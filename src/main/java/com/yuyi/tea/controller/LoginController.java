@@ -27,7 +27,12 @@ public class LoginController {
     @Autowired
     private ClerkService clerkService;
 
-    //职员通过身份证密码登陆
+    /**
+     * 职员通过身份证密码登陆
+     * @param response
+     * @param loginClerk
+     * @return
+     */
     @PostMapping("/admin/idLogin")
     public User clerkIdLogin(HttpServletResponse response,@RequestBody Clerk loginClerk){
         log.info("职员身份证密码登陆id:"+loginClerk.getIdentityId()+" psw:"+loginClerk.getPassword());
@@ -35,8 +40,12 @@ public class LoginController {
         return clerk;
     }
 
-    //发送短信验证码
-    @PostMapping("/sms")
+    /**
+     * 发送短信验证码
+     * @param contact
+     * @return
+     */
+    @PostMapping("/clerkSms")
     public String clerkSms(@RequestParam("contact") String contact){
         loginService.clerkSms(contact);
         return "success";
@@ -58,8 +67,8 @@ public class LoginController {
      * @return
      */
     @GetMapping("/verifyLogin")
-    public User verifyLogin(HttpServletResponse response, HttpServletRequest request){
-        User user = loginService.verifyLogin(response, request);
+    public User verifyToken(HttpServletResponse response, HttpServletRequest request){
+        User user = loginService.verifyToken(response, request);
         return user;
     }
 }

@@ -77,6 +77,8 @@ public class TokenFilter implements Filter {
                         response.addCookie(cookie);
                     }
                 }
+            }else{//需要校验的路由但无cookie
+                throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
             }
         }
         chain.doFilter(req, res);

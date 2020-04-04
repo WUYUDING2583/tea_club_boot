@@ -30,8 +30,6 @@ public class SMSService {
     private final int APP_ID = 1400244217; // SDK AppID 以1400开头
     // 短信应用 SDK AppKey
     private final String APP_KEY = "ebbe021156ca27d220e3cef80879ee1f";
-    // 需要发送短信的手机号码
-//    String[] phoneNumbers = {"21212313123", "12345678902", "12345678903"};
     // 短信模板 ID，需要在短信应用中申请
     private final int TEMPLATE_ID = 397475; // NOTE: 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
     // 签名
