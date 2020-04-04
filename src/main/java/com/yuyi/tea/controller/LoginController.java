@@ -51,7 +51,13 @@ public class LoginController {
         return "success";
     }
 
-    //短信验证码登陆
+    /**
+     * 短信验证码登陆
+     * @param response
+     * @param contact
+     * @param otp
+     * @return
+     */
     @PostMapping("/admin/otpLogin")
     public User clerkOtpLogin(HttpServletResponse response,@RequestParam("contact") String contact,
                               @RequestParam("otp") String otp){

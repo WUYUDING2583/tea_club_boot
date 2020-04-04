@@ -114,21 +114,27 @@ public class LoginService {
         return authorities;
     }
 
-    //短信验证码登陆
+    /**
+     * 短信验证码登陆
+     * @param response
+     * @param contact
+     * @param otp
+     * @return
+     */
     public User otpLogin(HttpServletResponse response,String contact, String otp) {
         //判断验证码是否失效
         boolean hasKey = redisService.exists(SMSService.OTP_TOKEN_NAME + ":" + contact);
-        if(hasKey){//验证码有效
+        if(hasKey){//此号码在5分钟内发送过验证码
             String redisOtp= (String) redisService.get(SMSService.OTP_TOKEN_NAME + ":" + contact);
             if(otp.equals(redisOtp)){
-                log.info("登陆成功");
+                log.info("登陆成功，清除redis验证码缓存");
+                redisService.remove(SMSService.OTP_TOKEN_NAME + ":" + contact);
                 User clerk = clerkMapper.getClerkByContact(contact);
-                String token = TokenUtil.getToken();
-//                clerk.setAvatar(null);
-                clerk.setPassword(null);
-                addCookie(response,token);
+                String token = JwtUtil.createToken(clerk);
+                clearClerk((Clerk) clerk);
                 List<AuthorityDetail> authorities = getAuthorities();
                 ((Clerk) clerk).setAuthorities(authorities);
+                addCookie(response,token);
                 return clerk;
             }else{
                 log.info("验证码错误");
