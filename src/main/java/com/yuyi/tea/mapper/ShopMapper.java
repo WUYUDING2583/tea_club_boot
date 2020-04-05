@@ -11,11 +11,17 @@ import java.util.List;
 public interface ShopMapper {
 
 
+    /**
+     * 获取门店列表
+     * @return
+     */
     @Select("select * from shop")
+    @ResultMap("shop")
     List<Shop> getShopList();
 
     @Select("select * from shop where uid=#{uid}")
-    @Results({
+    @Results(id="shop",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="uid",property="openHours",
                     many=@Many(select="com.yuyi.tea.mapper.OpenHourMapper.getOpenHoursByShopId",
@@ -40,8 +46,12 @@ public interface ShopMapper {
      void saveShop(Shop shop);
 
 
-    @Delete("delete from shop where uid=#{uid}")
-    void deleteShop(int uid);
+    /**
+     * 门店失效，不再在商城展示
+     * @param uid
+     */
+    @Update("update shop set enforceTerminal=true where uid=#{uid}")
+    void terminalShop(int uid);
 
     @Update("update shop set name=#{name},address=#{address},description=#{description},contact=#{contact} where uid=#{uid}")
     void updateShop(Shop shop);

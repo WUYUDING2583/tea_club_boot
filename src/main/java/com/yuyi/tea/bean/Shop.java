@@ -21,6 +21,7 @@ public class Shop implements Serializable {
     private List<Photo> photos;
     private List<Clerk> clerks;
     private List<ShopBox> shopBoxes;
+    private boolean enforceTerminal=false;
 
     public List<Photo> getPhotos() {
         return photos;
@@ -43,7 +44,7 @@ public class Shop implements Serializable {
         this.photos = photos;
     }
 
-    public Shop(int uid, String name, String address, String description, String contact, List<OpenHour> openHours, List<Photo> photos, List<Clerk> clerks, List<ShopBox> shopBoxes) {
+    public Shop(int uid, String name, String address, String description, String contact, List<OpenHour> openHours, List<Photo> photos, List<Clerk> clerks, List<ShopBox> shopBoxes, boolean enforceTerminal) {
         this.uid = uid;
         this.name = name;
         this.address = address;
@@ -53,6 +54,7 @@ public class Shop implements Serializable {
         this.photos = photos;
         this.clerks = clerks;
         this.shopBoxes = shopBoxes;
+        this.enforceTerminal = enforceTerminal;
     }
 
     @Override
@@ -68,6 +70,14 @@ public class Shop implements Serializable {
                 ", clerks=" + clerks +
                 ", shopBoxes=" + shopBoxes +
                 '}';
+    }
+
+    public boolean isEnforceTerminal() {
+        return enforceTerminal;
+    }
+
+    public void setEnforceTerminal(boolean enforceTerminal) {
+        this.enforceTerminal = enforceTerminal;
     }
 
     public List<ShopBox> getShopBoxes() {

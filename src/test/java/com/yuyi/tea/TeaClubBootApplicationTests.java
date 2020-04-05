@@ -44,8 +44,8 @@ class TeaClubBootApplicationTests {
 
     @Test
     void contextLoads() {
-        AuthorityEnd authorityEnd = authorityMapper.getAuthorityEnd(1);
-        System.out.println(authorityEnd);
+        boolean shops = redisService.exists("shops:shop");
+        System.out.println(shops);
     }
 
 }

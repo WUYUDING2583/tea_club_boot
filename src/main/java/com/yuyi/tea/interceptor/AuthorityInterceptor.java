@@ -1,6 +1,7 @@
 package com.yuyi.tea.interceptor;
 
 import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.common.utils.StringUtil;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.AuthorityService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 权限校验
@@ -36,14 +39,24 @@ public class AuthorityInterceptor  implements HandlerInterceptor {
             int uid = (int) request.getAttribute("uid");
             String type= (String) request.getAttribute("type");
             String method = request.getMethod();
+            //判断url是否是/{uid}模式
+            String[] splitUrl = url.split("/");
+            if(StringUtil.isInteger(splitUrl[splitUrl.length-1])){
+                url="";
+                for(int i=0;i<splitUrl.length-1;i++){
+                    url+=splitUrl[i]+"/";
+                }
+                url+="{uid}";
+            }
             if(type.equals("customer")){
                 throw new GlobalException(CodeMsg.NO_AUTHORITY);
             }
             boolean hasAuthority = authorityService.checkAuthorityEnd(uid, url, method);
-            log.info("校验结果："+hasAuthority);
             if(!hasAuthority){
+                log.info("校验结果："+"无权限");
                 throw new GlobalException(CodeMsg.NO_AUTHORITY);
             }
+            log.info("校验结果："+"有权限");
         }
         return true;
     }

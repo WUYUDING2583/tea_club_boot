@@ -2,6 +2,7 @@ package com.yuyi.tea.service;
 
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -15,7 +16,11 @@ import java.util.stream.Collectors;
 
 //@CacheConfig(cacheNames = "shop")//抽取缓存的公共配置
 @Service
+@Slf4j
 public class ShopService {
+
+    public static final String REDIS_SHOPS_NAME="shops";
+    public static final String REDIS_SHOP_NAME=REDIS_SHOPS_NAME+":shop";
 
     @Autowired
     private ShopMapper shopMapper;
@@ -32,9 +37,22 @@ public class ShopService {
     @Autowired
     private ShopBoxMapper shopBoxMapper;
 
+    @Autowired
+    private RedisService redisService;
+
+    /**
+     * 获取门店列表
+     * @return
+     */
     public List<Shop> getShopList(){
+        log.info("从数据库中获取门店列表");
         List<Shop> shopList = shopMapper.getShopList();
-        System.out.println("query shop list"+shopList.toString());
+        for (Shop shop : shopList) {
+            shop.setOpenHours(null);
+            shop.setClerks(null);
+            shop.setShopBoxes(null);
+            shop.setPhotos(null);
+        }
         return shopList;
     }
 
@@ -59,8 +77,20 @@ public class ShopService {
         }
     }
 
-    public void deleteShop(int uid){
-        shopMapper.deleteShop(uid);
+    /**
+     * 门店失效，不再在商城展示
+     * @param uid
+     */
+    public void terminalShop(int uid){
+        boolean hasKey=redisService.exists(REDIS_SHOP_NAME+":"+uid);
+        if(hasKey){
+            //若缓存中存在此商店，更新缓存中信息
+            log.info("更新缓存商店状态信息");
+            Shop shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
+            shop.setEnforceTerminal(true);
+            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
+        }
+        shopMapper.terminalShop(uid);
     }
 
     public Shop updateShop(Shop shop) {

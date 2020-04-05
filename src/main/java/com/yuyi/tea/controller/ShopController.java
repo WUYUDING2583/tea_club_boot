@@ -17,7 +17,11 @@ public class ShopController {
     @Autowired
     private ShopService shopService;
 
-    @GetMapping("/shops")
+    /**
+     * 获取门店列表
+     * @return
+     */
+    @GetMapping("/admin/shops")
     public List<Shop> getShopList(){
         List<Shop> shopList = shopService.getShopList();
         return shopList;
@@ -34,7 +38,7 @@ public class ShopController {
         return shop;
     }
 
-    @PostMapping("/shop")
+    @PostMapping("/admin/shop")
     @Transactional(rollbackFor = Exception.class)
     public Shop saveShop(@RequestBody Shop shop){
         shopService.saveShop(shop);
@@ -42,10 +46,15 @@ public class ShopController {
         return shop;
     }
 
-    @DeleteMapping("/shop/{uid}")
+    /**
+     * 门店失效，不再在商城展示
+     * @param uid
+     * @return
+     */
+    @DeleteMapping("/admin/shop/{uid}")
     @Transactional(rollbackFor = Exception.class)
-    public String deleteShop(@PathVariable int uid){
-        shopService.deleteShop(uid);
+    public String terminalShop(@PathVariable int uid){
+        shopService.terminalShop(uid);
         return "Success";
     }
 
