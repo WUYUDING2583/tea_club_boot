@@ -22,8 +22,8 @@ import static com.yuyi.tea.service.LoginService.COOKIE_NAME_TOKEN;
  * @author 于一
  */
 @Slf4j
-@Order(1)
-@WebFilter(filterName = "TokenFilter", urlPatterns = {"/admin/*","/verifyLogin"})
+@Order(2)
+@WebFilter(filterName = "TokenFilter", urlPatterns = {"/admin/*","/verifyToken"})
 public class TokenFilter implements Filter {
 
     private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<>(
@@ -36,15 +36,11 @@ public class TokenFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
-
         String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
         boolean allowedPath = ALLOWED_PATHS.contains(path);
         log.info("校验token");
         response.setCharacterEncoding("UTF-8");
-        if (allowedPath) {
-           log.info(path+"无需验证token");
-        }
-        else {
+        if (!allowedPath){
             log.info(path+"验证token");
             Cookie[] cookies = request.getCookies();
             if (cookies != null && cookies.length >0) {
@@ -52,15 +48,15 @@ public class TokenFilter implements Filter {
                     log.info("name:"+cookie.getName()+"value:"+cookie.getValue());
                     if(cookie.getName().equals(COOKIE_NAME_TOKEN)){
                         String token=cookie.getValue();
-                        if (token == null) {
+                        if (token == null||token.equals("")) {
                             log.info("token不存在");
-                            break;
+                            throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
                         }
 
                         Map<String, Claim> userData = JwtUtil.verifyToken(token);
                         if (userData == null) {
                             log.info("token无效");
-                            break;
+                            throw new GlobalException(CodeMsg.TOKEN_INVALID);
                         }else {
                             Integer uid = userData.get("uid").asInt();
                             String name = userData.get("name").asString();
@@ -78,6 +74,8 @@ public class TokenFilter implements Filter {
                         }
                     }
                 }
+            }else{
+                throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
             }
         }
         chain.doFilter(req, res);

@@ -1,6 +1,6 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.AuthorityDetail;
+import com.yuyi.tea.bean.AuthorityFront;
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.User;
 import com.yuyi.tea.common.CodeMsg;
@@ -74,7 +74,7 @@ public class LoginService {
             log.info("登陆成功");
             String token = JwtUtil.createToken(clerk);
             clearClerk((Clerk) clerk);
-            List<AuthorityDetail> authorities = getAuthorities();
+            List<AuthorityFront> authorities = getAuthorities();
             ((Clerk) clerk).setAuthorities(authorities);
             addCookie(response,token);
             return clerk;
@@ -99,11 +99,11 @@ public class LoginService {
      * 获取职员权限
      * @return
      */
-    private List<AuthorityDetail> getAuthorities(){
+    private List<AuthorityFront> getAuthorities(){
         boolean hasKey=redisService.exists(REDIS_AUTHORITY_NAME);
-        List<AuthorityDetail> authorities=null;
+        List<AuthorityFront> authorities=null;
         if(hasKey){
-            authorities= (List<AuthorityDetail>) redisService.get(REDIS_AUTHORITY_NAME);
+            authorities= (List<AuthorityFront>) redisService.get(REDIS_AUTHORITY_NAME);
             log.info("从缓存中获取职员权限"+authorities);
         }else{
             log.info("从数据库中获取职员权限");
@@ -132,7 +132,7 @@ public class LoginService {
                 User clerk = clerkMapper.getClerkByContact(contact);
                 String token = JwtUtil.createToken(clerk);
                 clearClerk((Clerk) clerk);
-                List<AuthorityDetail> authorities = getAuthorities();
+                List<AuthorityFront> authorities = getAuthorities();
                 ((Clerk) clerk).setAuthorities(authorities);
                 addCookie(response,token);
                 return clerk;
@@ -192,7 +192,7 @@ public class LoginService {
             } else {
                 user = clerkService.getClerk(uid);
                 clearClerk((Clerk) user);
-                List<AuthorityDetail> authorities = getAuthorities();
+                List<AuthorityFront> authorities = getAuthorities();
                 ((Clerk) user).setAuthorities(authorities);
             }
             log.info("获取token用户信息" + user);

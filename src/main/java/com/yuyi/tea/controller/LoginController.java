@@ -72,7 +72,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @GetMapping("/verifyLogin")
+    @GetMapping("/verifyToken")
     public User verifyToken(HttpServletResponse response, HttpServletRequest request){
         User user = loginService.verifyToken(response, request);
         return user;

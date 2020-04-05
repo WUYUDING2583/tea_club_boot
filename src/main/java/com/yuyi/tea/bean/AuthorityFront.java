@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 
 @JsonIgnoreProperties(value = { "handler" })
-public class AuthorityDetail implements Serializable {
+public class AuthorityFront implements Serializable {
 
     private int uid;
     private String name;
@@ -16,14 +16,14 @@ public class AuthorityDetail implements Serializable {
     private Authority belong;
     private boolean auth=true;
 
-    public AuthorityDetail() {
+    public AuthorityFront() {
     }
 
-    public AuthorityDetail(int uid) {
+    public AuthorityFront(int uid) {
         this.uid = uid;
     }
 
-    public AuthorityDetail(int uid, String name, String component, String title, String description, Authority belong, boolean auth) {
+    public AuthorityFront(int uid, String name, String component, String title, String description, Authority belong, boolean auth) {
         this.uid = uid;
         this.name = name;
         this.component = component;
@@ -91,7 +91,7 @@ public class AuthorityDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "AuthorityDetail{" +
+        return "AuthorityFront{" +
                 "uid=" + uid +
                 ", name='" + name + '\'' +
                 ", component='" + component + '\'' +

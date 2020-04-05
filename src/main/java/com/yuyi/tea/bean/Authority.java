@@ -12,7 +12,7 @@ public class Authority implements Serializable {
     private String name;
     private String title;
     private String icon;
-    private List<AuthorityDetail> details;
+    private List<AuthorityFront> details;
 
     public Authority() {
     }
@@ -21,7 +21,7 @@ public class Authority implements Serializable {
         this.uid = uid;
     }
 
-    public Authority(int uid, String name, String title, String icon, List<AuthorityDetail> details) {
+    public Authority(int uid, String name, String title, String icon, List<AuthorityFront> details) {
         this.uid = uid;
         this.name = name;
         this.title = title;
@@ -29,11 +29,11 @@ public class Authority implements Serializable {
         this.details = details;
     }
 
-    public List<AuthorityDetail> getDetails() {
+    public List<AuthorityFront> getDetails() {
         return details;
     }
 
-    public void setDetails(List<AuthorityDetail> details) {
+    public void setDetails(List<AuthorityFront> details) {
         this.details = details;
     }
 

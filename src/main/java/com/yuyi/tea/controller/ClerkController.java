@@ -1,6 +1,6 @@
 package com.yuyi.tea.controller;
 
-import com.yuyi.tea.bean.AuthorityDetail;
+import com.yuyi.tea.bean.AuthorityFront;
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.Position;
 import com.yuyi.tea.service.ClerkService;
