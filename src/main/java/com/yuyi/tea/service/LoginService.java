@@ -1,17 +1,12 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.AuthorityFront;
-import com.yuyi.tea.bean.Clerk;
-import com.yuyi.tea.bean.User;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.utils.JwtUtil;
-import com.yuyi.tea.common.utils.TokenUtil;
 import com.yuyi.tea.exception.GlobalException;
+import com.yuyi.tea.mapper.AuthorityMapper;
 import com.yuyi.tea.mapper.ClerkMapper;
-import com.yuyi.tea.mapper.LoginMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +14,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class LoginService {
-
-    @Autowired
-    private LoginMapper loginMapper;
 
     @Autowired
     private RedisService redisService;
@@ -40,6 +30,9 @@ public class LoginService {
 
     @Autowired
     private ClerkService clerkService;
+
+    @Autowired
+    private AuthorityMapper authorityMapper;
 
     /**
      * 存储在cookie中的key
@@ -74,8 +67,9 @@ public class LoginService {
             log.info("登陆成功");
             String token = JwtUtil.createToken(clerk);
             clearClerk((Clerk) clerk);
-            List<AuthorityFront> authorities = getAuthorities();
-            ((Clerk) clerk).setAuthorities(authorities);
+            Position position = ((Clerk) clerk).getPosition();
+            List<PositionAutorityFrontDetail> authorities = getPositionAutorityFrontDetails(position);
+            ((Clerk) clerk).setPositionAutorityFrontDetails(authorities);
             addCookie(response,token);
             return clerk;
         }
@@ -96,22 +90,22 @@ public class LoginService {
     }
 
     /**
-     * 获取职员权限
+     * 获取职员前端路由权限
      * @return
      */
-    private List<AuthorityFront> getAuthorities(){
-        boolean hasKey=redisService.exists(REDIS_AUTHORITY_NAME);
-        List<AuthorityFront> authorities=null;
+    private List<PositionAutorityFrontDetail> getPositionAutorityFrontDetails(Position position){
+        boolean hasKey=redisService.exists(REDIS_AUTHORITY_NAME+":"+position.getUid());
+        List<PositionAutorityFrontDetail> positionAutorityFrontDetails=null;
         if(hasKey){
-            authorities= (List<AuthorityFront>) redisService.get(REDIS_AUTHORITY_NAME);
-            log.info("从缓存中获取职员权限"+authorities);
+            positionAutorityFrontDetails= (List<PositionAutorityFrontDetail>) redisService.get(REDIS_AUTHORITY_NAME+":"+position.getUid());
+            log.info("从缓存中获取职员前端路由权限"+positionAutorityFrontDetails);
         }else{
-            log.info("从数据库中获取职员权限");
-            authorities=loginMapper.getAuthorities();
-            log.info("将职员权限存入缓存"+authorities);
-            redisService.set(REDIS_AUTHORITY_NAME,authorities);
+            log.info("从数据库中获取职员前端路由权限");
+            positionAutorityFrontDetails=authorityMapper.getPositionAutorityFrontDetails(position.getUid());
+            log.info("将职员前端路由权限存入缓存"+positionAutorityFrontDetails);
+            redisService.set(REDIS_AUTHORITY_NAME+":"+position.getUid(),positionAutorityFrontDetails);
         }
-        return authorities;
+        return positionAutorityFrontDetails;
     }
 
     /**
@@ -132,8 +126,9 @@ public class LoginService {
                 User clerk = clerkMapper.getClerkByContact(contact);
                 String token = JwtUtil.createToken(clerk);
                 clearClerk((Clerk) clerk);
-                List<AuthorityFront> authorities = getAuthorities();
-                ((Clerk) clerk).setAuthorities(authorities);
+                Position position = ((Clerk) clerk).getPosition();
+                List<PositionAutorityFrontDetail> positionAutorityFrontDetails = getPositionAutorityFrontDetails(position);
+                ((Clerk) clerk).setPositionAutorityFrontDetails(positionAutorityFrontDetails);
                 addCookie(response,token);
                 return clerk;
             }else{
@@ -192,8 +187,9 @@ public class LoginService {
             } else {
                 user = clerkService.getClerk(uid);
                 clearClerk((Clerk) user);
-                List<AuthorityFront> authorities = getAuthorities();
-                ((Clerk) user).setAuthorities(authorities);
+                Position position = ((Clerk) user).getPosition();
+                List<PositionAutorityFrontDetail> positionAutorityFrontDetails = getPositionAutorityFrontDetails(position);
+                ((Clerk) user).setPositionAutorityFrontDetails(positionAutorityFrontDetails);
             }
             log.info("获取token用户信息" + user);
         }catch (NullPointerException e){

@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @MapperScan("com.yuyi.tea.mapper")
 @SpringBootApplication
 @EnableCaching
-@ServletComponentScan
+//@ServletComponentScan(basePackages = "com.yuyi.tea.filter")
 public class TeaClubBootApplication {
 
     public static void main(String[] args) {

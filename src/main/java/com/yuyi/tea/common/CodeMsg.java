@@ -9,7 +9,7 @@ public class CodeMsg {
     private String error;
     //通用的错误码
     public static final CodeMsg SUCCESS = new CodeMsg(200, "成功");
-    public static final CodeMsg SERVER_ERROR = new CodeMsg(500100, "服务端异常");
+    public static final CodeMsg SERVER_ERROR = new CodeMsg(500100, "服务端异常，无法获取数据");
     public static final CodeMsg BIND_ERROR = new CodeMsg(500101, "参数校验异常：%s");
     public static final CodeMsg REQUEST_ILLEGAL = new CodeMsg(500102, "请求非法");
     public static final CodeMsg ACCESS_LIMIT_REACHED = new CodeMsg(500103, "访问太频繁！");
@@ -25,6 +25,8 @@ public class CodeMsg {
     public static final CodeMsg SMS_SEND_ERROR=new CodeMsg(500300,"验证码发送失败");
     public static final CodeMsg OTP_INVALID = new CodeMsg(500301,"验证码失效请重新获取");
     public static final CodeMsg OTP_ERROR = new CodeMsg(500302,"验证码错误");
+    //权限验证模块 5004xx
+    public static final CodeMsg NO_AUTHORITY = new CodeMsg(500400,"您没有权限");
 
     private CodeMsg() {
     }

@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
-@Order(1)
-@WebFilter(filterName = "ExceptionFilter", urlPatterns = {"/*"})
+//@WebFilter(filterName = "ExceptionFilter", urlPatterns = {"/*"})
+//@Order(value = 1)
 public class ExceptionFilter implements Filter {
 
     public static String EXCEPTION="exception";
@@ -26,6 +26,7 @@ public class ExceptionFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        log.info("异常校验");
         // 是否已经放有异常栈, 避免循环
         boolean isRethrow = !Objects.isNull(request.getAttribute(EXCEPTION));
         if (isRethrow) {

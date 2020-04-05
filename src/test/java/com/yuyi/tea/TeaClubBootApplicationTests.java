@@ -40,14 +40,12 @@ class TeaClubBootApplicationTests {
     LoginService loginService;
 
     @Autowired
-    LoginMapper loginMapper;
+    AuthorityMapper authorityMapper;
 
     @Test
     void contextLoads() {
-        String token = JwtUtil.createToken(new User());
-        System.out.println("token:"+token);
-        Map<String, Claim> stringClaimMap = JwtUtil.verifyToken(token);
-        System.out.println("value:"+stringClaimMap.get("id").asInt());
+        AuthorityEnd authorityEnd = authorityMapper.getAuthorityEnd(1);
+        System.out.println(authorityEnd);
     }
 
 }

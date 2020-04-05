@@ -10,7 +10,7 @@ public class Clerk  extends User{
 
     private Position position;
     private Shop shop;
-    private List<AuthorityFront> authorities;
+    private List<PositionAutorityFrontDetail> positionAutorityFrontDetails;
 
     public Clerk() {
     }
@@ -19,11 +19,11 @@ public class Clerk  extends User{
         super(uid);
     }
 
-    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, Position position, Shop shop, List<AuthorityFront> authorities) {
+    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, Position position, Shop shop, List<PositionAutorityFrontDetail> positionAutorityFrontDetails) {
         super(uid, name, contact, identityId, gender, address, avatar, password);
         this.position = position;
         this.shop = shop;
-        this.authorities = authorities;
+        this.positionAutorityFrontDetails = positionAutorityFrontDetails;
     }
 
     public Position getPosition() {
@@ -42,12 +42,12 @@ public class Clerk  extends User{
         this.shop = shop;
     }
 
-    public List<AuthorityFront> getAuthorities() {
-        return authorities;
+    public List<PositionAutorityFrontDetail> getPositionAutorityFrontDetails() {
+        return positionAutorityFrontDetails;
     }
 
-    public void setAuthorities(List<AuthorityFront> authorities) {
-        this.authorities = authorities;
+    public void setPositionAutorityFrontDetails(List<PositionAutorityFrontDetail> positionAutorityFrontDetails) {
+        this.positionAutorityFrontDetails = positionAutorityFrontDetails;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Clerk  extends User{
         return "Clerk{" +
                 "position=" + position +
                 ", shop=" + shop +
-                ", authorities=" + authorities +
+                ", positionAutorityFrontDetails=" + positionAutorityFrontDetails +
                 '}';
     }
 }

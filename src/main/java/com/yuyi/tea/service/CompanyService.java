@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//@CacheConfig(cacheNames = "company")//抽取缓存的公共配置
 @Service
 public class CompanyService {
 
@@ -25,7 +24,10 @@ public class CompanyService {
     @Autowired
     private RedisService redisService;
 
-    //获取公司信息
+    /**
+     * 获取公司信息
+     * @return
+     */
     public Company getCompanyInfo(){
         //查询缓存中是否存在
         boolean hasKey = redisService.exists("company:company");
@@ -46,7 +48,11 @@ public class CompanyService {
     }
 
 
-    //更新公司信息
+    /**
+     * 更新公司信息
+     * @param company
+     * @return
+     */
     public Company updateCompany(Company company) {
         companyMapper.updateCompany(company);
         //更新缓存

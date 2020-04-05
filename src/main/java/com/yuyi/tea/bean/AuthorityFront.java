@@ -3,6 +3,7 @@ package com.yuyi.tea.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @JsonIgnoreProperties(value = { "handler" })
@@ -14,6 +15,7 @@ public class AuthorityFront implements Serializable {
     private String title;
     private String description;
     private Authority belong;
+    private List<AuthorityEnd> authorityEnds;
     private boolean auth=true;
 
     public AuthorityFront() {
@@ -23,14 +25,23 @@ public class AuthorityFront implements Serializable {
         this.uid = uid;
     }
 
-    public AuthorityFront(int uid, String name, String component, String title, String description, Authority belong, boolean auth) {
+    public AuthorityFront(int uid, String name, String component, String title, String description, Authority belong, List<AuthorityEnd> authorityEnds, boolean auth) {
         this.uid = uid;
         this.name = name;
         this.component = component;
         this.title = title;
         this.description = description;
         this.belong = belong;
+        this.authorityEnds = authorityEnds;
         this.auth = auth;
+    }
+
+    public List<AuthorityEnd> getAuthorityEnds() {
+        return authorityEnds;
+    }
+
+    public void setAuthorityEnds(List<AuthorityEnd> authorityEnds) {
+        this.authorityEnds = authorityEnds;
     }
 
     public boolean isAuth() {
@@ -98,6 +109,7 @@ public class AuthorityFront implements Serializable {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", belong=" + belong +
+                ", authorityEnds=" + authorityEnds +
                 ", auth=" + auth +
                 '}';
     }
