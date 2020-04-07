@@ -46,6 +46,10 @@ public interface ShopMapper {
     @Select("select uid,name from shop where uid=#{uid}")
     Shop getShopOfShopBox(int uid);
 
+    /**
+     * 新增门店
+     * @param shop
+     */
     @Insert("insert into shop(name,address,description,contact) values(#{name},#{address},#{description},#{contact}) ")
     @Options(useGeneratedKeys=true, keyProperty="uid")
      void saveShop(Shop shop);

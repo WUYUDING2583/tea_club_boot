@@ -41,7 +41,11 @@ public class ShopController {
         return shop;
     }
 
-
+    /**
+     * 新增门店
+     * @param shop
+     * @return
+     */
     @PostMapping("/admin/shop")
     @Transactional(rollbackFor = Exception.class)
     public Shop saveShop(@RequestBody Shop shop){

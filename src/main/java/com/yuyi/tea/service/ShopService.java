@@ -77,6 +77,10 @@ public class ShopService {
     }
 
 
+    /**
+     * 新增门店
+     * @param shop
+     */
     public void saveShop(Shop shop){
         shopMapper.saveShop(shop);
         for(OpenHour openHour:shop.getOpenHours()){
@@ -90,7 +94,8 @@ public class ShopService {
             photo.setShopId(shop.getUid());
             photoMapper.saveShopPhotos(photo);
         }
-
+        log.info("将新增门店存入redis"+shop);
+        redisService.set(REDIS_SHOP_NAME+":"+shop.getUid(),shop);
     }
 
     /**
