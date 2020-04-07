@@ -56,11 +56,26 @@ public class ShopService {
         return shopList;
     }
 
-//    @Cacheable
+    /**
+     * 根据uid获取门店详细信息
+     * @param uid
+     * @return
+     */
     public Shop getShopByUid(int uid){
-        Shop shop = shopMapper.getShopByUid(uid);
+        boolean hasKey=redisService.exists(REDIS_SHOP_NAME+":"+uid);
+        Shop shop=null;
+        if(hasKey){
+            shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
+            log.info("从redis中获取门店信息"+shop);
+        }else {
+            shop = shopMapper.getShopByUid(uid);
+            log.info("从数据库获取门店数据");
+            log.info("将门店信息存入redis"+shop);
+            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
+        }
         return shop;
     }
+
 
     public void saveShop(Shop shop){
         shopMapper.saveShop(shop);
@@ -75,6 +90,7 @@ public class ShopService {
             photo.setShopId(shop.getUid());
             photoMapper.saveShopPhotos(photo);
         }
+
     }
 
     /**
@@ -93,6 +109,10 @@ public class ShopService {
         shopMapper.terminalShop(uid);
     }
 
+    /**
+     * 更改门店信息
+     * @param shop
+     */
     public Shop updateShop(Shop shop) {
         shopMapper.updateShop(shop);
         ArrayList<Integer> clerksUid=new ArrayList<Integer>();
@@ -162,7 +182,8 @@ public class ShopService {
                 openHourMapper.insertOpenHourRepeat(date,openHour.getUid());
             }
         }
-//        openHourMapper.insertOpenHours(shop.getOpenHours());
+        log.info("更新redis中门店信息"+shop);
+        redisService.set(REDIS_SHOP_NAME+":"+shop.getUid(),shop);
         return shop;
     }
 }

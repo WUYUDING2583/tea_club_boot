@@ -21,9 +21,14 @@ public class PhotoController {
     @Autowired
     private PhotoService photoService;
 
-    @PostMapping(value = "savephoto")
+    /**
+     * 保存图片
+     * @param request
+     * @return
+     */
+    @PostMapping("/savephoto")
     @Transactional(rollbackFor = Exception.class)
-    public Photo searchMember( HttpServletRequest request){
+    public Photo savePhoto( HttpServletRequest request){
         // 得到文件
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
         if(file.getSize()>1024*1024*1024){

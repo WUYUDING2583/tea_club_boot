@@ -17,8 +17,11 @@ public class ClerkController {
     @Autowired
     ClerkService clerkService;
 
-    //获取职员列表
-    @GetMapping("/clerks")
+    /**
+     * 获取职员列表
+     * @return
+     */
+    @GetMapping("/admin/clerks")
     public List<Clerk> getAllClerks(){
         List<Clerk> clerks = clerkService.getAllClerks();
         return clerks;

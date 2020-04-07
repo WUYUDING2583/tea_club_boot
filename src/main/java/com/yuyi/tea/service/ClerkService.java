@@ -28,9 +28,18 @@ public class ClerkService {
     @Autowired
     private RedisService redisService;
 
-
+    /**
+     * 获取除管理远外的职员列表
+     * @return
+     */
     public List<Clerk> getAllClerks(){
         List<Clerk> clerks = clerkMapper.getAllClerks();
+        for(Clerk clerk:clerks){
+            clerk.setShop(null);
+            clerk.setAvatar(null);
+            clerk.setPassword(null);
+            clerk.setPositionAutorityFrontDetails(null);
+        }
         return clerks;
     }
 

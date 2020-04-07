@@ -28,8 +28,11 @@ public interface ClerkMapper {
     @Select("select * from position where uid=#{uid}")
     Position getPosition(int uid);
 
-    //获取职员列表
-    @Select("select * from clerk")
+    /**
+     * 获取除管理远外的职员列表
+     * @return
+     */
+    @Select("select * from clerk where positionId!=1")
     @ResultMap("clerk")
     List<Clerk> getAllClerks();
 

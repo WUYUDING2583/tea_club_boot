@@ -27,22 +27,25 @@ public class ShopController {
         return shopList;
     }
 
-    @GetMapping("/shop/{uid}")
+    /**
+     * 根据uid获取门店详细信息
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/shop/{uid}")
     public Shop getShopByUid(@PathVariable int uid){
-//        throw new ShopNotExistException();
         Shop shop = shopService.getShopByUid(uid);
-        System.out.println("query shop "+uid+" "+shop);
         if(shop==null){
             throw new ShopNotExistException();
         }
         return shop;
     }
 
+
     @PostMapping("/admin/shop")
     @Transactional(rollbackFor = Exception.class)
     public Shop saveShop(@RequestBody Shop shop){
         shopService.saveShop(shop);
-        System.out.println("add shop"+shop);
         return shop;
     }
 
@@ -58,10 +61,14 @@ public class ShopController {
         return "Success";
     }
 
-    @PutMapping("/shop")
+    /**
+     * 更改门店信息
+     * @param shop
+     * @return
+     */
+    @PutMapping("/admin/shop")
     @Transactional(rollbackFor = Exception.class)
     public Shop updateShop(@RequestBody Shop shop){
-        System.out.println("update shop "+shop);
         shopService.updateShop(shop);
         return shop;
     }

@@ -19,6 +19,11 @@ public interface ShopMapper {
     @ResultMap("shop")
     List<Shop> getShopList();
 
+    /**
+     * 根据uid获取门店详细信息
+     * @param uid
+     * @return
+     */
     @Select("select * from shop where uid=#{uid}")
     @Results(id="shop",
             value = {
