@@ -20,8 +20,8 @@ public class Customer extends User {
         super(uid);
     }
 
-    public Customer(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, String email, CustomerType customerType, List<EnterpriseCustomerApplication> enterpriseCustomerApplications, String weChatId) {
-        super(uid, name, contact, identityId, gender, address, avatar, password);
+    public Customer(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, String email, CustomerType customerType, List<EnterpriseCustomerApplication> enterpriseCustomerApplications, String weChatId) {
+        super(uid, name, contact, identityId, gender, address, avatar, password, enforceTerminal);
         this.email = email;
         this.customerType = customerType;
         this.enterpriseCustomerApplications = enterpriseCustomerApplications;

@@ -40,17 +40,22 @@ public interface ClerkMapper {
     @Update("update clerk set shopId=#{shopId} where uid=#{uid}")
     void updateClerkShopId(int uid, int shopId);
 
-    //TODO 不能删除，应该更改其状态
-    //删除员工
-    @Delete("delete from clerk where uid=#{uid}")
-    void deleteClerk(int uid);
+    /**
+     * 失效职员
+     * @param uid
+     */
+    @Update("update clerk set enforceTerminal=true where uid=#{uid}")
+    void terminalClerk(int uid);
 
-    //获取职位列表
+    /**
+     * 获取职位列表
+     * @return
+     */
     @Select("select * from position")
     List<Position> getPositions();
 
     //新增职员
-    @Insert("insert into clerk(name,positionId,contact,identityId,sex,address,shopId) values(#{name},#{position.uid},#{contact},#{identityId},#{sex},#{address},#{shop.uid})")
+    @Insert("insert into clerk(name,positionId,contact,identityId,gender,address,shopId,password) values(#{name},#{position.uid},#{contact},#{identityId},#{gender},#{address},#{shop.uid},#{password})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveClerk(Clerk clerk);
 
@@ -73,7 +78,7 @@ public interface ClerkMapper {
 
     //更新职员信息
     @Update("update clerk set name=#{name},positionId=#{position.uid},contact=#{contact}," +
-            "identityId=#{identityId},sex=#{sex},address=#{address},shopId=#{shop.uid} where uid=#{uid}")
+            "identityId=#{identityId},gender=#{gender},address=#{address},shopId=#{shop.uid} where uid=#{uid}")
     void updateClerk(Clerk clerk);
 
     //通过手机号获取职员信息

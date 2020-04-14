@@ -27,34 +27,57 @@ public class ClerkController {
         return clerks;
     }
 
+    /**
+     * 获取职位列表
+     * @return
+     */
     @GetMapping("/positions")
-//    @Cacheable(cacheNames = "position")
     public List<Position> getPositions(){
         List<Position> positions = clerkService.getPositions();
         return positions;
     }
 
-    @PostMapping("/clerk")
+    /**
+     * 新增职员
+     * @param clerk
+     * @return
+     */
+    @PostMapping("/admin/clerk")
     @Transactional(rollbackFor = Exception.class)
     public Clerk saveClerk(@RequestBody Clerk clerk){
         clerkService.saveClerk(clerk);
         return clerk;
     }
 
-    @DeleteMapping("/clerk/{uid}")
+    /**
+     * 失效职员
+     * @param uid
+     * @return
+     */
+    @DeleteMapping("/admin/clerk/{uid}")
     @Transactional(rollbackFor = Exception.class)
-    public String deleteClerk(@PathVariable int uid){
-        clerkService.deleteClerk(uid);
+    public String terminalClerk(@PathVariable int uid){
+        clerkService.terminalClerk(uid);
         return "success";
     }
 
-    @GetMapping("/clerk/{uid}")
+    /**
+     * 获取职员详情
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/clerk/{uid}")
     public Clerk getClerk(@PathVariable int uid){
         Clerk clerk = clerkService.getClerk(uid);
         return clerk;
     }
 
-    @PutMapping("/clerk")
+    /**
+     * 更新职员信息
+     * @param clerk
+     * @return
+     */
+    @PutMapping("/admin/clerk")
     @Transactional(rollbackFor = Exception.class)
     public Clerk updateClerk(@RequestBody Clerk clerk){
         clerkService.updateClerk(clerk);

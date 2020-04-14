@@ -133,7 +133,7 @@ public class ShopService {
                 .collect(Collectors.toList());
         //删除这些职员
         for(Clerk clerk:needDeleteClerks){
-            clerkMapper.deleteClerk(clerk.getUid());
+            clerkMapper.terminalClerk(clerk.getUid());
         }
         //将更新后的职员返回
         List<Clerk> updateClerks=originClerkss.stream()

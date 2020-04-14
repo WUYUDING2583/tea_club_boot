@@ -13,6 +13,7 @@ public class User implements Serializable {
     private String address;
     private Photo avatar;
     private String password;
+    private boolean enforceTerminal=false;
 
     public User() {
     }
@@ -21,7 +22,7 @@ public class User implements Serializable {
         this.uid = uid;
     }
 
-    public User(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password) {
+    public User(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal) {
         this.uid = uid;
         this.name = name;
         this.contact = contact;
@@ -30,6 +31,15 @@ public class User implements Serializable {
         this.address = address;
         this.avatar = avatar;
         this.password = password;
+        this.enforceTerminal = enforceTerminal;
+    }
+
+    public boolean isEnforceTerminal() {
+        return enforceTerminal;
+    }
+
+    public void setEnforceTerminal(boolean enforceTerminal) {
+        this.enforceTerminal = enforceTerminal;
     }
 
     public int getUid() {
@@ -107,6 +117,7 @@ public class User implements Serializable {
                 ", address='" + address + '\'' +
                 ", avatar=" + avatar +
                 ", password='" + password + '\'' +
+                ", enforceTerminal=" + enforceTerminal +
                 '}';
     }
 }

@@ -19,8 +19,8 @@ public class Clerk  extends User{
         super(uid);
     }
 
-    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, Position position, Shop shop, List<PositionAutorityFrontDetail> positionAutorityFrontDetails) {
-        super(uid, name, contact, identityId, gender, address, avatar, password);
+    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, Position position, Shop shop, List<PositionAutorityFrontDetail> positionAutorityFrontDetails) {
+        super(uid, name, contact, identityId, gender, address, avatar, password, enforceTerminal);
         this.position = position;
         this.shop = shop;
         this.positionAutorityFrontDetails = positionAutorityFrontDetails;

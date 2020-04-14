@@ -66,7 +66,7 @@ public class LoginService {
             //生成cookie
             log.info("登陆成功");
             String token = JwtUtil.createToken(clerk);
-            clearClerk((Clerk) clerk);
+            clerkService.clearClerk((Clerk) clerk);
             Position position = ((Clerk) clerk).getPosition();
             List<PositionAutorityFrontDetail> authorities = getPositionAutorityFrontDetails(position);
             ((Clerk) clerk).setPositionAutorityFrontDetails(authorities);
@@ -125,7 +125,7 @@ public class LoginService {
                 redisService.remove(SMSService.OTP_TOKEN_NAME + ":" + contact);
                 User clerk = clerkMapper.getClerkByContact(contact);
                 String token = JwtUtil.createToken(clerk);
-                clearClerk((Clerk) clerk);
+                ClerkService.clearClerk((Clerk) clerk);
                 Position position = ((Clerk) clerk).getPosition();
                 List<PositionAutorityFrontDetail> positionAutorityFrontDetails = getPositionAutorityFrontDetails(position);
                 ((Clerk) clerk).setPositionAutorityFrontDetails(positionAutorityFrontDetails);
@@ -155,21 +155,6 @@ public class LoginService {
         //发送短信验证码
         smsService.sendOTP(contact);
     }
-
-    /**
-     * 将登陆返回的职员信息内不需要的去除
-     * @param clerk
-     */
-    private void clearClerk(Clerk clerk){
-        clerk.setPassword(null);
-        if(clerk.getShop()!=null) {
-            clerk.getShop().setPhotos(null);
-            clerk.getShop().setShopBoxes(null);
-            clerk.getShop().setClerks(null);
-            clerk.getShop().setOpenHours(null);
-        }
-    }
-
     /**
      * 用户刷新页面后验证是否登陆
      * @param response
@@ -186,7 +171,6 @@ public class LoginService {
 
             } else {
                 user = clerkService.getClerk(uid);
-                clearClerk((Clerk) user);
                 Position position = ((Clerk) user).getPosition();
                 List<PositionAutorityFrontDetail> positionAutorityFrontDetails = getPositionAutorityFrontDetails(position);
                 ((Clerk) user).setPositionAutorityFrontDetails(positionAutorityFrontDetails);
