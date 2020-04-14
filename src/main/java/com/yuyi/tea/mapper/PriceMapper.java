@@ -8,6 +8,10 @@ import org.apache.ibatis.annotations.Update;
 
 public interface PriceMapper {
 
+    /**
+     * 新增价格
+     * @param price
+     */
     @Insert("insert into price(ingot,credit) values(#{ingot},#{credit})")
     @Options(useGeneratedKeys = true,keyProperty = "uid")
     void savePrice(Price price);

@@ -16,6 +16,7 @@ public class ShopBox implements Serializable {
     private Price price;
     private List<Photo> photos;
     private int duration;//每泡茶时间
+    private boolean enforceTerminal=false;
 
     public ShopBox() {
     }
@@ -24,7 +25,7 @@ public class ShopBox implements Serializable {
         this.uid = uid;
     }
 
-    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, Price price, List<Photo> photos, int duration) {
+    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, Price price, List<Photo> photos, int duration, boolean enforceTerminal) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -33,6 +34,7 @@ public class ShopBox implements Serializable {
         this.price = price;
         this.photos = photos;
         this.duration = duration;
+        this.enforceTerminal = enforceTerminal;
     }
 
     @Override
@@ -46,7 +48,16 @@ public class ShopBox implements Serializable {
                 ", price=" + price +
                 ", photos=" + photos +
                 ", duration=" + duration +
+                ", enforceTerminal=" + enforceTerminal +
                 '}';
+    }
+
+    public boolean isEnforceTerminal() {
+        return enforceTerminal;
+    }
+
+    public void setEnforceTerminal(boolean enforceTerminal) {
+        this.enforceTerminal = enforceTerminal;
     }
 
     public int getDuration() {

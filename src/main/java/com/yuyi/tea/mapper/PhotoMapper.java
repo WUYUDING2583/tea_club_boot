@@ -43,6 +43,10 @@ public interface PhotoMapper {
     @Update("update photo set shopId=#{shopId} where uid=#{uid}")
     void saveShopPhotos(Photo photo);
 
+    /**
+     * 保存包厢照片
+     * @param photo
+     */
     @Update("update photo set shopBoxId=#{shopBoxId} where uid=#{uid}")
     void saveShopBoxPhotos(Photo photo);
 

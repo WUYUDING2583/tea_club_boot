@@ -14,33 +14,57 @@ public class ShopBoxController {
     @Autowired
     ShopBoxService shopBoxService;
 
-    @PostMapping("/shopBox")
+    /**
+     * 新增包厢
+     * @param shopBox
+     * @return
+     */
+    @PostMapping("/admin/shopBox")
     @Transactional(rollbackFor = Exception.class)
     ShopBox saveShopBox(@RequestBody ShopBox shopBox){
         shopBoxService.saveShopBox(shopBox);
         return shopBox;
     }
 
-    @GetMapping("/shopBoxes")
+    /**
+     * 获取包厢列表
+     * @return
+     */
+    @GetMapping("/admin/shopBoxes")
     List<ShopBox> getShopBoxes(){
         List<ShopBox> shopBoxes = shopBoxService.getShopBoxes();
         return shopBoxes;
     }
 
-    @DeleteMapping("/shopBox/{uid}")
+    /**
+     * 失效包厢
+     * @param uid
+     * @return
+     */
+    @DeleteMapping("/admin/shopBox/{uid}")
     @Transactional(rollbackFor = Exception.class)
-    public String deleteShopBox(@PathVariable int uid){
-        shopBoxService.deleteShopBoxByUid(uid);
+    public String terminalShopBox(@PathVariable int uid){
+        shopBoxService.terminalShopBoxByUid(uid);
         return "Success";
     }
 
-    @GetMapping("/shopBox/{uid}")
+    /**
+     * 查看包厢详情
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/shopBox/{uid}")
     public ShopBox getShopBoxByUid(@PathVariable int uid){
         ShopBox shopBoxByUid = shopBoxService.getShopBoxByUid(uid);
         return shopBoxByUid;
     }
 
-    @PutMapping("/shopBox")
+    /**
+     * 修改包厢信息
+     * @param shopBox
+     * @return
+     */
+    @PutMapping("/admin/shopBox")
     @Transactional(rollbackFor = Exception.class)
     public ShopBox updateShopBox(@RequestBody ShopBox shopBox){
         shopBoxService.updateShopBox(shopBox);

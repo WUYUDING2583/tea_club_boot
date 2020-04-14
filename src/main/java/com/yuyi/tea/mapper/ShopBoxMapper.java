@@ -11,12 +11,20 @@ public interface ShopBoxMapper {
     @Select("select * from shopBox where shopId=#{shopId}")
     List<ShopBox> getShopBoxByShopId(int shopId);
 
+    /**
+     * 新增包厢
+     * @param shopBox
+     */
     @Insert("insert into shopBox(uid,name,description,shopId,boxNum,priceId,duration) " +
             "values(#{uid},#{name},#{description},#{shop.uid},#{boxNum},#{price.uid},#{duration})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveShopBox(ShopBox shopBox);
 
-    @Select("select uid,name,description,shopId from shopBox")
+    /**
+     * 获取包厢列表
+     * @return
+     */
+    @Select("select uid,name,description,shopId,enforceTerminal from shopBox")
     @Results({
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="shopId",property="shop",
@@ -25,11 +33,21 @@ public interface ShopBoxMapper {
     })
     List<ShopBox> getShopBoxes();
 
-    @Delete("delete from shopBox where uid=#{uid}")
-    void deleteShopBoxByUid(int uid);
+    /**
+     * 失效包厢
+     * @param uid
+     */
+    @Update("update shopBox set enforceTerminal=true where uid=#{uid}")
+    void terminalShopBoxByUid(int uid);
 
+    /**
+     * 根据uid获取包厢详情
+     * @param uid
+     * @return
+     */
     @Select("select * from shopBox where uid=#{uid}")
-    @Results({
+    @Results(id = "shopBox",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="shopId",property="shop",
                     many=@Many(select="com.yuyi.tea.mapper.ShopMapper.getShopOfShopBox",
