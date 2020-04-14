@@ -8,13 +8,24 @@ import java.util.List;
 
 public interface ActivityMapper {
 
-    //获取所有活动的名称和描述
+    /**
+     * 获取所有活动的名称和描述
+     * @return
+     */
     @Select("select uid,name,description from activity")
     List<Activity> getActivitiesNameDesc();
 
+    /**
+     * 获取所有活动规则类型
+     * @return
+     */
     @Select("select * from activityRuleType")
     List<ActivityRuleType> getActivityRuleTypes();
 
+    /**
+     * 存储新增活动
+     * @param activity
+     */
     @Insert("insert into activity(name,description,startTime,endTime,enforceTerminal) values(#{name},#{description},#{startTime},#{endTime},#{enforceTerminal})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivity(Activity activity);
@@ -27,29 +38,52 @@ public interface ActivityMapper {
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivityRule(ActivityRule activityRule);
 
+    /**
+     * 存储活动使用产品范围
+     * @param product
+     * @param activityRuleId
+     */
     @Insert("insert into activityApplyForProduct(activityRuleId,productId) values(#{activityRuleId},#{product.uid})")
-//    @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivityApplyForProduct(Product product,int activityRuleId);
 
+    /**
+     * 存储活动使用客户类型
+     * @param customerType
+     * @param activityRuleId
+     */
     @Insert("insert into activityApplyForCustomerType(activityRuleId,customerTypeId) values(#{activityRuleId},#{customerType.uid})")
-//    @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivityApplyForCustomerType(CustomerType customerType, int activityRuleId);
 
+    /**
+     * 存储活动规则优惠规则2
+     * @param activityRule2
+     * @param activityRuleId
+     */
     @Insert("insert into activityRule2(activityRuleId,number,currency,operation) values(#{activityRuleId},#{activityRule2.number},#{activityRule2.currency},#{activityRule2.operation})")
-//    @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivityRule2(ActivityRule2 activityRule2,int activityRuleId);
 
-    //获取活动列表
+    /**
+     * 获取活动列表
+     * @return
+     */
     @Select("select * from activity")
     List<Activity> getActivities();
 
-    //终止活动
+    /**
+     * 终止活动
+     * @param uid
+     */
     @Update("update activity set enforceTerminal=true where uid=#{uid}")
     void terminalActivity(int uid);
 
-    //根据uid获取活动详细信息
+    /**
+     * 根据uid获取活动详细信息
+     * @param uid
+     * @return
+     */
     @Select("select * from activity where uid=#{uid}")
-    @Results({
+    @Results(id="activity",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="uid",property="photos",
                     many=@Many(select="com.yuyi.tea.mapper.PhotoMapper.getPhotosByActivityId",
@@ -107,6 +141,10 @@ public interface ActivityMapper {
     @Select("select uid,number,currency,operation from activityRule2 where activityRuleId=#{activityRuleId}")
     ActivityRule2 getActivityRule2(int activityRuleId);
 
+    /**
+     * 更新活动信息
+     * @param activity
+     */
     @Update("update activity set name=#{name},description=#{description},startTime=#{startTime},endTime=#{endTime} where uid=#{uid}")
     void updateActivity(Activity activity);
 

@@ -3,6 +3,7 @@ package com.yuyi.tea.service;
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.ActivityMapper;
 import com.yuyi.tea.mapper.PhotoMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CacheConfig(cacheNames = "activity")
 @Service
+@Slf4j
 public class ActivityService {
 
-    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+    public static String REDIS_ACTIVITIES_NAME="activities";
+    public static String REDIS_ACTIVITY_RULE_TYPES_NAME=REDIS_ACTIVITIES_NAME+":activityRuleTypes";
+    public static String REDIS_ACTIVITY_NAME=REDIS_ACTIVITIES_NAME+":activity";
 
     @Autowired
     private ActivityMapper activityMapper;
@@ -29,20 +32,38 @@ public class ActivityService {
     @Autowired
     private RedisService redisService;
 
-    //获取所有活动的名称和描述
-//    @Cacheable(key = "'acitvitiesNameDesc'")
+    /**
+     * 获取所有活动的名称和描述
+     * @return
+     */
     public List<Activity> getActivitiesNameDesc(){
         List<Activity> activitiesNameDesc = activityMapper.getActivitiesNameDesc();
         return activitiesNameDesc;
     }
 
-//    @Cacheable(key = "'activityRuleTypes'")
+    /**
+     * 获取所有活动规则类型
+     * @return
+     */
     public List<ActivityRuleType> getActivityRuleTypes() {
-        List<ActivityRuleType> activityRuleTypes = activityMapper.getActivityRuleTypes();
+        boolean hasKey=redisService.exists(REDIS_ACTIVITY_RULE_TYPES_NAME);
+        List<ActivityRuleType> activityRuleTypes;
+        if(hasKey){
+            activityRuleTypes= (List<ActivityRuleType>) redisService.get(REDIS_ACTIVITY_RULE_TYPES_NAME);
+            log.info("从redis中获取活动规则类型列表"+activityRuleTypes);
+        }else{
+            log.info("从数据库中获取活动规则类型列表");
+            activityRuleTypes= activityMapper.getActivityRuleTypes();
+            redisService.set(REDIS_ACTIVITY_RULE_TYPES_NAME,activityRuleTypes);
+            log.info("将活动规则类型列表存入redis"+activityRuleTypes);
+        }
         return activityRuleTypes;
     }
 
-    //存储新增活动
+    /**
+     * 存储新增活动
+     * @param activity
+     */
     public void saveActivity(Activity activity) {
         activityMapper.saveActivity(activity);
         for(Photo photo:activity.getPhotos()){
@@ -57,7 +78,10 @@ public class ActivityService {
         }
     }
 
-    //存储并返回活动规则
+    /**
+     * 存储并返回活动规则
+     * @param activityRule
+     */
     public void saveActivityRule(ActivityRule activityRule){
         activityMapper.saveActivityRule(activityRule);
         for(Product product:activityRule.getActivityApplyForProduct()){
@@ -71,23 +95,55 @@ public class ActivityService {
         activityMapper.saveActivityRule2(activityRule.getActivityRule2(),activityRule.getUid());
     }
 
-    //获取活动列表
+    /**
+     * 获取活动列表
+     * @return
+     */
     public List<Activity> getActivities() {
         List<Activity> activities = activityMapper.getActivities();
         return activities;
     }
 
-    //终止活动
+    /**
+     * 终止活动
+     * @param uid
+     */
     public void terminalActivity(int uid) {
         activityMapper.terminalActivity(uid);
+        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+uid);
+        if(hasKey){
+            log.info("更新redis中活动状态");
+            Activity activity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+uid);
+            activity.setEnforceTerminal(true);
+            redisService.set(REDIS_ACTIVITY_NAME+":"+uid,activity);
+        }
     }
 
-    //根据uid获取活动详细信息
+    /**
+     * 根据uid获取活动详细信息
+     * @param uid
+     * @return
+     */
     public Activity getActivity(int uid) {
-        Activity activity = activityMapper.getActivity(uid);
+        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+uid);
+        Activity activity;
+        if(hasKey){
+            activity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+uid);
+            log.info("从redis中获取活动信息"+activity);
+        }else{
+            log.info("从数据库中获取活动信息");
+            activity= activityMapper.getActivity(uid);
+            log.info("将获得信息存储到redis中"+activity);
+            redisService.set(REDIS_ACTIVITY_NAME+":"+uid,activity);
+        }
         return activity;
     }
 
+    /**
+     * 更新活动信息
+     * @param activity
+     * @return
+     */
     public Activity updateActivity(Activity activity) {
         activityMapper.updateActivity(activity);
         //更新照片
@@ -113,20 +169,31 @@ public class ActivityService {
         activityMapper.deleteMutexActivity(activity.getUid());
         List<Activity> mutexActivities = saveMutexActivity(activity);
         activity.setMutexActivities(mutexActivities);
-        //更新活动规则
-        //删除该活动当前所有规则
-        activityMapper.deleteActivityRules(activity.getUid());
-        //保存所有规则
-        for(ActivityRule activityRule:activity.getActivityRules()) {
-            activityRule.setActivityId(activity.getUid());
-            saveActivityRule(activityRule);
+//        //更新活动规则
+//        //删除该活动当前所有规则
+//        activityMapper.deleteActivityRules(activity.getUid());
+//        //保存所有规则
+//        for(ActivityRule activityRule:activity.getActivityRules()) {
+//            activityRule.setActivityId(activity.getUid());
+//            saveActivityRule(activityRule);
+//        }
+//        List<ActivityRule> activityRules = activityMapper.getActivityRules(activity.getUid());
+//        activity.setActivityRules(activityRules);
+        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+activity.getUid());
+        if(hasKey){
+            log.info("更新redis中活动信息");
+            Activity redisActivity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+activity.getUid());
+            activity.setActivityRules(redisActivity.getActivityRules());
+            redisService.set(REDIS_ACTIVITY_NAME+":"+activity.getUid(),activity);
         }
-        List<ActivityRule> activityRules = activityMapper.getActivityRules(activity.getUid());
-        activity.setActivityRules(activityRules);
         return activity;
     }
 
-    //插入并返回互斥活动
+    /**
+     * 存储并返回互斥活动
+     * @param activity
+     * @return
+     */
     public List<Activity> saveMutexActivity(Activity activity){
         for(Activity mutexActivity:activity.getMutexActivities()){
             activityMapper.saveMutexActivity(activity.getUid(),mutexActivity.getUid());

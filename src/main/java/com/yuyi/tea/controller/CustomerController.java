@@ -16,8 +16,11 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    //获取客户类型
-    @GetMapping("/customerTypes")
+    /**
+     * 获取客户类型
+     * @return
+     */
+    @GetMapping("/admin/customerTypes")
     public List<CustomerType> getCustomerTypes(){
         List<CustomerType> customerTypes = customerService.getCustomerTypes();
         return customerTypes;

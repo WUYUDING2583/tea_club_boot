@@ -10,7 +10,10 @@ import java.util.List;
 
 public interface CustomerMapper {
 
-    //获取客户类型
+    /**
+     * 获取客户类型
+     * @return
+     */
     @Select("select * from customerType")
     List<CustomerType> getCustomerTypes();
 

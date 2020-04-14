@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface ProductMapper {
 
-    //获取产品类型列表
+    /**
+     * 获取所有产品类型
+     * @return
+     */
     @Select("select * from productType")
     List<ProductType> getProductTypes();
 
@@ -17,7 +20,10 @@ public interface ProductMapper {
     @Select("select * from productType where uid=#{uid}")
     ProductType getProductType(int uid);
 
-    //获取所有产品的名称和类型
+    /**
+     * 获取所有产品的名称和类型
+     * @return
+     */
     @Select("select uid,name,type from product")
     @Results({
             @Result(id = true,column = "uid",property = "uid"),

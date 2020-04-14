@@ -16,15 +16,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    //获取所有产品类型
-    @GetMapping("/productTypes")
+    /**
+     * 获取所有产品类型
+     * @return
+     */
+    @GetMapping("/admin/productTypes")
     public List<ProductType> getProductTypes(){
         List<ProductType> productTypes = productService.getProductTypes();
         return productTypes;
     }
 
-    //根据所有产品的名称
-    @GetMapping("/productsName")
+    /**
+     * 获取所有产品的名称
+     * @return
+     */
+    @GetMapping("/admin/productsName")
     public List<Product> getProductsNameAndType(){
         List<Product> productsNameByType = productService.getProductsNameAndType();
         return productsNameByType;

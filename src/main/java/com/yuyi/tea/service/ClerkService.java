@@ -16,8 +16,8 @@ import java.util.List;
 @Slf4j
 public class ClerkService {
 
-    public static String REDIS_POSITIONS_NAME="positions";
     public static String REDIS_CLERKS_NAME="clerks";
+    public static String REDIS_POSITIONS_NAME=REDIS_CLERKS_NAME+":positions";
     public static String REDIS_CLERK_NAME=REDIS_CLERKS_NAME+":clerk";
 
     @Autowired

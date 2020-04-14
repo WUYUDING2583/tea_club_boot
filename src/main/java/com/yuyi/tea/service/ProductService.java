@@ -4,6 +4,7 @@ import com.yuyi.tea.bean.*;
 import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.PriceMapper;
 import com.yuyi.tea.mapper.ProductMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 
 //@CacheConfig(cacheNames = "product")
 @Service
+@Slf4j
 public class ProductService {
 
-    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+    public static String REDIS_PRODUCTS_NAME="products";
+    public static String REDIS_PRODUCT_TYPES_NAME=REDIS_PRODUCTS_NAME+":productTypes";
 
     @Autowired
     private ProductMapper productMapper;
@@ -36,14 +39,31 @@ public class ProductService {
     @Autowired
     private ActivityService activityService;
 
-//    @Cacheable(key = "'productTypes'")
+
+    /**
+     * 获取所有产品类型
+     * @return
+     */
     public List<ProductType> getProductTypes(){
-        List<ProductType> productTypes = productMapper.getProductTypes();
+        boolean hasKey=redisService.exists(REDIS_PRODUCT_TYPES_NAME);
+        List<ProductType> productTypes;
+        if(hasKey){
+            productTypes= (List<ProductType>) redisService.get(REDIS_PRODUCT_TYPES_NAME);
+            log.info("从redis中获取产品类型列表"+productTypes);
+        }else{
+            log.info("从数据库中获取产品类型列表");
+            productTypes = productMapper.getProductTypes();
+            redisService.set(REDIS_PRODUCT_TYPES_NAME,productTypes);
+            log.info("将产品类型列表存入redis"+productTypes);
+        }
         return productTypes;
     }
 
-    //获取所有产品的名称
-//    @Cacheable(key = "'productsName'")
+
+    /**
+     * 获取所有产品的名称
+     * @return
+     */
     public List<Product> getProductsNameAndType() {
         List<Product> productsNameByType = productMapper.getProductsNameAndType();
         return productsNameByType;

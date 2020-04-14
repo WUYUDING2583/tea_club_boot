@@ -6,6 +6,7 @@ import com.yuyi.tea.bean.EnterpriseCustomerApplication;
 import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.CustomerMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "customer")
+@Slf4j
 public class CustomerService {
 
-    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+    public static String REDIS_CUSTOMERS_NAME="customers";
+    public static String REDIS_CUSTOMER_TYPES_NAME=REDIS_CUSTOMERS_NAME+":customerTypes";
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -28,9 +30,22 @@ public class CustomerService {
     @Autowired
     private RedisService redisService;
 
-//    @Cacheable(key = "'customerTypes'")
+    /**
+     * 获取客户类型
+     * @return
+     */
     public List<CustomerType> getCustomerTypes(){
-        List<CustomerType> customerTypes = customerMapper.getCustomerTypes();
+        boolean hasKey=redisService.exists(REDIS_CUSTOMER_TYPES_NAME);
+        List<CustomerType> customerTypes;
+        if(hasKey){
+            customerTypes= (List<CustomerType>) redisService.get(REDIS_CUSTOMER_TYPES_NAME);
+            log.info("从redis中获取客户类型列表"+customerTypes);
+        }else{
+            log.info("从数据库获取客户类型列表");
+            customerTypes = customerMapper.getCustomerTypes();
+            log.info("将客户类型列表存入reids"+customerTypes);
+            redisService.set(REDIS_CUSTOMER_TYPES_NAME,customerTypes);
+        }
         return customerTypes;
     }
 

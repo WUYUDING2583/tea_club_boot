@@ -56,6 +56,10 @@ public interface PhotoMapper {
     @Update("update photo set clerkId=#{clerkId} where uid=#{uid}")
     void saveClerkAvatar(Photo avatar);
 
+    /**
+     * 存储活动照片
+     * @param photo
+     */
     @Update("update photo set activityId=#{activityId} where uid=#{uid}")
     void saveActivityPhoto(Photo photo);
 
