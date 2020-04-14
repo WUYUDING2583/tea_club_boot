@@ -85,11 +85,11 @@ public class ActivityService {
     public void saveActivityRule(ActivityRule activityRule){
         activityMapper.saveActivityRule(activityRule);
         for(Product product:activityRule.getActivityApplyForProduct()){
-            product.getActivityRules().add(activityRule);
+            //product.getActivityRules().add(activityRule);
             activityMapper.saveActivityApplyForProduct(product,activityRule.getUid());
         }
         for(CustomerType customerType:activityRule.getActivityApplyForCustomerTypes()){
-            customerType.getActivityRules().add(activityRule);
+            //customerType.getActivityRules().add(activityRule);
             activityMapper.saveActivityApplyForCustomerType(customerType,activityRule.getUid());
         }
         activityMapper.saveActivityRule2(activityRule.getActivityRule2(),activityRule.getUid());

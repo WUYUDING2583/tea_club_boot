@@ -36,45 +36,69 @@ public class ProductController {
         return productsNameByType;
     }
 
-    //创建新的产品种类
-    @PostMapping("/productType")
+    /**
+     * 创建新的产品种类
+     * @param productType
+     * @return
+     */
+    @PostMapping("/admin/productType")
     @Transactional(rollbackFor = Exception.class)
     public ProductType saveProductType(@RequestBody ProductType productType){
         productService.saveProductType(productType);
         return productType;
     }
 
-    //创建商品
-    @PostMapping("/product")
+    /**
+     * 创建商品
+     * @param product
+     * @return
+     */
+    @PostMapping("/admin/product")
     @Transactional(rollbackFor = Exception.class)
     public String saveProduct(@RequestBody Product product){
         productService.saveProduct(product);
         return "success";
     }
 
-    //获取产品列表
-    @GetMapping("/products")
+    /**
+     * 获取产品列表
+     * @return
+     */
+    @GetMapping("/admin/products")
     public List<Product> getProducts(){
         List<Product> products = productService.getProducts();
         return products;
     }
 
-    //下架商品
-    @DeleteMapping("/product/{uid}")
+    /**
+     * 下架商品
+     * @param uid
+     * @return
+     */
+    @DeleteMapping("/admin/product/{uid}")
     @Transactional(rollbackFor = Exception.class)
     public String terminalProduct(@PathVariable int uid){
         productService.terminalProduct(uid);
         return "success";
     }
 
-    //根据uid获取产品信息
-    @GetMapping("/product/{uid}")
+    /**
+     * 根据uid获取产品信息
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/product/{uid}")
     public Product getProduct(@PathVariable int uid){
         Product product = productService.getProduct(uid);
         return product;
     }
 
-    @PutMapping("/product")
+    /**
+     * 修改产品信息
+     * @param product
+     * @return
+     */
+    @PutMapping("/admin/product")
     @Transactional(rollbackFor = Exception.class)
     public Product updateProduct(@RequestBody Product product){
         return productService.updateProduct(product);

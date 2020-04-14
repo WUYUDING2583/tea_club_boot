@@ -33,7 +33,10 @@ public interface ProductMapper {
     })
     List<Product> getProductsNameAndType();
 
-    //创建新的产品种类
+    /**
+     * 创建新的产品种类
+     * @param productType
+     */
     @Insert("insert into productType(name) values(#{name})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveProductType(ProductType productType);
@@ -44,7 +47,10 @@ public interface ProductMapper {
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveProduct(Product product);
 
-    //获取产品列表
+    /**
+     * 获取产品列表
+     * @return
+     */
     @Select("select * from product")
     @Results({
             @Result(id = true,column = "uid",property = "uid"),
@@ -57,12 +63,21 @@ public interface ProductMapper {
     })
     List<Product> getProducts();
 
-    //下架商品
+    /**
+     * 下架商品
+     * @param uid
+     */
     @Update("update product set enforceTerminal=true where uid=#{uid}")
     void terminalProduct(int uid);
 
+    /**
+     * 根据uid获取产品信息
+     * @param uid
+     * @return
+     */
     @Select("select * from product where uid=#{uid}")
-    @Results({
+    @Results(id = "product",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column="type",property="type",
                     one=@One(select="com.yuyi.tea.mapper.ProductMapper.getProductType",

@@ -23,6 +23,7 @@ public class ProductService {
 
     public static String REDIS_PRODUCTS_NAME="products";
     public static String REDIS_PRODUCT_TYPES_NAME=REDIS_PRODUCTS_NAME+":productTypes";
+    public static String REDIS_PRODUCT_NAME=REDIS_PRODUCTS_NAME+":product";
 
     @Autowired
     private ProductMapper productMapper;
@@ -69,12 +70,25 @@ public class ProductService {
         return productsNameByType;
     }
 
-    //创建新的产品种类
+    /**
+     * 创建新的产品种类
+     * @param productType
+     */
     public void saveProductType(ProductType productType) {
         productMapper.saveProductType(productType);
+        boolean hasKey=redisService.exists(REDIS_PRODUCT_TYPES_NAME);
+        if(hasKey){
+            log.info("更新redis中产品列表信息");
+            List<ProductType> productTypes= (List<ProductType>) redisService.get(REDIS_PRODUCT_TYPES_NAME);
+            productTypes.add(productType);
+            redisService.set(REDIS_PRODUCT_TYPES_NAME,productTypes);
+        }
     }
 
-    //创建新的产品
+    /**
+     * 创建商品
+     * @param product
+     */
     public void saveProduct(Product product) {
         priceMapper.savePrice(product.getPrice());
         productMapper.saveProduct(product);
@@ -84,24 +98,55 @@ public class ProductService {
         }
     }
 
-    //获取产品列表
+    /**
+     * 获取产品列表
+     * @return
+     */
     public List<Product> getProducts() {
         List<Product> products = productMapper.getProducts();
         return products;
     }
 
-    //下架商品
+    /**
+     * 下架商品
+     * @param uid
+     */
     public void terminalProduct(int uid) {
         productMapper.terminalProduct(uid);
+        boolean hasKey=redisService.exists(REDIS_PRODUCT_NAME+":"+uid);
+        if(hasKey){
+            log.info("更新redis中产品状态");
+            Product product= (Product) redisService.get(REDIS_PRODUCT_NAME+":"+uid);
+            product.setEnforceTerminal(true);
+            redisService.set(REDIS_PRODUCT_NAME+":"+uid,product);
+        }
     }
 
-    //根据uid获取产品信息
+    /**
+     * 根据uid获取产品信息
+     * @param uid
+     * @return
+     */
     public Product getProduct(int uid) {
-        Product product = productMapper.getProduct(uid);
+        boolean hasKey=redisService.exists(REDIS_PRODUCT_NAME+":"+uid);
+        Product product;
+        if(hasKey){
+            product= (Product) redisService.get(REDIS_PRODUCT_NAME+":"+uid);
+            log.info("从redis中获取产品详情"+product);
+        }else{
+            log.info("从数据库中获取产品详情");
+            product= productMapper.getProduct(uid);
+            log.info("将产品详情存入redis"+product);
+            redisService.set(REDIS_PRODUCT_NAME+":"+uid,product);
+        }
         return product;
     }
 
-    //修改产品信息
+    /**
+     * 修改产品信息
+     * @param product
+     * @return
+     */
     public Product updateProduct(Product product) {
         productMapper.updateProduct(product);
         priceMapper.updatePrice(product.getPrice());
@@ -125,6 +170,14 @@ public class ProductService {
                 .filter((Photo photo)->photosUid.contains(photo.getUid()))
                 .collect(Collectors.toList());
         product.setPhotos(currentPhotos);
+        boolean hasKey=redisService.exists(REDIS_PRODUCT_NAME+":"+product.getUid());
+        if(hasKey){
+            log.info("更新redis中产品信息");
+            Product redisProduct= (Product) redisService.get(REDIS_PRODUCT_NAME+":"+product.getUid());
+            product.setActivityRules(redisProduct.getActivityRules());
+            product.setActivities(redisProduct.getActivities());
+            redisService.set(REDIS_PRODUCT_NAME+":"+product.getUid(),product);
+        }
         return product;
     }
 
