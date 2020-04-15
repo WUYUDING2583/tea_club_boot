@@ -94,8 +94,12 @@ public class CustomerController {
         return customers;
     }
 
-    //将客户升级为超级vip
-    @GetMapping("/setSupervip/{uid}")
+    /**
+     * 将客户升级为超级vip
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/setSupervip/{uid}")
     @Transactional(rollbackFor = Exception.class)
     public Customer setSuperVIP(@PathVariable int uid){
         Customer customer = customerService.setSuperVIP(uid);

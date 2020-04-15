@@ -48,6 +48,8 @@ public class AuthorityInterceptor  implements HandlerInterceptor {
                     url="/admin/ordersByCustomer/{customerId}/{startDate}/{endDate}";
                 }else if(splitUrl[2].equals("orders")){
                     url="/admin/orders/{status}/{startDate}/{endDate}";
+                }else if(splitUrl[2].equals("articles")){
+                    url="/admin/articles/{status}/{startDate}/{endDate}";
                 }
             }else{
                 for(int i=0;i<splitUrl.length-1;i++){

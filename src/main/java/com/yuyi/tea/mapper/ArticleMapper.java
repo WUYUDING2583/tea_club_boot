@@ -28,7 +28,12 @@ public interface ArticleMapper {
     @Insert("insert into articleTag(articleId,tagId) values(#{articleId},#{tagId})")
     void saveArticleTag(int tagId, int articleId);
 
-    //获取文章列表
+    /**
+     * 获取文章列表
+     * @param status
+     * @param timeRange
+     * @return
+     */
     @Select("<script>" +
             "select * from article where " +
             "<if test='status!=\"all\"'>" +

@@ -146,6 +146,13 @@ public class CustomerService {
         Customer customer = customerMapper.getCustomerByUid(uid);
         customer.setAvatar(null);
         customer.setPassword(null);
+        boolean hasKey=redisService.exists(REDIS_CUSTOMER_NAME+":"+uid);
+        if (hasKey){
+            log.info("将redis中客户信息更新为超级vip");
+            Customer redisCustomer= (Customer) redisService.get(REDIS_CUSTOMER_NAME+":"+uid);
+            redisCustomer.setCustomerType(customerMapper.getCustomerType(3));
+            redisService.set(REDIS_CUSTOMER_NAME+":"+uid,redisCustomer);
+        }
         return customer;
     }
 
