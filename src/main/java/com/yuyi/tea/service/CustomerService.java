@@ -1,9 +1,7 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.Customer;
-import com.yuyi.tea.bean.CustomerType;
-import com.yuyi.tea.bean.EnterpriseCustomerApplication;
-import com.yuyi.tea.bean.Photo;
+import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.CustomerMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +21,7 @@ public class CustomerService {
 
     public static String REDIS_CUSTOMERS_NAME="customers";
     public static String REDIS_CUSTOMER_TYPES_NAME=REDIS_CUSTOMERS_NAME+":customerTypes";
+    public static String REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME=REDIS_CUSTOMERS_NAME+":enterpriseApplication";
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -49,7 +48,11 @@ public class CustomerService {
         return customerTypes;
     }
 
-    //获取企业用户申请
+    /**
+     * 获取企业客户申请列表
+     * @param isFetchAll
+     * @return
+     */
     public List<EnterpriseCustomerApplication> getEnterpriseCustomerApplications(boolean isFetchAll) {
         List<EnterpriseCustomerApplication> applications=new ArrayList<>();
         if(isFetchAll){
@@ -64,24 +67,63 @@ public class CustomerService {
         return applications;
     }
 
-    //企业客户申请开始审核
+    /**
+     * 企业客户申请开始审核
+     * @param uid
+     */
     public void startEnterpriseCustomerApplication(int uid) {
         customerMapper.startEnterpriseCustomerApplication(uid);
     }
 
+    /**
+     * 根据uid获取企业客户申请详细信息
+     * @param uid
+     * @return
+     */
     public EnterpriseCustomerApplication getEnterpriseCustomerApplication(int uid) {
-        EnterpriseCustomerApplication enterpriseCustomerApplication = customerMapper.getEnterpriseCustomerApplication(uid);
+        boolean hasKey=redisService.exists(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid);
+        EnterpriseCustomerApplication enterpriseCustomerApplication;
+        if(hasKey){
+            enterpriseCustomerApplication= (EnterpriseCustomerApplication) redisService.get(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid);
+            log.info("从redis获取企业客户申请信息"+enterpriseCustomerApplication);
+        }else{
+            log.info("从数据库获取企业客户申请信息");
+            enterpriseCustomerApplication= customerMapper.getEnterpriseCustomerApplication(uid);
+            enterpriseCustomerApplication.getApplicant().setPassword(null);
+            log.info("将企业客户申请信息存入redis"+enterpriseCustomerApplication);
+            redisService.set(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid,enterpriseCustomerApplication);
+        }
         return enterpriseCustomerApplication;
     }
 
-    //通过企业客户申请
+    /**
+     * 通过企业客户申请
+     * @param uid
+     */
     public void approveEnterpriseCustomerApplication(int uid) {
         customerMapper.approveEnterpriseCustomerApplication(uid);
+        boolean hasKey=redisService.exists(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid);
+        if(hasKey){
+            log.info("更新redis中企业客户申请状态为通过");
+            EnterpriseCustomerApplication enterpriseCustomerApplication= (EnterpriseCustomerApplication) redisService.get(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid);
+            enterpriseCustomerApplication.setStatus(CommConstants.EnterpriseCustomerApplication.APPROVE);
+            redisService.set(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid,enterpriseCustomerApplication);
+        }
     }
 
-    //拒绝企业客户申请
+    /**
+     * 拒绝企业客户申请
+     * @param uid
+     */
     public void rejectEnterpriseCustomerApplication(int uid) {
         customerMapper.rejectEnterpriseCustomerApplication(uid);
+        boolean hasKey=redisService.exists(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid);
+        if(hasKey){
+            log.info("更新redis中企业客户申请状态为拒绝");
+            EnterpriseCustomerApplication enterpriseCustomerApplication= (EnterpriseCustomerApplication) redisService.get(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid);
+            enterpriseCustomerApplication.setStatus(CommConstants.EnterpriseCustomerApplication.REJECT);
+            redisService.set(REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME+":"+uid,enterpriseCustomerApplication);
+        }
     }
 
     //获取客户列表

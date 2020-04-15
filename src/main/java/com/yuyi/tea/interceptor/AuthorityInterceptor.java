@@ -39,15 +39,22 @@ public class AuthorityInterceptor  implements HandlerInterceptor {
             int uid = (int) request.getAttribute("uid");
             String type= (String) request.getAttribute("type");
             String method = request.getMethod();
-            //判断url是否是/{uid}模式
             String[] splitUrl = url.split("/");
+            url="";
+            for(int i=0;i<splitUrl.length-1;i++){
+                url+=splitUrl[i]+"/";
+            }
+            //判断url是否是/{uid}模式
             if(StringUtil.isInteger(splitUrl[splitUrl.length-1])){
-                url="";
-                for(int i=0;i<splitUrl.length-1;i++){
-                    url+=splitUrl[i]+"/";
-                }
                 url+="{uid}";
             }
+            //判断url是否是/{isFetchAll}模式
+            else if(splitUrl[splitUrl.length-1].equals("true")||splitUrl[splitUrl.length-1].equals("false")){
+                url+="{isFetchAll}";
+            }else{
+                url+=splitUrl[splitUrl.length-1];
+            }
+
             if(type.equals("customer")){
                 throw new GlobalException(CodeMsg.NO_AUTHORITY);
             }

@@ -26,38 +26,58 @@ public class CustomerController {
         return customerTypes;
     }
 
-    //获取企业客户申请列表
-    @GetMapping("/enterpriseCustomerApplications/{isFetchAll}")
+    /**
+     * 获取企业客户申请列表
+     * @param isFetchAll
+     * @return
+     */
+    @GetMapping("/admin/enterpriseCustomerApplications/{isFetchAll}")
     public List<EnterpriseCustomerApplication> getEnterpriseCustomerApplications(@PathVariable boolean isFetchAll){
         List<EnterpriseCustomerApplication> enterpriseCustomerApplications = customerService.getEnterpriseCustomerApplications(isFetchAll);
         return enterpriseCustomerApplications;
     }
 
-    //企业客户申请开始审核
-    @GetMapping("/startEnterpriseCustomerApplication/{uid}")
+    /**
+     * 企业客户申请开始审核
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/startEnterpriseCustomerApplication/{uid}")
     @Transactional(rollbackFor = Exception.class)
     public String startEnterpriseCustomerApplication(@PathVariable int uid){
         customerService.startEnterpriseCustomerApplication(uid);
         return "success";
     }
 
-    //根据uid获取企业客户申请详细信息
-    @GetMapping("/enterpriseCustomerApplication/{uid}")
+    /**
+     * 根据uid获取企业客户申请详细信息
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/enterpriseCustomerApplication/{uid}")
     public EnterpriseCustomerApplication getEnterpriseCustomerApplication(@PathVariable int uid){
         EnterpriseCustomerApplication enterpriseCustomerApplication = customerService.getEnterpriseCustomerApplication(uid);
         return enterpriseCustomerApplication;
     }
 
-    //通过企业客户申请
-    @GetMapping("/approveEnterpriseCustomerApplication/{uid}")
+    /**
+     * 通过企业客户申请
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/approveEnterpriseCustomerApplication/{uid}")
     @Transactional(rollbackFor = Exception.class)
     public String approveEnterpriseCustomerApplication(@PathVariable int uid){
         customerService.approveEnterpriseCustomerApplication(uid);
         return "success";
     }
 
-    //拒绝企业客户申请
-    @GetMapping("/rejectEnterpriseCustomerApplication/{uid}")
+    /**
+     * 拒绝企业客户申请
+     * @param uid
+     * @return
+     */
+    @GetMapping("/admin/rejectEnterpriseCustomerApplication/{uid}")
     @Transactional(rollbackFor = Exception.class)
     public String rejectEnterpriseCustomerApplication(@PathVariable int uid){
         customerService.rejectEnterpriseCustomerApplication(uid);

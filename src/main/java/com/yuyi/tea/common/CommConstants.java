@@ -1,5 +1,7 @@
 package com.yuyi.tea.common;
 
+import com.yuyi.tea.common.utils.StringUtil;
+
 public class CommConstants {
 
     public static class UserException{
@@ -18,6 +20,13 @@ public class CommConstants {
         public static final String REQUEST_REFUND="requestRefund";
         public static final String REFUND="refunded";
         public static final String REJECT_REFUND="rejectRefund";
+    }
+
+    public static class EnterpriseCustomerApplication{
+        public static final String SUBMIT="submit";
+        public static final String PENDING="pending";
+        public static final String APPROVE="approve";
+        public static final String REJECT="reject";
     }
 //
 //    public static final String[] FilterUrl={"/admin/*","/verifyToken"};
