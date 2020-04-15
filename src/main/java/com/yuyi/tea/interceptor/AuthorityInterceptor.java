@@ -46,6 +46,8 @@ public class AuthorityInterceptor  implements HandlerInterceptor {
                 //判断是否是获取客户的订单列表
                 if(splitUrl[2].equals("ordersByCustomer")){
                     url="/admin/ordersByCustomer/{customerId}/{startDate}/{endDate}";
+                }else if(splitUrl[2].equals("orders")){
+                    url="/admin/orders/{status}/{startDate}/{endDate}";
                 }
             }else{
                 for(int i=0;i<splitUrl.length-1;i++){

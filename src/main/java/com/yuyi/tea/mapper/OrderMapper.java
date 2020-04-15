@@ -61,7 +61,10 @@ public interface OrderMapper {
     List<OrderProduct> getOrderProducts(int orderId);
 
 
-    //获取未完成的订单列表
+    /**
+     * 获取未完成的订单列表
+     * @return
+     */
     @Select("select * from orders where uid in " +
             "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status!='complete' and A.status!='refunded')")
     @Results(id="order",
@@ -85,7 +88,12 @@ public interface OrderMapper {
             })
     List<Order> getUncompleteOrders();
 
-    //根据条件获取订单列表
+    /**
+     * 根据条件获取订单列表
+     * @param status
+     * @param timeRange
+     * @return
+     */
     @Select("<script>" +
             "select * from orders where " +
             "<if test='status!=\"all\"'> uid in (select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status=#{status}) and</if>" +
@@ -95,7 +103,11 @@ public interface OrderMapper {
     @ResultMap(value = "order")
     List<Order> getOrders(String status, TimeRange timeRange);
 
-    //根据uid获取订单详细信息
+    /**
+     * 根据uid获取订单详细信息
+     * @param uid
+     * @return
+     */
     @Select("select * from orders where uid=${uid}")
     @ResultMap(value = "order")
     Order getOrder(int uid);

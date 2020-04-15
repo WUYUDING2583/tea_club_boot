@@ -19,6 +19,7 @@ import java.util.List;
 public class OrderService {
 
     public static final String REDIS_ORDERS_NAME="orders";
+    public static final String REDIS_ORDER_NAME=REDIS_ORDERS_NAME+":order";
 
     @Autowired
     private OrderMapper orderMapper;
@@ -68,7 +69,10 @@ public class OrderService {
         return ordersByCustomer;
     }
 
-    //获取未完成的订单列表
+    /**
+     * 获取未完成的订单列表
+     * @return
+     */
     public List<Order> getUncompleteOrders() {
         List<Order> uncompleteOrders = orderMapper.getUncompleteOrders();
         //查询缓存中订单信息
@@ -84,7 +88,12 @@ public class OrderService {
         return uncompleteOrders;
     }
 
-    //根据条件获取订单列表
+    /**
+     * 根据条件获取订单列表
+     * @param status
+     * @param timeRange
+     * @return
+     */
     public List<Order> getOrders(String status, TimeRange timeRange) {
         List<Order> orders = orderMapper.getOrders(status, timeRange);
         //查询缓存中订单信息
@@ -133,17 +142,21 @@ public class OrderService {
         order.getClerk().setPassword(null);
     }
 
-
-    //根据uid获取订单详细信息
-//    @Cacheable(cacheNames = "order")
+    /**
+     * 根据uid获取订单详细信息
+     * @param uid
+     * @return
+     */
     public Order getOrder(int uid) {
-//        Order order = orderMapper.getOrder(uid);
-//        getRedisOrderDetail(order);
         Order redisOrder = getRedisOrder(uid);
         return redisOrder;
     }
 
-    //将订单状态更新为已发货
+    /**
+     * 将订单状态更新为已发货
+     * @param order
+     * @return
+     */
     public Order updateOrderShipped(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
@@ -165,29 +178,36 @@ public class OrderService {
         return redisOrder;
     }
 
-    //从缓存中查询订单信息
+    /**
+     * 从缓存中查询订单信息
+     * @param uid
+     * @return
+     */
     public Order getRedisOrder(int uid){
         if(uid==0){
             return null;
         }
         Order order=null;
-        boolean hasKey = redisService.exists("orders:order:"+uid);
+        boolean hasKey = redisService.exists(REDIS_ORDER_NAME+":"+uid);
         if(hasKey){
             //获取缓存
-            order= (Order) redisService.get("orders:order:"+uid);
+            order= (Order) redisService.get(REDIS_ORDER_NAME+":"+uid);
             log.info("从缓存获取的数据"+ order);
         }else{
             //从数据库中获取信息
             log.info("从数据库中获取数据");
             order = orderMapper.getOrder(uid);
             getRedisOrderDetail(order);
-            redisService.set("orders:order:"+uid,order);
+            redisService.set(REDIS_ORDER_NAME+":"+uid,order);
             log.info("数据插入缓存" + order);
         }
         return order;
     }
 
-    //从缓存中查询订单内部信息
+    /**
+     * 从缓存中查询订单内部信息
+     * @param order
+     */
     public void getRedisOrderDetail(Order order){
         Customer redisCustomer = customerService.getRedisCustomer(order.getCustomer().getUid());
         redisCustomer.setPassword(null);
@@ -220,7 +240,11 @@ public class OrderService {
         }
     }
 
-    //卖家主动退款
+    /**
+     * 卖家主动退款
+     * @param order
+     * @return
+     */
     public Order updateOrderRefunded(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
@@ -241,7 +265,11 @@ public class OrderService {
         return redisOrder;
     }
 
-    //卖家拒绝买家申请退款
+    /**
+     * 卖家拒绝买家申请退款
+     * @param order
+     * @return
+     */
     public Order updateOrderRejectRefunded(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
