@@ -19,9 +19,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ActivityService {
 
-    public static String REDIS_ACTIVITIES_NAME="activities";
-    public static String REDIS_ACTIVITY_RULE_TYPES_NAME=REDIS_ACTIVITIES_NAME+":activityRuleTypes";
-    public static String REDIS_ACTIVITY_NAME=REDIS_ACTIVITIES_NAME+":activity";
+    public static final String REDIS_ACTIVITIES_NAME="activities";
+    public static final String REDIS_ACTIVITY_RULE_TYPES_NAME=REDIS_ACTIVITIES_NAME+":activityRuleTypes";
+    public static final String REDIS_ACTIVITY_NAME=REDIS_ACTIVITIES_NAME+":activity";
+    public static final String REDIS_ACTIVITY_RULES_NAME=REDIS_ACTIVITIES_NAME+":activityRules";
+    public static final String REDIS_ACTIVITY_RULE_NAME=REDIS_ACTIVITY_RULES_NAME+":activityRule";
 
     @Autowired
     private ActivityMapper activityMapper;
@@ -203,30 +205,34 @@ public class ActivityService {
         return mutexActivities;
     }
 
-    //获取redis中存储的activityRule
+    /**
+     * 获取redis中存储的activityRule
+     * @param uid
+     * @return
+     */
     public ActivityRule getRedisActivityRule(int uid){
         ActivityRule activityRule=null;
         if(uid==0){
             return null;
         }
-         boolean hasKey = redisService.exists("activityRules:activityRule:"+uid);
+         boolean hasKey = redisService.exists(REDIS_ACTIVITY_RULE_NAME+":"+uid);
         if(hasKey){
-            //获取缓存
-            activityRule= (ActivityRule) redisService.get("activityRules:activityRule:"+uid);
+            activityRule= (ActivityRule) redisService.get(REDIS_ACTIVITY_RULE_NAME+":"+uid);
             log.info("从缓存获取的数据"+ activityRule);
         }else{
-            //从数据库中获取信息
             log.info("从数据库中获取数据");
             activityRule = activityMapper.getActivityRule(uid);
-            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
-            redisService.set("activityRules:activityRule:"+uid,activityRule);
+            redisService.set(REDIS_ACTIVITY_RULE_NAME+":"+uid,activityRule);
             log.info("数据插入缓存" + activityRule);
         }
         return activityRule;
     }
 
 
-    //清除前端不需要的activityRule的内容
+    /**
+     * 清除前端不需要的activityRule的内容
+     * @param activityRule
+     */
     public static void clearActivityRule(ActivityRule activityRule){
         if(activityRule!=null) {
             activityRule.setActivityApplyForProduct(null);

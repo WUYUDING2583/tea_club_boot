@@ -27,9 +27,9 @@ public class JwtUtil {
     private static final String SECRET = "01234562389_012345659_0123456273";
 
     /**
-     * 过期时间 20分钟
+     * 过期时间 1天
      **/
-    public static final long EXPIRATION = 60*20L;//单位为秒
+    public static final long EXPIRATION = 60*60*24L;//单位为秒
 
     /**
      * 生成用户token,设置token超时时间

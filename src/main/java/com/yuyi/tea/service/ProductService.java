@@ -181,30 +181,25 @@ public class ProductService {
         return product;
     }
 
-    //从缓存中获取产品信息
+    /**
+     * 从缓存中获取产品信息
+     * @param uid
+     * @return
+     */
     public Product getRedisProduct(int uid){
-        boolean hasKey = redisService.exists("products:product:"+uid);
+        boolean hasKey = redisService.exists(REDIS_PRODUCT_NAME+":"+uid);
         Product product=null;
         if(hasKey){
             //获取缓存
-            product= (Product) redisService.get("products:product:"+uid);
+            product= (Product) redisService.get(REDIS_PRODUCT_NAME+":"+uid);
             log.info("从缓存获取的数据"+ product);
         }else{
             //从数据库中获取信息
             log.info("从数据库中获取数据");
             product = productMapper.getProduct(uid);
             activityService.clearActivityRules(product.getActivityRules());
-//            for(ActivityRule activityRule:product.getActivityRules()){
-//                ActivityService.clearActivityRule(activityRule);
-//            }
             activityService.clearActivities(product.getActivities());
-//            for(Activity activity:product.getActivities()){
-//                activity.setPhotos(null);
-//                activity.setMutexActivities(null);
-//                activity.setActivityRules(null);
-//            }
-            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
-            redisService.set("products:product:"+uid,product);
+            redisService.set(REDIS_PRODUCT_NAME+":"+uid,product);
             log.info("数据插入缓存" + product);
         }
         return product;

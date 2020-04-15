@@ -41,20 +41,27 @@ public class AuthorityInterceptor  implements HandlerInterceptor {
             String method = request.getMethod();
             String[] splitUrl = url.split("/");
             url="";
-            for(int i=0;i<splitUrl.length-1;i++){
-                url+=splitUrl[i]+"/";
-            }
-            //判断url是否是/{uid}模式
-            if(StringUtil.isInteger(splitUrl[splitUrl.length-1])){
-                url+="{uid}";
-            }
-            //判断url是否是/{isFetchAll}模式
-            else if(splitUrl[splitUrl.length-1].equals("true")||splitUrl[splitUrl.length-1].equals("false")){
-                url+="{isFetchAll}";
+            //判断url的长度，若长度超过3，则需要判断特殊模式
+            if(splitUrl.length>4){
+                //判断是否是获取客户的订单列表
+                if(splitUrl[2].equals("ordersByCustomer")){
+                    url="/admin/ordersByCustomer/{customerId}/{startDate}/{endDate}";
+                }
             }else{
-                url+=splitUrl[splitUrl.length-1];
+                for(int i=0;i<splitUrl.length-1;i++){
+                    url+=splitUrl[i]+"/";
+                }
+                //判断url是否是/{uid}模式
+                if(StringUtil.isInteger(splitUrl[splitUrl.length-1])){
+                    url+="{uid}";
+                }
+                //判断url是否是/{isFetchAll}模式
+                else if(splitUrl[splitUrl.length-1].equals("true")||splitUrl[splitUrl.length-1].equals("false")){
+                    url+="{isFetchAll}";
+                }else{
+                    url+=splitUrl[splitUrl.length-1];
+                }
             }
-
             if(type.equals("customer")){
                 throw new GlobalException(CodeMsg.NO_AUTHORITY);
             }

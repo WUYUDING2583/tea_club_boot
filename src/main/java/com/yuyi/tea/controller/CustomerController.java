@@ -84,8 +84,11 @@ public class CustomerController {
         return "success";
     }
 
-    //获取客户列表
-    @GetMapping("/customers")
+    /**
+     * 获取客户列表
+     * @return
+     */
+    @GetMapping("/admin/customers")
     public List<Customer> getCustomers(){
         List<Customer> customers = customerService.getCustomers();
         return customers;

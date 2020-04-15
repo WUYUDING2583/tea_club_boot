@@ -6,6 +6,7 @@ import com.yuyi.tea.common.utils.AmountUtil;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.mapper.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class OrderService {
 
-    private final Logger log = LoggerFactory.getLogger(OrderService.class);
+    public static final String REDIS_ORDERS_NAME="orders";
 
     @Autowired
     private OrderMapper orderMapper;
@@ -48,8 +50,12 @@ public class OrderService {
     @Autowired
     private ClerkService clerkService;
 
-    //获取客户的订单列表
-//    @Cacheable(cacheNames = "customerOrders",key = "#customerId")
+    /**
+     * 获取客户的订单列表
+     * @param customerId
+     * @param timeRange
+     * @return
+     */
     public List<Order> getOrdersByCustomer(int customerId, TimeRange timeRange){
         List<Order> ordersByCustomer = orderMapper.getOrdersByCustomer(customerId, timeRange);
         //查询缓存中订单信息
@@ -195,7 +201,6 @@ public class OrderService {
         //查询产品信息
         for(OrderProduct orderProduct:order.getProducts()){
             Product redisProduct = productService.getRedisProduct(orderProduct.getProduct().getUid());
-//            redisProduct.setPhotos(null);
             ActivityRule redisActivityRule = activityService.getRedisActivityRule(orderProduct.getActivityRule().getUid());
             ActivityService.clearActivityRule(redisActivityRule);
             orderProduct.setActivityRule(redisActivityRule);

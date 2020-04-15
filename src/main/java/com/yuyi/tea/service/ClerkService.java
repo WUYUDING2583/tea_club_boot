@@ -153,20 +153,21 @@ public class ClerkService {
         }
     }
 
-    //从缓存中获取职员信息
+    /**
+     * 从缓存中获取职员信息
+     * @param uid
+     * @return
+     */
     public Clerk getRedisClerk(int uid){
-        Clerk clerk=null;
-        boolean hasKey = redisService.exists("clerks:clerk:"+uid);
+        Clerk clerk;
+        boolean hasKey = redisService.exists(REDIS_CLERK_NAME+":"+uid);
         if(hasKey){
-            //获取缓存
-            clerk= (Clerk) redisService.get("clerks:clerk:"+uid);
+            clerk= (Clerk) redisService.get(REDIS_CLERK_NAME+":"+uid);
             log.info("从缓存获取的数据"+ clerk);
         }else{
-            //从数据库中获取信息
             log.info("从数据库中获取数据");
             clerk = clerkMapper.getClerk(uid);
-            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
-            redisService.set("clerks:clerk:"+uid,clerk);
+            redisService.set(REDIS_CLERK_NAME+":"+uid,clerk);
             log.info("数据插入缓存" + clerk);
         }
         return clerk;

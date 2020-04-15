@@ -20,7 +20,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] urls={"/admin/*","/admin/*/*"};
+        String[] urls={"/admin/*","/admin/*/*","/admin/*/*/*/*"};
         registry.addInterceptor(authorityInterceptor()).addPathPatterns(urls);
     }
 }

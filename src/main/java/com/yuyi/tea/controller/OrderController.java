@@ -22,8 +22,14 @@ public class OrderController {
     @Autowired
     private RedisService redisService;
 
-    //获取客户的订单列表
-    @GetMapping("/ordersByCustomer/{customerId}/{startDate}/{endDate}")
+    /**
+     * 获取客户的订单列表
+     * @param customerId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @GetMapping("/admin/ordersByCustomer/{customerId}/{startDate}/{endDate}")
     public List<Order> getOrdersByCustomer(@PathVariable int customerId,@PathVariable long startDate,@PathVariable long endDate){
        TimeRange timeRange=new TimeRange(startDate,endDate);
         List<Order> ordersByCustomer = orderService.getOrdersByCustomer(customerId, timeRange);

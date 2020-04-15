@@ -19,9 +19,10 @@ import java.util.List;
 @Slf4j
 public class CustomerService {
 
-    public static String REDIS_CUSTOMERS_NAME="customers";
-    public static String REDIS_CUSTOMER_TYPES_NAME=REDIS_CUSTOMERS_NAME+":customerTypes";
-    public static String REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME=REDIS_CUSTOMERS_NAME+":enterpriseApplication";
+    public static final String REDIS_CUSTOMERS_NAME="customers";
+    public static final String REDIS_CUSTOMER_TYPES_NAME=REDIS_CUSTOMERS_NAME+":customerTypes";
+    public static final String REDIS_ENTERPRISE_CUSTOMER_APPLICATION_NAME=REDIS_CUSTOMERS_NAME+":enterpriseApplication";
+    public static final String REDIS_CUSTOMER_NAME=REDIS_CUSTOMERS_NAME+":customer";
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -126,7 +127,10 @@ public class CustomerService {
         }
     }
 
-    //获取客户列表
+    /**
+     * 获取客户列表
+     * @return
+     */
     public List<Customer> getCustomers() {
         List<Customer> customers = customerMapper.getCustomers();
         for(Customer customer:customers){
@@ -145,20 +149,21 @@ public class CustomerService {
         return customer;
     }
 
-    //从redis中获取客户信息
+    /**
+     * 从redis中获取客户信息
+     * @param uid
+     * @return
+     */
     public Customer getRedisCustomer(int uid){
         Customer customer=null;
-        boolean hasKey = redisService.exists("customers:customer:"+uid);
+        boolean hasKey = redisService.exists(REDIS_CUSTOMER_NAME+":"+uid);
         if(hasKey){
-            //获取缓存
-            customer= (Customer) redisService.get("customers:customer:"+uid);
+            customer= (Customer) redisService.get(REDIS_CUSTOMER_NAME+":"+uid);
             log.info("从缓存获取的数据"+ customer);
         }else{
-            //从数据库中获取信息
             log.info("从数据库中获取数据");
             customer = customerMapper.getCustomerByUid(uid);
-            //数据插入缓存（set中的参数含义：key值，user对象，缓存存在时间10（long类型），时间单位）
-            redisService.set("customers:customer:"+uid,customer);
+            redisService.set(REDIS_CUSTOMER_NAME+":"+uid,customer);
             log.info("数据插入缓存" + customer);
         }
         return customer;

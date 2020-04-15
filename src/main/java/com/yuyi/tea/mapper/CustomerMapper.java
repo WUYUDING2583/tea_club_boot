@@ -86,9 +86,13 @@ public interface CustomerMapper {
     @Update("update enterpriseCustomerApplication set status='reject' where uid=#{uid}")
     void rejectEnterpriseCustomerApplication(int uid);
 
-    //获取客户列表
+    /**
+     * 获取客户列表
+     * @return
+     */
     @Select("select * from customer")
-    @Results({
+    @Results(id="customer",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column = "uid",property = "avatar",
                     one = @One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByCustomerId",

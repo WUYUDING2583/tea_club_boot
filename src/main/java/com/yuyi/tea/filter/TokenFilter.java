@@ -22,8 +22,6 @@ import static com.yuyi.tea.service.LoginService.COOKIE_NAME_TOKEN;
  * @author 于一
  */
 @Slf4j
-//@WebFilter(filterName = "TokenFilter", urlPatterns = {"/admin/*","/verifyToken"})
-//@Order(value = 2)
 public class TokenFilter implements Filter {
 
     private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<>(
