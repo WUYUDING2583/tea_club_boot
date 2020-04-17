@@ -35,7 +35,6 @@ public class LoginController {
      */
     @PostMapping("/admin/idLogin")
     public User clerkIdLogin(HttpServletResponse response,@RequestBody Clerk loginClerk){
-        log.info("职员身份证密码登陆id:"+loginClerk.getIdentityId()+" psw:"+loginClerk.getPassword());
         User clerk= loginService.loginByIdPsw(response, loginClerk.getIdentityId(), loginClerk.getPassword());
         return clerk;
     }
@@ -75,6 +74,17 @@ public class LoginController {
     @GetMapping("/verifyToken")
     public User verifyToken(HttpServletResponse response, HttpServletRequest request){
         User user = loginService.verifyToken(response, request);
+        return user;
+    }
+
+    /**
+     * 移动端登陆验证
+     * @param
+     * @return
+     */
+    @PostMapping("/mobile/login")
+    public User mobileLogin(@RequestBody Clerk clerk){
+        User user = loginService.moblieLogin(clerk);
         return user;
     }
 }

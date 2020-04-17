@@ -14,6 +14,7 @@ public class User implements Serializable {
     private Photo avatar;
     private String password;
     private boolean enforceTerminal=false;
+    private String token;
 
     public User() {
     }
@@ -32,6 +33,14 @@ public class User implements Serializable {
         this.avatar = avatar;
         this.password = password;
         this.enforceTerminal = enforceTerminal;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public boolean isEnforceTerminal() {

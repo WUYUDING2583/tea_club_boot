@@ -181,4 +181,26 @@ public class LoginService {
         }
         return user;
     }
+
+    /**
+     * 移动端职员登陆
+     * @param clerk
+     * @return
+     */
+    public User moblieLogin(Clerk clerk) {
+        User realClerk = clerkMapper.getClerkByIdentityId(clerk.getIdentityId());
+        if(realClerk==null){
+            throw new GlobalException(CodeMsg.IDENTITYID_NOT_EXIST);
+        }else if(!realClerk.getPassword().equals(clerk.getPassword())){
+            throw new GlobalException(CodeMsg.PASSWORD_ERROR);
+        }else{//密码正确，生成token
+            //生成cookie
+            log.info("登陆成功");
+            String token = JwtUtil.createToken(realClerk);
+            clerkService.clearClerk((Clerk) realClerk);
+            realClerk.setToken(token);
+            realClerk.setPassword(null);
+            return realClerk;
+        }
+    }
 }

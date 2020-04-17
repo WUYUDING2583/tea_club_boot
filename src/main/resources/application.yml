@@ -28,3 +28,17 @@ mybatis:
 logging:
   level:
     com.yuyi.tea.mapper: debug
+
+#https端口号.
+#server:
+#  port: 443
+#  ssl:
+#    #证书的路径.
+#    key-store: classpath:keystore.p12
+#    #证书密码，请修改为您自己证书的密码.
+#    key-store-password: 1q2w3e4rasdf
+#    #秘钥库类型
+#    key-store-type: PKCS12
+#    #证书别名
+#    key-alias: tomcat
+
