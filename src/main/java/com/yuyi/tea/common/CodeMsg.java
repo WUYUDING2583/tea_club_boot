@@ -1,5 +1,7 @@
 package com.yuyi.tea.common;
 
+import com.yuyi.tea.enums.ErrorCodeEnum;
+
 /**
  * 状态码，错误码
  */
@@ -27,6 +29,11 @@ public class CodeMsg {
     public static final CodeMsg OTP_ERROR = new CodeMsg(500302,"验证码错误");
     //权限验证模块 5004xx
     public static final CodeMsg NO_AUTHORITY = new CodeMsg(500400,"您没有权限");
+    //人脸识别模块 5005xx
+    public static final CodeMsg FILE_IS_NULL=new CodeMsg(500500,"文件为空");
+    public static final CodeMsg GROUP_ID_IS_NULL=new CodeMsg(500501,"groupId为空");
+    public static final CodeMsg NAME_IS_NULL=new CodeMsg(500502,"名字为空");
+
 
     private CodeMsg() {
     }
@@ -34,6 +41,12 @@ public class CodeMsg {
         this.code = code;
         this.error = error;
     }
+
+    public CodeMsg(ErrorCodeEnum errorCodeEnum){
+        this.code=errorCodeEnum.getCode();
+        this.error=errorCodeEnum.getDescription();
+    }
+
     public int getCode() {
         return code;
     }
