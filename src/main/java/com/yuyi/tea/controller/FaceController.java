@@ -113,17 +113,20 @@ public class FaceController {
                     faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(bytes1));
                     faceSearchResDto.setClerk(faceUserInfo.getClerk());
                     faceSearchResDto.setCustomer(faceUserInfo.getCustomer());
+                    if(faceUserInfo.getCustomer()!=null){
+                        faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(faceUserInfo.getCustomer().getAvatar().getPhoto()));
+                    }
                 }
-                if(faceSearchResDto.getCustomer()!=null)
+                if(faceSearchResDto.getClerk()==null)
                     faceSearchResDtoList.add(faceSearchResDto);
             }
         }
+        //TODO 人脸识别区分数据库内已有客户照片和无照片，返回值不同
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Customer.class, new CustomerTypeAdapter());
         gsonBuilder.setPrettyPrinting();
         Gson gson=gsonBuilder.create();
-        String t=gson.toJson(faceSearchResDtoList);
-        WebSocketServer.sendInfo(t,null);
+        WebSocketServer.sendInfo(gson.toJson(faceSearchResDtoList),null);
         return faceSearchResDtoList;
     }
 

@@ -2,6 +2,8 @@ package com.yuyi.tea.typeAdapter;
 
 
 import java.io.IOException;
+
+import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -13,11 +15,13 @@ public class CustomerTypeAdapter extends TypeAdapter {
     public void write(JsonWriter out, Object o) throws IOException {
         Customer customer=(Customer)o;
         out.beginObject();
-        out.name("uid").value(customer.getUid());
-        out.name("name").value(customer.getName());
-        out.name("email").value(customer.getEmail());
-        out.name("contact").value((customer.getContact()));
-        out.name("gender").value(customer.getGender());
+        if(o!=null){
+            out.name("uid").value(customer.getUid());
+            out.name("name").value(customer.getName());
+            out.name("email").value(customer.getEmail());
+            out.name("contact").value((customer.getContact()));
+            out.name("gender").value(customer.getGender());
+        }
         out.endObject();
     }
 
@@ -42,6 +46,7 @@ public class CustomerTypeAdapter extends TypeAdapter {
                     break;
                 case "gender":
                     customer.setGender(in.nextInt());
+                    break;
             }
         }
         in.endObject();

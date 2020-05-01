@@ -39,11 +39,11 @@ public class WebSocketServer {
         addOnlineCount();           //在线数加1
         log.info("有新窗口开始监听:"+sid+",当前在线人数为" + getOnlineCount());
         this.sid=sid;
-        try {
-            sendMessage("连接成功");
-        } catch (IOException e) {
-            log.error("websocket IO异常");
-        }
+//        try {
+//            sendMessage("连接成功");
+//        } catch (IOException e) {
+//            log.error("websocket IO异常");
+//        }
     }
 
     /**
@@ -65,11 +65,11 @@ public class WebSocketServer {
         log.info("收到来自窗口"+sid+"的信息:"+message);
         //群发消息
         for (WebSocketServer item : webSocketSet) {
-            try {
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                item.sendMessage(message);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
