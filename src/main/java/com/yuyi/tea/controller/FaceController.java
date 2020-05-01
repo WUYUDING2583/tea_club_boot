@@ -35,6 +35,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.yuyi.tea.common.utils.StringUtil.base64Process;
+
 
 @RestController
 public class FaceController {
@@ -49,62 +51,17 @@ public class FaceController {
     UserFaceInfoService userFaceInfoService;
 
 
-//    /*
-//    人脸添加
-//     */
-//    @RequestMapping(value = "/faceAdd", method = RequestMethod.POST)
-//    @ResponseBody
-//    public String faceAdd(@RequestParam("file") String file, @RequestParam("groupId") Integer groupId, @RequestParam("name") String name) {
-//
-//        try {
-//            if (file == null) {
-//                throw new GlobalException(CodeMsg.FILE_IS_NULL);
-//            }
-//            if (groupId == null) {
-//                throw new GlobalException(CodeMsg.GROUP_ID_IS_NULL);
-//            }
-//            if (name == null) {
-//                throw new GlobalException(CodeMsg.NAME_IS_NULL);
-//            }
-//
-//            byte[] decode = Base64.decode(base64Process(file));
-//            ImageInfo imageInfo = ImageFactory.getRGBData(decode);
-//
-//            //人脸特征获取
-//            List<FaceFeature> faceFeatureList = faceEngineService.extractFaceFeature(imageInfo);
-//            if (faceFeatureList == null) {
-//                throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
-//            }
-//
-//            for(FaceFeature faceFeature:faceFeatureList){
-//
-//                UserFaceInfo userFaceInfo = new UserFaceInfo();
-//                userFaceInfo.setName(name);
-//                userFaceInfo.setGroupId(groupId);
-//                userFaceInfo.setFaceFeature(faceFeature.getFeatureData());
-//                userFaceInfo.setFaceId(RandomUtil.randomString(10));
-//
-//                //人脸特征插入到数据库
-//                userFaceInfoService.insertSelective(userFaceInfo);
-//            }
-//
-//            logger.info("faceAdd:" + name);
-//            return "success";
-//        } catch (Exception e) {
-//            logger.error("", e);
-//            throw new GlobalException(new CodeMsg(ErrorCodeEnum.UNKNOWN));
-//        }
-//    }
-
-    /*
-    人脸识别
+    /**
+     * 人脸识别
+     * @param file
+     * @param groupId
+     * @return
+     * @throws Exception
      */
     @PostMapping("/faceSearch")
-//    @RequestMapping(value = "/faceSearch", method = RequestMethod.POST)
-//    @ResponseBody
     public List<FaceSearchResDto> faceSearch(String file, Integer groupId) throws Exception {
 
-        if (groupId == null) {;
+        if (groupId == null) {
             throw new GlobalException(CodeMsg.GROUP_ID_IS_NULL);
         }
         byte[] decode = Base64.decode(base64Process(file));
@@ -123,8 +80,11 @@ public class FaceController {
             //人脸比对，获取比对结果
             List<FaceUserInfo> userFaceInfoList = faceEngineService.compareFaceFeature(faceFeature.getFeatureData(), groupId);
 
-            if (CollectionUtil.isNotEmpty(userFaceInfoList)) {
-                FaceUserInfo faceUserInfo = userFaceInfoList.get(0);
+            if (!CollectionUtil.isNotEmpty(userFaceInfoList)) {
+                //无匹配人脸时将其存入数据库
+                userFaceInfoList = userFaceInfoService.addFace(file, groupId, null);
+            }
+            for(FaceUserInfo faceUserInfo:userFaceInfoList){
                 FaceSearchResDto faceSearchResDto = new FaceSearchResDto();
                 BeanUtil.copyProperties(faceUserInfo, faceSearchResDto);
                 List<ProcessInfo> processInfoList = faceEngineService.process(imageInfo);
@@ -150,11 +110,7 @@ public class FaceController {
 
                 }
                 faceSearchResDtoList.add(faceSearchResDto);
-            }else{
-                throw new GlobalException(new CodeMsg(ErrorCodeEnum.FACE_DOES_NOT_MATCH));
             }
-
-
         }
         return faceSearchResDtoList;
     }
@@ -176,17 +132,5 @@ public class FaceController {
     }
 
 
-    private String base64Process(String base64Str) {
-        if (!StringUtils.isEmpty(base64Str)) {
-            String photoBase64 = base64Str.substring(0, 30).toLowerCase();
-            int indexOf = photoBase64.indexOf("base64,");
-            if (indexOf > 0) {
-                base64Str = base64Str.substring(indexOf + 7);
-            }
 
-            return base64Str;
-        } else {
-            return "";
-        }
-    }
 }
