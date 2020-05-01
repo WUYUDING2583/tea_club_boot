@@ -23,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -39,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Controller
+@RestController
 public class FaceController {
 
     public final static Logger logger = LoggerFactory.getLogger(FaceController.class);
@@ -51,63 +48,60 @@ public class FaceController {
     @Autowired
     UserFaceInfoService userFaceInfoService;
 
-    @RequestMapping(value = "/demo")
-    public String demo() {
-        return "demo";
-    }
 
-    /*
-    人脸添加
-     */
-    @RequestMapping(value = "/faceAdd", method = RequestMethod.POST)
-    @ResponseBody
-    public String faceAdd(@RequestParam("file") String file, @RequestParam("groupId") Integer groupId, @RequestParam("name") String name) {
-
-        try {
-            if (file == null) {
-                throw new GlobalException(CodeMsg.FILE_IS_NULL);
-            }
-            if (groupId == null) {
-                throw new GlobalException(CodeMsg.GROUP_ID_IS_NULL);
-            }
-            if (name == null) {
-                throw new GlobalException(CodeMsg.NAME_IS_NULL);
-            }
-
-            byte[] decode = Base64.decode(base64Process(file));
-            ImageInfo imageInfo = ImageFactory.getRGBData(decode);
-
-            //人脸特征获取
-            List<FaceFeature> faceFeatureList = faceEngineService.extractFaceFeature(imageInfo);
-            if (faceFeatureList == null) {
-                throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
-            }
-
-            for(FaceFeature faceFeature:faceFeatureList){
-
-                UserFaceInfo userFaceInfo = new UserFaceInfo();
-                userFaceInfo.setName(name);
-                userFaceInfo.setGroupId(groupId);
-                userFaceInfo.setFaceFeature(faceFeature.getFeatureData());
-                userFaceInfo.setFaceId(RandomUtil.randomString(10));
-
-                //人脸特征插入到数据库
-                userFaceInfoService.insertSelective(userFaceInfo);
-            }
-
-            logger.info("faceAdd:" + name);
-            return "success";
-        } catch (Exception e) {
-            logger.error("", e);
-            throw new GlobalException(new CodeMsg(ErrorCodeEnum.UNKNOWN));
-        }
-    }
+//    /*
+//    人脸添加
+//     */
+//    @RequestMapping(value = "/faceAdd", method = RequestMethod.POST)
+//    @ResponseBody
+//    public String faceAdd(@RequestParam("file") String file, @RequestParam("groupId") Integer groupId, @RequestParam("name") String name) {
+//
+//        try {
+//            if (file == null) {
+//                throw new GlobalException(CodeMsg.FILE_IS_NULL);
+//            }
+//            if (groupId == null) {
+//                throw new GlobalException(CodeMsg.GROUP_ID_IS_NULL);
+//            }
+//            if (name == null) {
+//                throw new GlobalException(CodeMsg.NAME_IS_NULL);
+//            }
+//
+//            byte[] decode = Base64.decode(base64Process(file));
+//            ImageInfo imageInfo = ImageFactory.getRGBData(decode);
+//
+//            //人脸特征获取
+//            List<FaceFeature> faceFeatureList = faceEngineService.extractFaceFeature(imageInfo);
+//            if (faceFeatureList == null) {
+//                throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
+//            }
+//
+//            for(FaceFeature faceFeature:faceFeatureList){
+//
+//                UserFaceInfo userFaceInfo = new UserFaceInfo();
+//                userFaceInfo.setName(name);
+//                userFaceInfo.setGroupId(groupId);
+//                userFaceInfo.setFaceFeature(faceFeature.getFeatureData());
+//                userFaceInfo.setFaceId(RandomUtil.randomString(10));
+//
+//                //人脸特征插入到数据库
+//                userFaceInfoService.insertSelective(userFaceInfo);
+//            }
+//
+//            logger.info("faceAdd:" + name);
+//            return "success";
+//        } catch (Exception e) {
+//            logger.error("", e);
+//            throw new GlobalException(new CodeMsg(ErrorCodeEnum.UNKNOWN));
+//        }
+//    }
 
     /*
     人脸识别
      */
-    @RequestMapping(value = "/faceSearch", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/faceSearch")
+//    @RequestMapping(value = "/faceSearch", method = RequestMethod.POST)
+//    @ResponseBody
     public List<FaceSearchResDto> faceSearch(String file, Integer groupId) throws Exception {
 
         if (groupId == null) {;

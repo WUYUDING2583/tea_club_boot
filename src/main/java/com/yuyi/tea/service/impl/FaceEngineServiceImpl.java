@@ -54,6 +54,7 @@ public class FaceEngineServiceImpl implements FaceEngineService {
 
     @PostConstruct
     public void init() {
+        logger.info("start init face engine");
         executorService = Executors.newFixedThreadPool(threadPoolSize);
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxIdle(threadPoolSize);
