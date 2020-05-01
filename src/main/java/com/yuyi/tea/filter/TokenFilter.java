@@ -18,7 +18,7 @@ import java.util.*;
 import static com.yuyi.tea.service.LoginService.COOKIE_NAME_TOKEN;
 
 /**
- * JWT过滤器，验证用户token
+ * JWT过滤器，验证网页端用户token
  * @author 于一
  */
 @Slf4j

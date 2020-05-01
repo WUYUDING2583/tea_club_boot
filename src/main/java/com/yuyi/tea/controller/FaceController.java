@@ -8,6 +8,10 @@ import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.toolkit.ImageFactory;
 import com.arcsoft.face.toolkit.ImageInfo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.yuyi.tea.bean.Clerk;
+import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.domain.UserFaceInfo;
 import com.yuyi.tea.dto.FaceSearchResDto;
@@ -17,6 +21,7 @@ import com.yuyi.tea.enums.ErrorCodeEnum;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.interfaces.FaceEngineService;
 import com.yuyi.tea.service.interfaces.UserFaceInfoService;
+import com.yuyi.tea.typeAdapter.CustomerTypeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +93,7 @@ public class FaceController {
                 FaceSearchResDto faceSearchResDto = new FaceSearchResDto();
                 BeanUtil.copyProperties(faceUserInfo, faceSearchResDto);
                 List<ProcessInfo> processInfoList = faceEngineService.process(imageInfo);
+                faceUserInfo=userFaceInfoService.getFaceUserInfo(faceUserInfo);
                 if (CollectionUtil.isNotEmpty(processInfoList)) {
                     //人脸检测
                     List<FaceInfo> faceInfoList = faceEngineService.detectFaces(imageInfo);
@@ -105,13 +111,19 @@ public class FaceController {
                     ImageIO.write(bufImage, "jpg", outputStream);
                     byte[] bytes1 = outputStream.toByteArray();
                     faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(bytes1));
-                    faceSearchResDto.setAge(processInfoList.get(0).getAge());
-                    faceSearchResDto.setGender(processInfoList.get(0).getGender().equals(1) ? "女" : "男");
-
+                    faceSearchResDto.setClerk(faceUserInfo.getClerk());
+                    faceSearchResDto.setCustomer(faceUserInfo.getCustomer());
                 }
-                faceSearchResDtoList.add(faceSearchResDto);
+                if(faceSearchResDto.getCustomer()!=null)
+                    faceSearchResDtoList.add(faceSearchResDto);
             }
         }
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Customer.class, new CustomerTypeAdapter());
+        gsonBuilder.setPrettyPrinting();
+        Gson gson=gsonBuilder.create();
+        String t=gson.toJson(faceSearchResDtoList);
+        WebSocketServer.sendInfo(t,null);
         return faceSearchResDtoList;
     }
 

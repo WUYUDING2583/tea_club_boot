@@ -69,7 +69,6 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
             for(FaceFeature faceFeature:faceFeatureList){
 
                 UserFaceInfo userFaceInfo = new UserFaceInfo();
-                userFaceInfo.setName(name);
                 userFaceInfo.setGroupId(groupId);
                 userFaceInfo.setFaceFeature(faceFeature.getFeatureData());
                 userFaceInfo.setFaceId(RandomUtil.randomString(10));
@@ -78,7 +77,6 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
                 insertSelective(userFaceInfo);
                 FaceUserInfo faceUserInfo=new FaceUserInfo();
                 faceUserInfo.setFaceId(userFaceInfo.getFaceId());
-                faceUserInfo.setName(name);
                 faceUserInfo.setFaceFeature(userFaceInfo.getFaceFeature());
                 userFaceInfoList.add(faceUserInfo);
             }
@@ -89,5 +87,16 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
             log.error("", e);
             throw new GlobalException(new CodeMsg(ErrorCodeEnum.UNKNOWN));
         }
+    }
+
+    /**
+     * 获取人脸对应的所有信息
+     * @param faceUserInfo
+     * @return
+     */
+    @Override
+    public FaceUserInfo getFaceUserInfo(FaceUserInfo faceUserInfo) {
+        faceUserInfo=userFaceInfoMapper.getFaceUserInfoByFaceId(faceUserInfo.getFaceId());
+        return faceUserInfo;
     }
 }

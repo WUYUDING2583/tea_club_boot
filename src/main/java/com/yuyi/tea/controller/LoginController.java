@@ -87,4 +87,10 @@ public class LoginController {
         User user = loginService.moblieLogin(clerk);
         return user;
     }
+
+    @GetMapping("/mobile/verifyToken/{token}")
+    public User moblieVerifyToken(@PathVariable String token){
+        User user = loginService.verifyToken(token);
+        return user;
+    }
 }

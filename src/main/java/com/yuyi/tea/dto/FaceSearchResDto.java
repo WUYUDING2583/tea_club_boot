@@ -1,13 +1,24 @@
 package com.yuyi.tea.dto;
 
 
+import com.yuyi.tea.bean.Clerk;
+import com.yuyi.tea.bean.Customer;
+
 public class FaceSearchResDto {
+    private int uid;
     private String faceId;
-    private String name;
     private Integer similarValue;
-    private Integer age;
-    private String gender;
     private String image;
+    private Customer customer;
+    private Clerk clerk;
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 
     public String getFaceId() {
         return faceId;
@@ -17,12 +28,20 @@ public class FaceSearchResDto {
         this.faceId = faceId;
     }
 
-    public String getName() {
-        return name;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Clerk getClerk() {
+        return clerk;
+    }
+
+    public void setClerk(Clerk clerk) {
+        this.clerk = clerk;
     }
 
     public Integer getSimilarValue() {
@@ -33,21 +52,6 @@ public class FaceSearchResDto {
         this.similarValue = similarValue;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
 
     public String getImage() {
         return image;

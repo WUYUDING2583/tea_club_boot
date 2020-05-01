@@ -1,6 +1,9 @@
 package com.yuyi.tea.domain;
 
 
+import com.yuyi.tea.bean.Clerk;
+import com.yuyi.tea.bean.Customer;
+
 import java.util.Date;
 
 
@@ -12,21 +15,15 @@ public class UserFaceInfo {
 
         private String faceId;
 
-        private String name;
-
-        private Integer age;
-
-        private String email;
-
-        private Short gender;
-
-        private String phoneNumber;
-
         private Date createTime;
 
         private Date updateTime;
 
         private byte[] faceFeature;
+
+        private Customer customer=null;
+
+        private Clerk clerk=null;
 
         public Integer getId() {
             return id;
@@ -53,47 +50,23 @@ public class UserFaceInfo {
             this.faceId = faceId;
         }
 
-        public String getName() {
-            return name;
-        }
+    public Customer getCustomer() {
+        return customer;
+    }
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
-        public Integer getAge() {
-            return age;
-        }
+    public Clerk getClerk() {
+        return clerk;
+    }
 
-        public void setAge(Integer age) {
-            this.age = age;
-        }
+    public void setClerk(Clerk clerk) {
+        this.clerk = clerk;
+    }
 
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public Short getGender() {
-            return gender;
-        }
-
-        public void setGender(Short gender) {
-            this.gender = gender;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
-
-        public Date getCreateTime() {
+    public Date getCreateTime() {
             return createTime;
         }
 

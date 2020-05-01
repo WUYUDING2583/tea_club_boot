@@ -250,7 +250,6 @@ public class FaceEngineServiceImpl implements FaceEngineService {
                     if (similarValue > passRate) {//相似值大于配置预期，加入到识别到人脸的列表
 
                         FaceUserInfo info = new FaceUserInfo();
-                        info.setName(faceUserInfo.getName());
                         info.setFaceId(faceUserInfo.getFaceId());
                         info.setSimilarValue(similarValue);
                         resultFaceInfoList.add(info);

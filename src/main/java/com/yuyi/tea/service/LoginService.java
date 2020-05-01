@@ -1,5 +1,6 @@
 package com.yuyi.tea.service;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.utils.JwtUtil;
@@ -14,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -178,6 +180,24 @@ public class LoginService {
             log.info("获取token用户信息" + user);
         }catch (NullPointerException e){
             throw new GlobalException(CodeMsg.TOKEN_NOT_EXIST);
+        }
+        return user;
+    }
+
+    /**
+     * 校验移动端职员token
+     * @param token
+     * @return
+     */
+    public User verifyToken(String token) {
+        User user = null;
+        Map<String, Claim> userData = JwtUtil.verifyToken(token);
+        if (userData == null) {
+            log.info("token无效");
+            throw new GlobalException(CodeMsg.TOKEN_INVALID);
+        }else {
+            Integer uid = userData.get("uid").asInt();
+            user = clerkMapper.getClerk(uid);
         }
         return user;
     }

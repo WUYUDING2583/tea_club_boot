@@ -32,5 +32,4 @@ public interface FaceEngineService {
     List<FaceUserInfo> compareFaceFeature(byte[] faceFeature, Integer groupId) throws InterruptedException, ExecutionException;
 
 
-
 }

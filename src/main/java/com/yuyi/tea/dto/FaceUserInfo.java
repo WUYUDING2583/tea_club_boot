@@ -1,13 +1,17 @@
 package com.yuyi.tea.dto;
 
 
+import com.yuyi.tea.bean.Clerk;
+import com.yuyi.tea.bean.Customer;
 
 public class FaceUserInfo {
 
+    private int uid;
     private String faceId;
-    private String name;
     private Integer similarValue;
     private byte[] faceFeature;
+    private Customer customer=null;
+    private Clerk clerk=null;
 
     public String getFaceId() {
         return faceId;
@@ -17,12 +21,28 @@ public class FaceUserInfo {
         this.faceId = faceId;
     }
 
-    public String getName() {
-        return name;
+    public int getUid() {
+        return uid;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Clerk getClerk() {
+        return clerk;
+    }
+
+    public void setClerk(Clerk clerk) {
+        this.clerk = clerk;
     }
 
     public Integer getSimilarValue() {
