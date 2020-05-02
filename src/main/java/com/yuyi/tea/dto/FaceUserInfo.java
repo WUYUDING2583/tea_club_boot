@@ -12,6 +12,15 @@ public class FaceUserInfo {
     private byte[] faceFeature;
     private Customer customer=null;
     private Clerk clerk=null;
+    private byte[] face;
+
+    public byte[] getFace() {
+        return face;
+    }
+
+    public void setFace(byte[] face) {
+        this.face = face;
+    }
 
     public String getFaceId() {
         return faceId;

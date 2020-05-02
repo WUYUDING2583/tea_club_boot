@@ -72,6 +72,7 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
                 userFaceInfo.setGroupId(groupId);
                 userFaceInfo.setFaceFeature(faceFeature.getFeatureData());
                 userFaceInfo.setFaceId(RandomUtil.randomString(10));
+                userFaceInfo.setFace(file.getBytes());
 
                 //人脸特征插入到数据库
                 insertSelective(userFaceInfo);

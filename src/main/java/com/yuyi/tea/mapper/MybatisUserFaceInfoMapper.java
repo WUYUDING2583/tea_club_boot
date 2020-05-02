@@ -11,10 +11,10 @@ import java.util.List;
 @Mapper
 public interface MybatisUserFaceInfoMapper {
 
-    @Insert("INSERT INTO user_face_info (group_id,face_id,customerId,clerkId,face_feature) VALUES (#{groupId},#{faceId},#{customer.uid},#{clerk.uid},#{faceFeature})")
+    @Insert("INSERT INTO user_face_info (group_id,face_id,customerId,clerkId,face_feature,face) VALUES (#{groupId},#{faceId},#{customer.uid},#{clerk.uid},#{faceFeature},#{face})")
     void insertUserFaceInfo(UserFaceInfo userFaceInfo);
 
-    @Select("select uid,face_id,customerId,clerkId,face_feature from user_face_info")
+    @Select("select uid,face_id,customerId,clerkId,face_feature,face from user_face_info")
     @Results(id = "userFace",
             value = {
                     @Result(id = true,column = "uid",property = "uid"),
@@ -27,11 +27,12 @@ public interface MybatisUserFaceInfoMapper {
                             one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getClerk",
                                     fetchType = FetchType.LAZY)),
                     @Result(column = "create_time",property = "createTime"),
-                    @Result(column = "face_feature",property = "faceFeature")
+                    @Result(column = "face_feature",property = "faceFeature"),
+                    @Result(column = "face",property = "face")
             })
     List<FaceUserInfo> getUserFaceInfoByGroupId(Integer groupId);
 
-    @Select("select uid,face_id,customerId,clerkId,face_feature from user_face_info where face_Id=#{faceId}")
+    @Select("select uid,face_id,customerId,clerkId,face_feature,face from user_face_info where face_Id=#{faceId}")
     @ResultMap("userFace")
     FaceUserInfo getFaceUserInfoByFaceId(String faceId);
 }

@@ -58,7 +58,7 @@ public class FaceController {
 
     /**
      * 人脸识别
-     * @param file
+     * @param file 摄像头捕捉到的人脸图片
      * @param groupId
      * @return
      * @throws Exception
@@ -102,6 +102,7 @@ public class FaceController {
                     int width = faceInfoList.get(0).getRect().getRight() - left;
                     int height = faceInfoList.get(0).getRect().getBottom() - top;
 
+//                    bufImage=ImageIO.read(new ByteArrayInputStream(file.getBytes()));
                     Graphics2D graphics2D = bufImage.createGraphics();
                     graphics2D.setColor(Color.RED);//红色
                     BasicStroke stroke = new BasicStroke(5f);
@@ -110,6 +111,7 @@ public class FaceController {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     ImageIO.write(bufImage, "jpg", outputStream);
                     byte[] bytes1 = outputStream.toByteArray();
+                    faceSearchResDto.setImage(file);
                     faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(bytes1));
                     faceSearchResDto.setClerk(faceUserInfo.getClerk());
                     faceSearchResDto.setCustomer(faceUserInfo.getCustomer());

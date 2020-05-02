@@ -28,7 +28,7 @@ CREATE TABLE `user_face_info`  (
   `customerId` int(11) default  null comment '客户id',
   `clerkId` int(11) default  null comment '职员id',
   `face_feature` blob NULL COMMENT '人脸特征',
-  `face` blob default null comment '人脸照片',
+  `face` MEDIUMBLOB default null comment '人脸照片',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   `fpath` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '照片路径',

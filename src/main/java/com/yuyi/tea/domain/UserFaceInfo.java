@@ -21,6 +21,8 @@ public class UserFaceInfo {
 
         private byte[] faceFeature;
 
+        private byte[] face;
+
         private Customer customer=null;
 
         private Clerk clerk=null;
@@ -33,8 +35,15 @@ public class UserFaceInfo {
             this.id = id;
         }
 
-        
-        public Integer getGroupId() {
+    public byte[] getFace() {
+        return face;
+    }
+
+    public void setFace(byte[] face) {
+        this.face = face;
+    }
+
+    public Integer getGroupId() {
             return groupId;
         }
 
