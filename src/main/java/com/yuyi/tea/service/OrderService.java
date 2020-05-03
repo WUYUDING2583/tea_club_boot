@@ -293,4 +293,24 @@ public class OrderService {
         log.info("更新缓存中的订单信息"+redisOrder);
         return redisOrder;
     }
+
+    /**
+     * 根据客户id获取其未完成订单列表
+     * @param customerId
+     * @return
+     */
+    public List<Order> getUncompleteOrders(int customerId) {
+        List<Order> uncompleteOrders = orderMapper.getCustomerUncompleteOrders(customerId);
+        //查询缓存中订单信息
+        getRedisOrdersDetail(uncompleteOrders);
+        for(Order order:uncompleteOrders){
+            order.getCustomer().setAvatar(null);
+        }
+        for(Order order:uncompleteOrders){
+            for(OrderProduct orderProduct:order.getProducts()){
+                orderProduct.getProduct().setPhotos(null);
+            }
+        }
+        return uncompleteOrders;
+    }
 }

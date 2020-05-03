@@ -3,7 +3,11 @@ package com.yuyi.tea.controller;
 import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.bean.EnterpriseCustomerApplication;
+import com.yuyi.tea.bean.Order;
+import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.service.CustomerService;
+import com.yuyi.tea.service.OrderService;
+import com.yuyi.tea.service.interfaces.UserFaceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,12 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private UserFaceInfoService userFaceInfoService;
+
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 获取客户类型
@@ -104,6 +114,27 @@ public class CustomerController {
     public Customer setSuperVIP(@PathVariable int uid){
         Customer customer = customerService.setSuperVIP(uid);
         return customer;
+    }
+
+    /**
+     * 根据user_face_info的uid获取客户信息
+     * 若此face有对应的customer则返回
+     * 否则返回null
+     * @param uid
+     * @return
+     */
+    @GetMapping("/mobile/customer/{uid}")
+    public Customer fetchCustomerByFaceUid(@PathVariable int uid){
+        FaceUserInfo faceUserInfo = userFaceInfoService.getFaceUserInfo(uid);
+        if(faceUserInfo.getCustomer()!=null){
+            Customer customer=faceUserInfo.getCustomer();
+            customer.setPassword(null);
+            //获取该用户未完成的订单
+            List<Order> uncompleteOrders = orderService.getUncompleteOrders(customer.getUid());
+            customer.setOrders(uncompleteOrders);
+            return customer;
+        }
+        return null;
     }
 
 }

@@ -12,6 +12,15 @@ public class Customer extends User {
     private CustomerType customerType;
     private List<EnterpriseCustomerApplication> enterpriseCustomerApplications;
     private String weChatId;
+    private List<Order> orders;
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
     public Customer() {
     }

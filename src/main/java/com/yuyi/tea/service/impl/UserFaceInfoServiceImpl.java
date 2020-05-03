@@ -100,4 +100,15 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
         faceUserInfo=userFaceInfoMapper.getFaceUserInfoByFaceId(faceUserInfo.getFaceId());
         return faceUserInfo;
     }
+
+    /**
+     * 获取人脸对应的所有信息
+     * @param uid
+     * @return
+     */
+    @Override
+    public FaceUserInfo getFaceUserInfo(int uid) {
+        FaceUserInfo faceUserInfo=userFaceInfoMapper.getFaceUserInfo(uid);
+        return faceUserInfo;
+    }
 }

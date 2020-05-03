@@ -13,4 +13,6 @@ public interface UserFaceInfoService {
     List<FaceUserInfo> addFace(String file, Integer groupId, String name);
 
     FaceUserInfo getFaceUserInfo(FaceUserInfo faceUserInfo);
+
+    FaceUserInfo getFaceUserInfo(int uid);
 }

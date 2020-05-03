@@ -20,31 +20,6 @@ public interface OrderMapper {
             "<![CDATA[orderTime<=#{timeRange.endDate}]]> order by orderTime desc" +
             "</script>")
     @ResultMap(value = "order")
-//    @Results(id = "order",
-//            value = {
-//                    @Result(id = true,column = "uid",property = "uid"),
-//                    @Result(column = "customerId",property = "customer",
-//                            one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerByUid",
-//                                    fetchType = FetchType.LAZY)),
-//                    @Result(column = "clerkId",property = "clerk",
-//                            one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getClerk",
-//                                    fetchType = FetchType.LAZY)),
-//                    @Result(column = "uid",property = "products",
-//                            one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderProducts",
-//                                    fetchType = FetchType.LAZY)),
-//                    @Result(column = "activityRuleId",property = "activityRule",
-//                            one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRule",
-//                                    fetchType = FetchType.LAZY)),
-//                    @Result(column = "trackingId",property = "trackInfo",
-//                            one = @One(select="com.yuyi.tea.mapper.OrderMapper.getTrackInfo",
-//                                    fetchType = FetchType.LAZY)),
-//                     @Result(column = "uid",property = "status",
-//                             one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderCurrentStatus",
-//                                    fetchType = FetchType.LAZY)),
-//                    @Result(column = "uid",property = "orderStatusHistory",
-//                            one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderStatusHistory",
-//                                    fetchType = FetchType.LAZY)),
-//    })
     List<Order> getOrdersByCustomer(int customerId, TimeRange timeRange);
 
     //根据订单id获取该订单所有产品信息
@@ -52,14 +27,14 @@ public interface OrderMapper {
     @Results({
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column = "productId",property = "product",typeHandler = ProductTypeHandler.class),
-//                    one = @One(select="com.yuyi.tea.mapper.ProductMapper.getProduct",
-//                            fetchType = FetchType.LAZY)),
             @Result(column = "activityRuleId",property = "activityRule",typeHandler = ActivityRuleTypeHandler.class)
-//                    one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRule",
-//                            fetchType = FetchType.LAZY)),
     })
     List<OrderProduct> getOrderProducts(int orderId);
 
+    @Select("select * from orders where customerId=#{customerId} and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status!='complete' and A.status!='refunded')")
+    @ResultMap("order")
+    List<Order> getCustomerUncompleteOrders(int customerId);
 
     /**
      * 获取未完成的订单列表
@@ -141,4 +116,6 @@ public interface OrderMapper {
     //更新卖家留言
     @Update("update orders set sellerPs=#{sellerPs} where uid=#{uid}")
     void saveSellerPs(Order order);
+
+
 }

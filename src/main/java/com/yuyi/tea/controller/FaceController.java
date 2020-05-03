@@ -29,14 +29,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +56,7 @@ public class FaceController {
 
     /**
      * 人脸识别
-     * @param file 摄像头捕捉到的人脸图片
+     * @param file 摄像头捕捉到的人脸图片base64
      * @param groupId
      * @return
      * @throws Exception
@@ -102,7 +100,6 @@ public class FaceController {
                     int width = faceInfoList.get(0).getRect().getRight() - left;
                     int height = faceInfoList.get(0).getRect().getBottom() - top;
 
-//                    bufImage=ImageIO.read(new ByteArrayInputStream(file.getBytes()));
                     Graphics2D graphics2D = bufImage.createGraphics();
                     graphics2D.setColor(Color.RED);//红色
                     BasicStroke stroke = new BasicStroke(5f);
@@ -111,19 +108,19 @@ public class FaceController {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     ImageIO.write(bufImage, "jpg", outputStream);
                     byte[] bytes1 = outputStream.toByteArray();
+                    faceSearchResDto.setUid(faceUserInfo.getUid());
                     faceSearchResDto.setImage(file);
-                    faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(bytes1));
+//                    faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(bytes1));
                     faceSearchResDto.setClerk(faceUserInfo.getClerk());
                     faceSearchResDto.setCustomer(faceUserInfo.getCustomer());
-                    if(faceUserInfo.getCustomer()!=null){
-                        faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(faceUserInfo.getCustomer().getAvatar().getPhoto()));
-                    }
+//                    if(faceUserInfo.getCustomer()!=null){
+//                        faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(faceUserInfo.getCustomer().getAvatar().getPhoto()));
+//                    }
                 }
                 if(faceSearchResDto.getClerk()==null)
                     faceSearchResDtoList.add(faceSearchResDto);
             }
         }
-        //TODO 人脸识别区分数据库内已有客户照片和无照片，返回值不同
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Customer.class, new CustomerTypeAdapter());
         gsonBuilder.setPrettyPrinting();

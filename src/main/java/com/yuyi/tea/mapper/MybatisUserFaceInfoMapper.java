@@ -27,12 +27,18 @@ public interface MybatisUserFaceInfoMapper {
                             one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getClerk",
                                     fetchType = FetchType.LAZY)),
                     @Result(column = "create_time",property = "createTime"),
+                    @Result(column = "update_time",property = "updateTime"),
                     @Result(column = "face_feature",property = "faceFeature"),
-                    @Result(column = "face",property = "face")
+                    @Result(column = "face",property = "face"),
+                    @Result(column = "fpath",property = "fPath")
             })
     List<FaceUserInfo> getUserFaceInfoByGroupId(Integer groupId);
 
     @Select("select uid,face_id,customerId,clerkId,face_feature,face from user_face_info where face_Id=#{faceId}")
     @ResultMap("userFace")
     FaceUserInfo getFaceUserInfoByFaceId(String faceId);
+
+    @Select("select uid,face_id,customerId,clerkId,face_feature,face from user_face_info where uid=#{uid}")
+    @ResultMap("userFace")
+    FaceUserInfo getFaceUserInfo(int uid);
 }

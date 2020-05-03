@@ -7,12 +7,48 @@ import com.yuyi.tea.bean.Customer;
 public class FaceUserInfo {
 
     private int uid;
+    private int groupId;
     private String faceId;
     private Integer similarValue;
     private byte[] faceFeature;
     private Customer customer=null;
     private Clerk clerk=null;
     private byte[] face;
+    private long createTime;
+    private long updateTime;
+    private String fPath;
+
+    public String getfPath() {
+        return fPath;
+    }
+
+    public void setfPath(String fPath) {
+        this.fPath = fPath;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public byte[] getFace() {
         return face;
