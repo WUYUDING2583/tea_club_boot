@@ -160,7 +160,7 @@ public class OrderService {
     public Order updateOrderShipped(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
-        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.SHIPPED,time);
+        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.SHIPPED,time,order.getClerk());
         orderMapper.saveOrderStatus(status);
         //在trackInfo表插入物流信息
         orderMapper.saveTrackInfo(order.getTrackInfo());
@@ -248,7 +248,7 @@ public class OrderService {
     public Order updateOrderRefunded(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
-        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REFUND,time);
+        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REFUND,time,order.getClerk());
         Order redisOrder = updateRedisOrderRefundStatus(order, status);
 //        orderMapper.saveOrderStatus(status);
 //        //更新卖家留言
@@ -273,7 +273,7 @@ public class OrderService {
     public Order updateOrderRejectRefunded(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
-        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REJECT_REFUND,time);
+        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REJECT_REFUND,time,order.getClerk());
         Order redisOrder = updateRedisOrderRefundStatus(order, status);
         return redisOrder;
     }
@@ -312,5 +312,26 @@ public class OrderService {
             }
         }
         return uncompleteOrders;
+    }
+
+    /**
+     * 更新订单信息为客户自提
+     * @param order
+     * @return
+     */
+    public Order updateMobileOrderShipped(Order order) {
+        //在orderStatus表插入最新状态
+        long time=TimeUtil.getCurrentTimestamp();
+        OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.SHIPPED,time,order.getClerk());
+        orderMapper.saveOrderStatus(status);
+        //从缓存中获取该订单信息
+        Order redisOrder = getRedisOrder(order.getUid());
+        log.info("从缓存中获取订单信息"+redisOrder);
+        redisOrder.setStatus(status);
+        redisOrder.getOrderStatusHistory().add(status);
+        //更新redis数据
+        redisService.set("orders:order:"+order.getUid(),redisOrder);
+        log.info("更新缓存中的订单信息"+redisOrder);
+        return redisOrder;
     }
 }

@@ -2,6 +2,7 @@ package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.Position;
+import com.yuyi.tea.bean.User;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -75,6 +76,9 @@ public interface ClerkMapper {
                             fetchType= FetchType.LAZY))
     })
     Clerk getClerk(int uid);
+
+    @Select("select uid,name from clerk where uid=#{uid}")
+    User getBriefClerk(int uid);
 
     //更新职员信息
     @Update("update clerk set name=#{name},positionId=#{position.uid},contact=#{contact}," +

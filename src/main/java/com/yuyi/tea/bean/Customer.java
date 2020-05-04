@@ -13,6 +13,7 @@ public class Customer extends User {
     private List<EnterpriseCustomerApplication> enterpriseCustomerApplications;
     private String weChatId;
     private List<Order> orders;
+    private List<Address> addresses;
 
     public List<Order> getOrders() {
         return orders;
@@ -20,6 +21,14 @@ public class Customer extends User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public Customer() {

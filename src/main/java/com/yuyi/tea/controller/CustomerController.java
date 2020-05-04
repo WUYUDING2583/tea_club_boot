@@ -131,6 +131,7 @@ public class CustomerController {
             customer.setPassword(null);
             //获取该用户未完成的订单
             List<Order> uncompleteOrders = orderService.getUncompleteOrders(customer.getUid());
+            System.out.println(uncompleteOrders);
             customer.setOrders(uncompleteOrders);
             return customer;
         }

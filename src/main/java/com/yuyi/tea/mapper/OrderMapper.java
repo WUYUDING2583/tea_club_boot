@@ -47,6 +47,7 @@ public interface OrderMapper {
                     @Result(id = true,column = "uid",property = "uid"),
                     @Result(column = "customerId",property = "customer",typeHandler = CustomerTypeHandler.class),
                     @Result(column = "clerkId",property = "clerk",typeHandler = ClerkTypeHandler.class),
+                    @Result(column = "deliverMode",property = "deliverMode"),
                     @Result(column = "uid",property = "products",
                             one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderProducts",
                                     fetchType = FetchType.LAZY)),
@@ -59,6 +60,9 @@ public interface OrderMapper {
                                     fetchType = FetchType.LAZY)),
                     @Result(column = "uid",property = "orderStatusHistory",
                             one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderStatusHistory",
+                                    fetchType = FetchType.LAZY)),
+                    @Result(column = "addressId",property = "address",
+                            one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getAddress",
                                     fetchType = FetchType.LAZY)),
             })
     List<Order> getUncompleteOrders();
@@ -93,14 +97,22 @@ public interface OrderMapper {
 
     //获取订单状态历史信息
     @Select("select * from orderStatus where orderId=#{orderId} order by time desc")
+    @Results(id="orderStatuls",
+            value = {
+                    @Result(id = true,column = "uid",property = "uid"),
+                    @Result(column = "handler",property = "handler",
+                            one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getBriefClerk",
+                                    fetchType = FetchType.LAZY))
+            })
     List<OrderStatus> getOrderStatusHistory(int orderId);
 
     //获取订单当前状态
     @Select("select * from orderStatus where orderId=#{orderId} order by time desc limit 1")
+    @ResultMap("orderStatuls")
     OrderStatus getOrderCurrentStatus(int orderId);
 
     //将订单状态更新为已发货
-    @Insert("insert into orderStatus(orderId,status,time) values(#{orderId},#{status},#{time})")
+    @Insert("insert into orderStatus(orderId,status,time,handler) values(#{orderId},#{status},#{time},#{handler.uid})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveOrderStatus(OrderStatus status);
 

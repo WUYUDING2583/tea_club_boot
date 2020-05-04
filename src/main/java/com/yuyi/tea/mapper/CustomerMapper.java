@@ -1,5 +1,6 @@
 package com.yuyi.tea.mapper;
 
+import com.yuyi.tea.bean.Address;
 import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.bean.EnterpriseCustomerApplication;
@@ -36,15 +37,16 @@ public interface CustomerMapper {
 
     //根据uid获取客户信息
     @Select("select * from customer where uid=#{uid}")
-    @Results({
-            @Result(id = true,column = "uid",property = "uid"),
-            @Result(column = "uid",property = "avatar",
-                    one = @One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByCustomerId",
-                            fetchType = FetchType.LAZY)),
-            @Result(column = "type",property = "customerType",
-                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerType",
-                            fetchType = FetchType.LAZY))
-    })
+//    @Results({
+//            @Result(id = true,column = "uid",property = "uid"),
+//            @Result(column = "uid",property = "avatar",
+//                    one = @One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByCustomerId",
+//                            fetchType = FetchType.LAZY)),
+//            @Result(column = "type",property = "customerType",
+//                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerType",
+//                            fetchType = FetchType.LAZY))
+//    })
+    @ResultMap("customer")
     Customer getCustomerByUid(int uid);
 
     /**
@@ -99,9 +101,18 @@ public interface CustomerMapper {
                             fetchType = FetchType.LAZY)),
             @Result(column = "type",property = "customerType",
                     one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerType",
-                            fetchType = FetchType.LAZY))
+                            fetchType = FetchType.LAZY)),
+            @Result(column = "uid",property = "addresses",
+                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getAddressByCustomerId",
+                            fetchType = FetchType.LAZY)),
     })
     List<Customer> getCustomers();
+
+    @Select("select * from customerAddress where customerId=#{uid}")
+    List<Address> getAddressByCustomerId(int uid);
+
+    @Select("select address from customerAddress where uid=#{uid}")
+    String getAddress(int uid);
 
     //根据uid获取客户类型
     @Select("select * from customerType where uid=#{uid}")

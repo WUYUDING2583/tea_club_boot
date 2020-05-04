@@ -23,6 +23,11 @@ public class User implements Serializable {
         this.uid = uid;
     }
 
+    public User(int uid, String name) {
+        this.uid = uid;
+        this.name = name;
+    }
+
     public User(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal) {
         this.uid = uid;
         this.name = name;

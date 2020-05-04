@@ -11,8 +11,8 @@ public class Order implements Serializable {
 
     private int uid;
     private long orderTime;
-    private Customer customer;
-    private Clerk clerk;
+    private User customer;
+    private User clerk;
     private OrderStatus status;
     private List<OrderStatus> orderStatusHistory;
     private List<OrderProduct> products;
@@ -23,6 +23,8 @@ public class Order implements Serializable {
     private String buyerRefundReason;//买家退款理由
     private String sellerPs;//卖家退款说明
     private TrackInfo trackInfo;
+    private String deliverMode;//配送方式
+    private String address;
 
     public Order() {
     }
@@ -31,7 +33,7 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, Customer customer, Clerk clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo) {
+    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
@@ -46,6 +48,24 @@ public class Order implements Serializable {
         this.buyerRefundReason = buyerRefundReason;
         this.sellerPs = sellerPs;
         this.trackInfo = trackInfo;
+        this.deliverMode = deliverMode;
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDeliverMode() {
+        return deliverMode;
+    }
+
+    public void setDeliverMode(String deliverMode) {
+        this.deliverMode = deliverMode;
     }
 
     public String getBuyerRefundReason() {
@@ -128,19 +148,19 @@ public class Order implements Serializable {
         this.orderTime = orderTime;
     }
 
-    public Customer getCustomer() {
+    public User getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(User customer) {
         this.customer = customer;
     }
 
-    public Clerk getClerk() {
+    public User getClerk() {
         return clerk;
     }
 
-    public void setClerk(Clerk clerk) {
+    public void setClerk(User clerk) {
         this.clerk = clerk;
     }
 
@@ -177,6 +197,8 @@ public class Order implements Serializable {
                 ", buyerRefundReason='" + buyerRefundReason + '\'' +
                 ", sellerPs='" + sellerPs + '\'' +
                 ", trackInfo=" + trackInfo +
+                ", deliverMode='" + deliverMode + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 }
