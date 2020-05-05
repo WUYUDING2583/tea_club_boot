@@ -17,6 +17,7 @@ public class ShopBox implements Serializable {
     private List<Photo> photos;
     private int duration;//每泡茶时间
     private boolean enforceTerminal=false;
+    private List<Reservation> reservations;
 
     public ShopBox() {
     }
@@ -49,7 +50,16 @@ public class ShopBox implements Serializable {
                 ", photos=" + photos +
                 ", duration=" + duration +
                 ", enforceTerminal=" + enforceTerminal +
+                ", reservations=" + reservations +
                 '}';
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public boolean isEnforceTerminal() {

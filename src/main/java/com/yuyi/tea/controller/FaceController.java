@@ -3,17 +3,14 @@ package com.yuyi.tea.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.toolkit.ImageFactory;
 import com.arcsoft.face.toolkit.ImageInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.common.CodeMsg;
-import com.yuyi.tea.domain.UserFaceInfo;
 import com.yuyi.tea.dto.FaceSearchResDto;
 import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.dto.ProcessInfo;
@@ -25,11 +22,7 @@ import com.yuyi.tea.typeAdapter.CustomerTypeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.Base64Utils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -52,6 +45,9 @@ public class FaceController {
 
     @Autowired
     UserFaceInfoService userFaceInfoService;
+
+    @Autowired
+    WebSocketFaceServer webSocketFaceServer;
 
 
     /**
@@ -125,7 +121,7 @@ public class FaceController {
         gsonBuilder.registerTypeAdapter(Customer.class, new CustomerTypeAdapter());
         gsonBuilder.setPrettyPrinting();
         Gson gson=gsonBuilder.create();
-        WebSocketServer.sendInfo(gson.toJson(faceSearchResDtoList),null);
+        webSocketFaceServer.sendInfo(gson.toJson(faceSearchResDtoList),null);
         return faceSearchResDtoList;
     }
 

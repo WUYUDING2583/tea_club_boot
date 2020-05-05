@@ -70,4 +70,14 @@ public class ShopBoxController {
         shopBoxService.updateShopBox(shopBox);
         return shopBox;
     }
+
+    /**
+     * 获取门店包厢列表及其当天
+     * @param shopId
+     * @return
+     */
+    @GetMapping("/mobile/box/{shopId}")
+    public List<ShopBox> getMobileShopBoxes(@PathVariable int shopId){
+        return null;
+    }
 }

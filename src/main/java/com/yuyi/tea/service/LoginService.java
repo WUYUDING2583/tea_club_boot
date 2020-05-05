@@ -198,6 +198,8 @@ public class LoginService {
         }else {
             Integer uid = userData.get("uid").asInt();
             user = clerkMapper.getClerk(uid);
+            ((Clerk) user).getShop().setPhotos(null);
+            ((Clerk) user).getShop().setClerks(null);
         }
         return user;
     }

@@ -25,6 +25,7 @@ public class Order implements Serializable {
     private TrackInfo trackInfo;
     private String deliverMode;//配送方式
     private String address;
+    private List<Reservation> reservations;
 
     public Order() {
     }
@@ -50,6 +51,14 @@ public class Order implements Serializable {
         this.trackInfo = trackInfo;
         this.deliverMode = deliverMode;
         this.address = address;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public String getAddress() {
@@ -199,6 +208,7 @@ public class Order implements Serializable {
                 ", trackInfo=" + trackInfo +
                 ", deliverMode='" + deliverMode + '\'' +
                 ", address='" + address + '\'' +
+                ", reservations=" + reservations +
                 '}';
     }
 }
