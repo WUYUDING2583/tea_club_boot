@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 04/05/2020 14:58:39
+ Date: 05/05/2020 11:49:57
 */
 
 SET NAMES utf8mb4;
@@ -427,6 +427,12 @@ CREATE TABLE `customerAddress`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of customerAddress
+-- ----------------------------
+INSERT INTO `customerAddress` VALUES (1, '111111', 1, 1);
+INSERT INTO `customerAddress` VALUES (2, '2222222', 1, 0);
+
+-- ----------------------------
 -- Table structure for customerType
 -- ----------------------------
 DROP TABLE IF EXISTS `customerType`;
@@ -614,20 +620,24 @@ CREATE TABLE `orderStatus`  (
   `orderId` int(0) NULL DEFAULT NULL,
   `status` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `time` bigint(0) NULL DEFAULT NULL,
+  `processer` int(0) NULL DEFAULT NULL COMMENT '订单处理人',
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `orderId`(`orderId`) USING BTREE,
-  CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+  INDEX `handler`(`processer`) USING BTREE,
+  CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderStatus
 -- ----------------------------
-INSERT INTO `orderStatus` VALUES (1, 2, 'payed', 1585640223220);
-INSERT INTO `orderStatus` VALUES (2, 2, 'unpay', 1585640223210);
-INSERT INTO `orderStatus` VALUES (14, 4, 'payed', 1585731032991);
-INSERT INTO `orderStatus` VALUES (15, 4, 'refunded', 1585753923142);
-INSERT INTO `orderStatus` VALUES (16, 5, 'requestRefund', 1583137145000);
-INSERT INTO `orderStatus` VALUES (26, 5, 'rejectRefund', 1586936387236);
+INSERT INTO `orderStatus` VALUES (1, 2, 'payed', 1585640223220, NULL);
+INSERT INTO `orderStatus` VALUES (2, 2, 'unpay', 1585640223210, NULL);
+INSERT INTO `orderStatus` VALUES (14, 4, 'payed', 1585731032991, NULL);
+INSERT INTO `orderStatus` VALUES (15, 4, 'refunded', 1585753923142, 10);
+INSERT INTO `orderStatus` VALUES (16, 5, 'requestRefund', 1583137145000, 10);
+INSERT INTO `orderStatus` VALUES (26, 5, 'rejectRefund', 1586936387236, 10);
+INSERT INTO `orderStatus` VALUES (41, 2, 'shipped', 1588606862873, 10);
 
 -- ----------------------------
 -- Table structure for orders
@@ -644,23 +654,26 @@ CREATE TABLE `orders`  (
   `sellerPs` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `buyerRefundReason` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `deliverMode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `addressId` int(0) NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   INDEX `clerkId`(`clerkId`) USING BTREE,
   INDEX `activityRuleId`(`activityRuleId`) USING BTREE,
   INDEX `trackingId`(`trackingId`) USING BTREE,
+  INDEX `addressId`(`addressId`) USING BTREE,
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`clerkId`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`activityRuleId`) REFERENCES `activityRule` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `orders_ibfk_5` FOREIGN KEY (`addressId`) REFERENCES `customerAddress` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'deliver');
-INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp');
-INSERT INTO `orders` VALUES (5, 1583137145000, 1, 9, NULL, NULL, NULL, 'asdfa', 'asdfsafa', 'deliver');
+INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1);
+INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2);
+INSERT INTO `orders` VALUES (5, 1583137145000, 1, 9, NULL, NULL, NULL, 'asdfa', 'asdfsafa', 'deliver', 1);
 
 -- ----------------------------
 -- Table structure for photo

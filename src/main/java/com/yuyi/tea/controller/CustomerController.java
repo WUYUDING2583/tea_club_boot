@@ -1,5 +1,6 @@
 package com.yuyi.tea.controller;
 
+import com.google.gson.Gson;
 import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.bean.EnterpriseCustomerApplication;
@@ -133,6 +134,7 @@ public class CustomerController {
             List<Order> uncompleteOrders = orderService.getUncompleteOrders(customer.getUid());
             System.out.println(uncompleteOrders);
             customer.setOrders(uncompleteOrders);
+//            System.out.println(new Gson().toJson(customer));
             return customer;
         }
         return null;

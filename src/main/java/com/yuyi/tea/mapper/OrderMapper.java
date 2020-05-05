@@ -100,7 +100,7 @@ public interface OrderMapper {
     @Results(id="orderStatuls",
             value = {
                     @Result(id = true,column = "uid",property = "uid"),
-                    @Result(column = "handler",property = "handler",
+                    @Result(column = "processer",property = "processer",
                             one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getBriefClerk",
                                     fetchType = FetchType.LAZY))
             })
@@ -112,7 +112,7 @@ public interface OrderMapper {
     OrderStatus getOrderCurrentStatus(int orderId);
 
     //将订单状态更新为已发货
-    @Insert("insert into orderStatus(orderId,status,time,handler) values(#{orderId},#{status},#{time},#{handler.uid})")
+    @Insert("insert into orderStatus(orderId,status,time,processer) values(#{orderId},#{status},#{time},#{processer.uid})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveOrderStatus(OrderStatus status);
 

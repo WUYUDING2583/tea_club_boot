@@ -20,6 +20,7 @@ public class CommConstants {
         public static final String REQUEST_REFUND="requestRefund";
         public static final String REFUND="refunded";
         public static final String REJECT_REFUND="rejectRefund";
+        public static final String CUSTOMER_PICK_UP="customerPcikUp";
     }
 
     public static class EnterpriseCustomerApplication{

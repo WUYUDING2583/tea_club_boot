@@ -11,7 +11,7 @@ public class OrderStatus implements Serializable {
     private int orderId;
     private String status;
     private long time;
-    private User handler;
+    private User processer;
 
     public OrderStatus() {
     }
@@ -20,20 +20,20 @@ public class OrderStatus implements Serializable {
         this.uid = uid;
     }
 
-    public OrderStatus(int uid, int orderId, String status, long time, User handler) {
+    public OrderStatus(int uid, int orderId, String status, long time, User processer) {
         this.uid = uid;
         this.orderId = orderId;
         this.status = status;
         this.time = time;
-        this.handler = handler;
+        this.processer = processer;
     }
 
-    public User getHandler() {
-        return handler;
+    public User getProcesser() {
+        return processer;
     }
 
-    public void setHandler(User handler) {
-        this.handler = handler;
+    public void setProcesser(User processer) {
+        this.processer = processer;
     }
 
     public int getUid() {
@@ -75,7 +75,7 @@ public class OrderStatus implements Serializable {
                 ", orderId=" + orderId +
                 ", status='" + status + '\'' +
                 ", time=" + time +
-                ", handler=" + handler +
+                ", processer=" + processer +
                 '}';
     }
 }
