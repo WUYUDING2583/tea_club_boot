@@ -334,4 +334,17 @@ public class OrderService {
         log.info("更新缓存中的订单信息"+redisOrder);
         return redisOrder;
     }
+
+    /**
+     * 保存包厢预约信息
+     * @param order
+     */
+    public void saveReservation(Order order) {
+        long time=TimeUtil.getCurrentTimestamp();
+        order.setOrderTime(time);
+        orderMapper.saveReservationOrder(order);
+        for(Reservation reservation:order.getReservations()){
+            orderMapper.saveReservation(reservation,order.getUid());
+        }
+    }
 }

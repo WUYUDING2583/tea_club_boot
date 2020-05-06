@@ -1,5 +1,9 @@
 package com.yuyi.tea.common.utils;
 
+import com.sun.jmx.snmp.Timestamp;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,6 +29,20 @@ public class TimeUtil {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         return calendar.getTime().getTime()-N*ONE_DAY_TOTAL_MILLION_SECONDS;
+    }
+
+    /**
+     * 将时间戳转变为yyyy-MM-dd格式时间字符串
+     * @param timestamp
+     * @return
+     */
+    public static String convertTimestampToTimeFormat(long timestamp){
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        //方法一:优势在于可以灵活的设置字符串的形式。
+        String tsStr = sdf.format(ts);
+        return tsStr;
     }
 
 }

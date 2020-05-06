@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 06/05/2020 19:12:22
+ Date: 07/05/2020 00:23:45
 */
 
 SET NAMES utf8mb4;
@@ -945,7 +945,7 @@ CREATE TABLE `reservation`  (
   INDEX `orderId`(`orderId`) USING BTREE,
   CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`boxId`) REFERENCES `shopBox` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of reservation

@@ -86,7 +86,11 @@ public interface ShopBoxMapper {
      * @param endTime
      * @return
      */
-    @Select("select * from reservation where boxId=#{boxId} and reservationTime<#{endTime} and reservationTime>#{startTime}")
+    @Select("<script>" +
+            "select * from reservation where boxId=#{boxId} and  " +
+            "<if test='startTime!=-1'> <![CDATA[reservationTime>= #{startTime}]]> and </if>" +
+            "<if test='endTime!=-1'> <![CDATA[reservationTime<= #{endTime}]]></if>" +
+            "</script>")
     List<Reservation> getReservationByBoxId(int boxId,long startTime,long endTime);
 
 

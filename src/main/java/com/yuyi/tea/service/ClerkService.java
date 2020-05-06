@@ -123,7 +123,6 @@ public class ClerkService {
             clerk.getShop().setPhotos(null);
             clerk.getShop().setShopBoxes(null);
             clerk.getShop().setClerks(null);
-            clerk.getShop().setOpenHours(null);
         }
     }
 

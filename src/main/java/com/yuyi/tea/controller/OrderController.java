@@ -2,17 +2,25 @@ package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Order;
 import com.yuyi.tea.bean.OrderStatus;
+import com.yuyi.tea.bean.Reservation;
+import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.common.utils.TimeUtil;
+import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.ActivityMapper;
 import com.yuyi.tea.mapper.ClerkMapper;
 import com.yuyi.tea.mapper.OrderMapper;
+import com.yuyi.tea.mapper.ShopBoxMapper;
 import com.yuyi.tea.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -20,6 +28,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private ShopBoxMapper shopBoxMapper;
 
 
     /**
@@ -113,5 +124,29 @@ public class OrderController {
         Order updateOrderShipped = orderService.updateMobileOrderShipped(order);
         return updateOrderShipped;
     }
+
+    @PostMapping("/mobile/reserve")
+    @Transactional(rollbackFor = Exception.class)
+    public String reserve(@RequestBody Order order){
+        List<Long> orderReservation=new ArrayList();
+        for(Reservation reservation:order.getReservations()){
+            orderReservation.add(reservation.getReservationTime());
+        }
+        List<Reservation> originReservations = shopBoxMapper.getReservationByBoxId(order.getReservations().get(0).getBoxId(), -1, -1);
+        List<Reservation> repeatReservation=originReservations.stream()
+                .filter((Reservation reservation)->orderReservation.contains(reservation.getReservationTime()))
+                .collect(Collectors.toList());
+        if(repeatReservation.size()>0){
+            String msg="以下时间段";
+            for(Reservation reservation:repeatReservation){
+                msg+=TimeUtil.convertTimestampToTimeFormat(reservation.getReservationTime())+"\n";
+            }
+            msg+="已被预约，请另选时间";
+            throw new GlobalException(CodeMsg.RESERVATION_DUPLICATE(msg));
+        }
+        orderService.saveReservation(order);
+        return "success";
+    }
+
 
 }

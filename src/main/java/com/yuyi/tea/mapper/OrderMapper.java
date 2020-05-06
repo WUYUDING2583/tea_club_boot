@@ -133,4 +133,19 @@ public interface OrderMapper {
     void saveSellerPs(Order order);
 
 
+    /**
+     * 保存包厢预约订单
+     * @param order
+     */
+    @Insert("insert orders(orderTime,customerId,clerkId) values(#{orderTime},#{customer.uid},#{clerk.uid})")
+    @Options(useGeneratedKeys=true, keyProperty="uid")
+    void saveReservationOrder(Order order);
+
+    /**
+     * 保存包厢预约记录
+     * @param reservation
+     * @param orderId
+     */
+    @Insert("insert into reservation(reservationTime,boxId,orderId) values(#{reservation.reservationTime},#{reservation.boxId},#{orderId})")
+    void saveReservation(Reservation reservation, int orderId);
 }
