@@ -1,6 +1,8 @@
 package com.yuyi.tea.controller;
 
+import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.service.RedisService;
 import com.yuyi.tea.service.ShopBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,12 +74,26 @@ public class ShopBoxController {
     }
 
     /**
-     * 获取门店包厢列表及其当天
+     * 获取门店包厢列表及其当天预约信息
      * @param shopId
      * @return
      */
-    @GetMapping("/mobile/box/{shopId}")
+    @GetMapping("/mobile/boxes/{shopId}")
     public List<ShopBox> getMobileShopBoxes(@PathVariable int shopId){
-        return null;
+        List<ShopBox> shopBoxes = shopBoxService.getShopBoxes(shopId);
+        return shopBoxes;
+    }
+
+    /**
+     * 根据boxId,开始时间，结束时间获取包厢预约列表
+     * @param boxId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @GetMapping("/mobile/reservations/{boxId}/{startTime}/{endTime}")
+    public List<Reservation> getReservations(@PathVariable int boxId,@PathVariable long startTime,@PathVariable long endTime){
+        List<Reservation> reservations=shopBoxService.getReservations(boxId,startTime,endTime);
+        return reservations;
     }
 }

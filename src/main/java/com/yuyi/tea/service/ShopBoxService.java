@@ -1,8 +1,10 @@
 package com.yuyi.tea.service;
 
 import com.yuyi.tea.bean.Photo;
+import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.bean.Shop;
 import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.PriceMapper;
 import com.yuyi.tea.mapper.ShopBoxMapper;
@@ -125,5 +127,33 @@ public class ShopBoxService {
         shopBox.setPhotos(currentPhotos);
         log.info("更新redis中包厢信息"+shopBox);
         redisService.set(REDIS_SHOP_BOX_NAME+":"+shopBox.getUid(),shopBox);
+    }
+
+    /**
+     * 根据shopId获取门店包厢列表及其当天预约信息
+     * @param shopId
+     * @return
+     */
+    public List<ShopBox> getShopBoxes(int shopId) {
+        long startTime= TimeUtil.getNDayAgoStartTime(0);
+        long endTime = TimeUtil.getNDayAgoStartTime(-1);
+        List<ShopBox> shopBoxes=shopBoxMapper.getShopBoxByShopId(shopId);
+        for(ShopBox shopBox:shopBoxes){
+            List<Reservation> reservations = shopBoxMapper.getReservationByBoxId(shopBox.getUid(), startTime, endTime);
+            shopBox.setReservations(reservations);
+        }
+        return shopBoxes;
+    }
+
+    /**
+     * 根据boxId,开始时间，结束时间获取包厢预约列表
+     * @param boxId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public List<Reservation> getReservations(int boxId, long startTime, long endTime) {
+        List<Reservation> reservationByBoxId = shopBoxMapper.getReservationByBoxId(boxId, startTime, endTime);
+        return reservationByBoxId;
     }
 }

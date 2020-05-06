@@ -59,9 +59,6 @@ public interface ShopBoxMapper {
             @Result(column="uid",property="photos",
                     many=@Many(select="com.yuyi.tea.mapper.PhotoMapper.getPhotosByShopBoxId",
                             fetchType= FetchType.LAZY)),
-            @Result(column="uid",property="reservations",
-                    many=@Many(select="com.yuyi.tea.mapper.ShopBoxMapper.getReservationByBoxId",
-                            fetchType= FetchType.LAZY))
     })
     ShopBox getShopBoxByUid(int uid);
 
@@ -83,12 +80,16 @@ public interface ShopBoxMapper {
     List<Reservation> getReservationByOrderId(int orderId);
 
     /**
-     * 根据boxId获取包厢预约列表
+     * 根据boxId,开始时间，结束时间获取包厢预约列表
      * @param boxId
+     * @param startTime
+     * @param endTime
      * @return
      */
-    @Select("select * from reservation where boxId=#{boxId}")
-    List<Reservation> getReservationByBoxId(int boxId);
+    @Select("select * from reservation where boxId=#{boxId} and reservationTime<#{endTime} and reservationTime>#{startTime}")
+    List<Reservation> getReservationByBoxId(int boxId,long startTime,long endTime);
+
+
 }
 
 

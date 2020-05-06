@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 05/05/2020 23:04:46
+ Date: 06/05/2020 19:12:22
 */
 
 SET NAMES utf8mb4;
@@ -538,7 +538,7 @@ CREATE TABLE `openHour`  (
 -- ----------------------------
 INSERT INTO `openHour` VALUES (35, '08:00', '20:00', 25);
 INSERT INTO `openHour` VALUES (36, '09:00', '22:00', 25);
-INSERT INTO `openHour` VALUES (37, '20:45', '21:45', 26);
+INSERT INTO `openHour` VALUES (37, '09:00', '21:00', 26);
 
 -- ----------------------------
 -- Table structure for openRepeatDate
@@ -556,13 +556,13 @@ CREATE TABLE `openRepeatDate`  (
 -- ----------------------------
 -- Records of openRepeatDate
 -- ----------------------------
-INSERT INTO `openRepeatDate` VALUES (83, '1', 35);
-INSERT INTO `openRepeatDate` VALUES (84, '2', 35);
-INSERT INTO `openRepeatDate` VALUES (85, '3', 35);
-INSERT INTO `openRepeatDate` VALUES (86, '4', 35);
-INSERT INTO `openRepeatDate` VALUES (87, '5', 35);
-INSERT INTO `openRepeatDate` VALUES (88, '6', 36);
-INSERT INTO `openRepeatDate` VALUES (89, '1', 37);
+INSERT INTO `openRepeatDate` VALUES (83, '1', 37);
+INSERT INTO `openRepeatDate` VALUES (84, '2', 37);
+INSERT INTO `openRepeatDate` VALUES (85, '3', 37);
+INSERT INTO `openRepeatDate` VALUES (86, '4', 37);
+INSERT INTO `openRepeatDate` VALUES (87, '5', 37);
+INSERT INTO `openRepeatDate` VALUES (88, '6', 37);
+INSERT INTO `openRepeatDate` VALUES (89, '0', 37);
 
 -- ----------------------------
 -- Table structure for orderActivityRule
@@ -946,6 +946,11 @@ CREATE TABLE `reservation`  (
   CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`boxId`) REFERENCES `shopBox` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of reservation
+-- ----------------------------
+INSERT INTO `reservation` VALUES (1, 1588726800000, 4, NULL);
 
 -- ----------------------------
 -- Table structure for shop

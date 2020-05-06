@@ -200,6 +200,7 @@ public class LoginService {
             user = clerkMapper.getClerk(uid);
             ((Clerk) user).getShop().setPhotos(null);
             ((Clerk) user).getShop().setClerks(null);
+            ((Clerk) user).getShop().setShopBoxes(null);
         }
         return user;
     }
