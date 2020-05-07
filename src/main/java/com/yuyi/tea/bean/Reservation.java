@@ -8,7 +8,6 @@ import java.io.Serializable;
 @JsonIgnoreProperties(value = { "handler" })
 public class Reservation implements Serializable {
 
-    private int uid;
     private long reservationTime;
     private int boxId;
     private int orderId;
@@ -16,23 +15,14 @@ public class Reservation implements Serializable {
     public Reservation() {
     }
 
-    public Reservation(int uid) {
-        this.uid = uid;
+    public Reservation(long reservationTime) {
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(int uid, long reservationTime, int boxId, int orderId) {
-        this.uid = uid;
+    public Reservation(long reservationTime, int boxId, int orderId) {
         this.reservationTime = reservationTime;
         this.boxId = boxId;
         this.orderId = orderId;
-    }
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
     }
 
     public long getReservationTime() {
@@ -62,8 +52,7 @@ public class Reservation implements Serializable {
     @Override
     public String toString() {
         return "Reservation{" +
-                "uid=" + uid +
-                ", reservationTime=" + reservationTime +
+                "reservationTime=" + reservationTime +
                 ", boxId=" + boxId +
                 ", orderId=" + orderId +
                 '}';

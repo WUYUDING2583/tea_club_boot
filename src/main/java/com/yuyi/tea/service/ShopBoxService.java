@@ -141,6 +141,8 @@ public class ShopBoxService {
         for(ShopBox shopBox:shopBoxes){
             List<Reservation> reservations = shopBoxMapper.getReservationByBoxId(shopBox.getUid(), startTime, endTime);
             shopBox.setReservations(reservations);
+            shopBox.setPhotos(null);
+            shopBox.setShop(null);
         }
         return shopBoxes;
     }

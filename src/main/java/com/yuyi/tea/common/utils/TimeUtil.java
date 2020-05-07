@@ -1,7 +1,7 @@
 package com.yuyi.tea.common.utils;
 
-import com.sun.jmx.snmp.Timestamp;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,7 +37,7 @@ public class TimeUtil {
      * @return
      */
     public static String convertTimestampToTimeFormat(long timestamp){
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        Timestamp ts = new Timestamp(timestamp);
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         //方法一:优势在于可以灵活的设置字符串的形式。

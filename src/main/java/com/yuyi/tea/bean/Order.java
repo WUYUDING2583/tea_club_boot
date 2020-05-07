@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yuyi.tea.common.Amount;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(value = { "handler" })
@@ -14,10 +15,10 @@ public class Order implements Serializable {
     private User customer;
     private User clerk;
     private OrderStatus status;
-    private List<OrderStatus> orderStatusHistory;
-    private List<OrderProduct> products;
+    private List<OrderStatus> orderStatusHistory=new ArrayList<>();
+    private List<OrderProduct> products=new ArrayList<>();
     private ActivityRule activityRule;//全局购物满减活动规则
-    private List<Activity> activities;
+    private List<Activity> activities=new ArrayList<>();
     private Amount amount;
     private String buyerPs;//买家留言
     private String buyerRefundReason;//买家退款理由
@@ -25,7 +26,7 @@ public class Order implements Serializable {
     private TrackInfo trackInfo;
     private String deliverMode;//配送方式
     private String address;
-    private List<Reservation> reservations;
+    private List<Reservation> reservations=new ArrayList<>();
 
     public Order() {
     }

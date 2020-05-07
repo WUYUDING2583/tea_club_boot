@@ -127,25 +127,22 @@ public class OrderController {
 
     @PostMapping("/mobile/reserve")
     @Transactional(rollbackFor = Exception.class)
-    public String reserve(@RequestBody Order order){
-        List<Long> orderReservation=new ArrayList();
-        for(Reservation reservation:order.getReservations()){
-            orderReservation.add(reservation.getReservationTime());
-        }
-        List<Reservation> originReservations = shopBoxMapper.getReservationByBoxId(order.getReservations().get(0).getBoxId(), -1, -1);
-        List<Reservation> repeatReservation=originReservations.stream()
-                .filter((Reservation reservation)->orderReservation.contains(reservation.getReservationTime()))
-                .collect(Collectors.toList());
-        if(repeatReservation.size()>0){
-            String msg="以下时间段";
-            for(Reservation reservation:repeatReservation){
-                msg+=TimeUtil.convertTimestampToTimeFormat(reservation.getReservationTime())+"\n";
+    public Order reserve(@RequestBody Order order){
+        try{
+            orderService.saveReservation(order);
+            //检查账户余额
+            return order;
+        }catch(Exception e){
+            String msg="以下时间段：";
+            for(Reservation reservation:order.getReservations()){
+                Reservation result = shopBoxMapper.findReservation(reservation.getReservationTime(), reservation.getBoxId());
+                if (result!=null){
+                    msg+=TimeUtil.convertTimestampToTimeFormat(reservation.getReservationTime())+"\n";
+                }
             }
-            msg+="已被预约，请另选时间";
-            throw new GlobalException(CodeMsg.RESERVATION_DUPLICATE(msg));
+            msg+="已被预约，请重新选择";
+            throw  new GlobalException(CodeMsg.RESERVATION_DUPLICATE(msg));
         }
-        orderService.saveReservation(order);
-        return "success";
     }
 
 

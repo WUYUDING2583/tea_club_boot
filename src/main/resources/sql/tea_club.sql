@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 07/05/2020 00:23:45
+ Date: 07/05/2020 17:06:02
 */
 
 SET NAMES utf8mb4;
@@ -638,6 +638,12 @@ INSERT INTO `orderStatus` VALUES (15, 4, 'refunded', 1585753923142, 10);
 INSERT INTO `orderStatus` VALUES (16, 5, 'requestRefund', 1583137145000, 10);
 INSERT INTO `orderStatus` VALUES (48, 2, 'customerPcikUp', 1588657433376, 10);
 INSERT INTO `orderStatus` VALUES (49, 2, 'complete', 1588657433376, 10);
+INSERT INTO `orderStatus` VALUES (50, 19, 'unpay', 1588837612937, 10);
+INSERT INTO `orderStatus` VALUES (51, 20, 'unpay', 1588841229215, 10);
+INSERT INTO `orderStatus` VALUES (52, 21, 'unpay', 1588841409411, 10);
+INSERT INTO `orderStatus` VALUES (53, 22, 'unpay', 1588841565864, 10);
+INSERT INTO `orderStatus` VALUES (54, 23, 'unpay', 1588841643457, 10);
+INSERT INTO `orderStatus` VALUES (55, 24, 'unpay', 1588841734104, 10);
 
 -- ----------------------------
 -- Table structure for orders
@@ -655,6 +661,8 @@ CREATE TABLE `orders`  (
   `buyerRefundReason` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `deliverMode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `addressId` int(0) NULL DEFAULT NULL,
+  `ingot` float NULL DEFAULT 0,
+  `credit` int(0) NULL DEFAULT 0,
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   INDEX `clerkId`(`clerkId`) USING BTREE,
@@ -671,9 +679,15 @@ CREATE TABLE `orders`  (
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1);
-INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2);
-INSERT INTO `orders` VALUES (5, 1583137145000, 1, 9, NULL, NULL, NULL, 'asdfa', 'asdfsafa', 'deliver', 1);
+INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1, 0, 0);
+INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2, 0, 0);
+INSERT INTO `orders` VALUES (5, 1583137145000, 1, 9, NULL, NULL, NULL, 'asdfa', 'asdfsafa', 'deliver', 1, 0, 0);
+INSERT INTO `orders` VALUES (19, 1588837612937, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` VALUES (20, 1588841229215, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` VALUES (21, 1588841409411, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` VALUES (22, 1588841565864, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` VALUES (23, 1588841643457, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` VALUES (24, 1588841734104, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
 
 -- ----------------------------
 -- Table structure for photo
@@ -936,11 +950,10 @@ INSERT INTO `productType` VALUES (8, 'new product tpe');
 -- ----------------------------
 DROP TABLE IF EXISTS `reservation`;
 CREATE TABLE `reservation`  (
-  `uid` int(0) NOT NULL AUTO_INCREMENT,
-  `reservationTime` bigint(0) NULL DEFAULT NULL,
-  `boxId` int(0) NULL DEFAULT NULL,
+  `reservationTime` bigint(0) NOT NULL,
+  `boxId` int(0) NOT NULL,
   `orderId` int(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`uid`) USING BTREE,
+  PRIMARY KEY (`reservationTime`, `boxId`) USING BTREE,
   INDEX `boxId`(`boxId`) USING BTREE,
   INDEX `orderId`(`orderId`) USING BTREE,
   CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`boxId`) REFERENCES `shopBox` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -950,7 +963,13 @@ CREATE TABLE `reservation`  (
 -- ----------------------------
 -- Records of reservation
 -- ----------------------------
-INSERT INTO `reservation` VALUES (1, 1588726800000, 4, NULL);
+INSERT INTO `reservation` VALUES (1588813200000, 4, NULL);
+INSERT INTO `reservation` VALUES (1588834800000, 4, 19);
+INSERT INTO `reservation` VALUES (1588842000000, 4, 20);
+INSERT INTO `reservation` VALUES (1588849200000, 4, 21);
+INSERT INTO `reservation` VALUES (1588899600000, 4, 22);
+INSERT INTO `reservation` VALUES (1588906800000, 4, 23);
+INSERT INTO `reservation` VALUES (1588914000000, 4, 24);
 
 -- ----------------------------
 -- Table structure for shop

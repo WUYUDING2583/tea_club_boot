@@ -343,6 +343,10 @@ public class OrderService {
         long time=TimeUtil.getCurrentTimestamp();
         order.setOrderTime(time);
         orderMapper.saveReservationOrder(order);
+        OrderStatus orderStatus=new OrderStatus(order.getUid(),CommConstants.OrderStatus.UNPAY,time,order.getClerk());
+        orderMapper.saveOrderStatus(orderStatus);
+        order.setStatus(orderStatus);
+        order.getOrderStatusHistory().add(orderStatus);
         for(Reservation reservation:order.getReservations()){
             orderMapper.saveReservation(reservation,order.getUid());
         }

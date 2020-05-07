@@ -10,6 +10,7 @@ import java.util.List;
 public interface ShopBoxMapper {
 
     @Select("select * from shopBox where shopId=#{shopId}")
+    @ResultMap("shopBox")
     List<ShopBox> getShopBoxByShopId(int shopId);
 
     /**
@@ -94,6 +95,14 @@ public interface ShopBoxMapper {
     List<Reservation> getReservationByBoxId(int boxId,long startTime,long endTime);
 
 
+    /**
+     * 查找对应时间和包厢的预约
+     * @param reservationTime
+     * @param boxId
+     * @return
+     */
+    @Select("select * from reservation where reservationTime=#{reservationTime} and boxId=#{boxId}")
+    Reservation findReservation(long reservationTime, int boxId);
 }
 
 
