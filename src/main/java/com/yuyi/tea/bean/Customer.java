@@ -14,6 +14,8 @@ public class Customer extends User {
     private String weChatId;
     private List<Order> orders;
     private List<Address> addresses;
+    private float ingot=0;
+    private float credit=0;
 
     public List<Order> getOrders() {
         return orders;
@@ -38,12 +40,32 @@ public class Customer extends User {
         super(uid);
     }
 
-    public Customer(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, String email, CustomerType customerType, List<EnterpriseCustomerApplication> enterpriseCustomerApplications, String weChatId) {
+    public Customer(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, String email, CustomerType customerType, List<EnterpriseCustomerApplication> enterpriseCustomerApplications, String weChatId, List<Order> orders, List<Address> addresses, float ingot, float credit) {
         super(uid, name, contact, identityId, gender, address, avatar, password, enforceTerminal);
         this.email = email;
         this.customerType = customerType;
         this.enterpriseCustomerApplications = enterpriseCustomerApplications;
         this.weChatId = weChatId;
+        this.orders = orders;
+        this.addresses = addresses;
+        this.ingot = ingot;
+        this.credit = credit;
+    }
+
+    public float getIngot() {
+        return ingot;
+    }
+
+    public void setIngot(float ingot) {
+        this.ingot = ingot;
+    }
+
+    public float getCredit() {
+        return credit;
+    }
+
+    public void setCredit(float credit) {
+        this.credit = credit;
     }
 
     public String getEmail() {

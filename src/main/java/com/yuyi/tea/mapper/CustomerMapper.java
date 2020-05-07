@@ -37,15 +37,6 @@ public interface CustomerMapper {
 
     //根据uid获取客户信息
     @Select("select * from customer where uid=#{uid}")
-//    @Results({
-//            @Result(id = true,column = "uid",property = "uid"),
-//            @Result(column = "uid",property = "avatar",
-//                    one = @One(select="com.yuyi.tea.mapper.PhotoMapper.getAvatarByCustomerId",
-//                            fetchType = FetchType.LAZY)),
-//            @Result(column = "type",property = "customerType",
-//                    one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerType",
-//                            fetchType = FetchType.LAZY))
-//    })
     @ResultMap("customer")
     Customer getCustomerByUid(int uid);
 
@@ -121,4 +112,7 @@ public interface CustomerMapper {
     //将客户升级为超级vip
     @Update("update customer set type=3 where uid=#{uid}")
     void setSuperVIP(int uid);
+
+    @Update("update customer set ingot=ingot-#{ingot}, credit=credit-#{credit} where uid=#{uid}")
+    void pay(float ingot, float credit,int uid);
 }

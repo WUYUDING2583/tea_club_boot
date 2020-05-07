@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 07/05/2020 17:06:02
+ Date: 07/05/2020 17:34:41
 */
 
 SET NAMES utf8mb4;
@@ -661,8 +661,6 @@ CREATE TABLE `orders`  (
   `buyerRefundReason` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `deliverMode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `addressId` int(0) NULL DEFAULT NULL,
-  `ingot` float NULL DEFAULT 0,
-  `credit` int(0) NULL DEFAULT 0,
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   INDEX `clerkId`(`clerkId`) USING BTREE,
@@ -679,15 +677,15 @@ CREATE TABLE `orders`  (
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1, 0, 0);
-INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2, 0, 0);
-INSERT INTO `orders` VALUES (5, 1583137145000, 1, 9, NULL, NULL, NULL, 'asdfa', 'asdfsafa', 'deliver', 1, 0, 0);
-INSERT INTO `orders` VALUES (19, 1588837612937, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
-INSERT INTO `orders` VALUES (20, 1588841229215, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
-INSERT INTO `orders` VALUES (21, 1588841409411, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
-INSERT INTO `orders` VALUES (22, 1588841565864, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
-INSERT INTO `orders` VALUES (23, 1588841643457, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
-INSERT INTO `orders` VALUES (24, 1588841734104, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1);
+INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2);
+INSERT INTO `orders` VALUES (5, 1583137145000, 1, 9, NULL, NULL, NULL, 'asdfa', 'asdfsafa', 'deliver', 1);
+INSERT INTO `orders` VALUES (19, 1588837612937, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `orders` VALUES (20, 1588841229215, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `orders` VALUES (21, 1588841409411, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `orders` VALUES (22, 1588841565864, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `orders` VALUES (23, 1588841643457, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `orders` VALUES (24, 1588841734104, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo

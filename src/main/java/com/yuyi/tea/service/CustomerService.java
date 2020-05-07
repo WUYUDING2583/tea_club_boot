@@ -1,8 +1,11 @@
 package com.yuyi.tea.service;
 
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.Amount;
+import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.common.utils.TimeUtil;
+import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.CustomerMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,4 +181,28 @@ public class CustomerService {
     }
 
 
+    /**
+     * 获取客户账户余额
+     * @param uid
+     * @return
+     */
+    public Amount getCustomerBalance(int uid) {
+        Customer customer = customerMapper.getCustomerByUid(uid);
+        Amount balance=new Amount(customer.getIngot(),customer.getCredit());
+        return balance;
+    }
+
+    /**
+     * 扣除客户账户金额
+     * @param ingot
+     * @param credit
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void pay(float ingot, float credit,int uid) {
+        try {
+            customerMapper.pay(ingot, credit, uid);
+        }catch (Exception e){
+            throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);
+        }
+    }
 }

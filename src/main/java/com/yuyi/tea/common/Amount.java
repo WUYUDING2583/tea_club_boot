@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class Amount implements Serializable {
     private float ingot;
-    private int credit;
+    private float credit;
 
     public Amount() {
     }
 
-    public Amount(float ingot, int credit) {
+    public Amount(float ingot, float credit) {
         this.ingot = ingot;
         this.credit = credit;
     }
@@ -22,14 +22,13 @@ public class Amount implements Serializable {
         this.ingot = ingot;
     }
 
-    public int getCredit() {
+    public float getCredit() {
         return credit;
     }
 
-    public void setCredit(int credit) {
+    public void setCredit(float credit) {
         this.credit = credit;
     }
-
 
     @Override
     public String toString() {

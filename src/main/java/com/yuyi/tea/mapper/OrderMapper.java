@@ -1,6 +1,7 @@
 package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.Amount;
 import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.typehandler.ActivityRuleTypeHandler;
 import com.yuyi.tea.typehandler.ClerkTypeHandler;
@@ -148,4 +149,6 @@ public interface OrderMapper {
      */
     @Insert("insert into reservation(reservationTime,boxId,orderId) values(#{reservation.reservationTime},#{reservation.boxId},#{orderId})")
     void saveReservation(Reservation reservation, int orderId);
+
+
 }

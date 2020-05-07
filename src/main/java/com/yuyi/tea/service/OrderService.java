@@ -1,16 +1,17 @@
 package com.yuyi.tea.service;
 
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.common.utils.AmountUtil;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.*;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class OrderService {
 
     @Autowired
     private ClerkService clerkService;
+
+    @Autowired
+    private ShopBoxMapper shopBoxMapper;
 
     /**
      * 获取客户的订单列表
@@ -339,16 +343,29 @@ public class OrderService {
      * 保存包厢预约信息
      * @param order
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveReservation(Order order) {
-        long time=TimeUtil.getCurrentTimestamp();
-        order.setOrderTime(time);
-        orderMapper.saveReservationOrder(order);
-        OrderStatus orderStatus=new OrderStatus(order.getUid(),CommConstants.OrderStatus.UNPAY,time,order.getClerk());
-        orderMapper.saveOrderStatus(orderStatus);
-        order.setStatus(orderStatus);
-        order.getOrderStatusHistory().add(orderStatus);
-        for(Reservation reservation:order.getReservations()){
-            orderMapper.saveReservation(reservation,order.getUid());
+        try{
+            long time=TimeUtil.getCurrentTimestamp();
+            order.setOrderTime(time);
+            orderMapper.saveReservationOrder(order);
+            OrderStatus orderStatus=new OrderStatus(order.getUid(),CommConstants.OrderStatus.UNPAY,time,order.getClerk());
+            orderMapper.saveOrderStatus(orderStatus);
+            order.setStatus(orderStatus);
+            order.getOrderStatusHistory().add(orderStatus);
+            for(Reservation reservation:order.getReservations()){
+                orderMapper.saveReservation(reservation,order.getUid());
+            }
+        }catch (Exception e){
+            String msg="以下时间段：";
+            for(Reservation reservation:order.getReservations()){
+                Reservation result = shopBoxMapper.findReservation(reservation.getReservationTime(), reservation.getBoxId());
+                if (result!=null){
+                    msg+=TimeUtil.convertTimestampToTimeFormat(reservation.getReservationTime())+"\n";
+                }
+            }
+            msg+="已被预约，请重新选择";
+            throw new GlobalException(CodeMsg.RESERVATION_DUPLICATE(msg));
         }
     }
 }

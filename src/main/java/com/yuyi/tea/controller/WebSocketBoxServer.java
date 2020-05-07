@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/websocket/box/{sid}")
 @Component
 @Slf4j
-public class WebSocketBoxServer extends WebSocketBase {
+public class WebSocketBoxServer {
 
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
@@ -55,7 +55,7 @@ public class WebSocketBoxServer extends WebSocketBase {
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口"+sid+"的信息:"+message);
         //群发消息
-        for (WebSocketBase item : webSocketSet) {
+        for (WebSocketBoxServer item : webSocketSet) {
 //            try {
 //                item.sendMessage(message);
 //            } catch (IOException e) {

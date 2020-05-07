@@ -38,7 +38,7 @@ public class TimeUtil {
      */
     public static String convertTimestampToTimeFormat(long timestamp){
         Timestamp ts = new Timestamp(timestamp);
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         //方法一:优势在于可以灵活的设置字符串的形式。
         String tsStr = sdf.format(ts);

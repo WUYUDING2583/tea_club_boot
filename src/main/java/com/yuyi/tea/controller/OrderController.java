@@ -1,26 +1,22 @@
 package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Order;
-import com.yuyi.tea.bean.OrderStatus;
 import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.common.Amount;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.TimeRange;
-import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.exception.GlobalException;
-import com.yuyi.tea.mapper.ActivityMapper;
-import com.yuyi.tea.mapper.ClerkMapper;
-import com.yuyi.tea.mapper.OrderMapper;
 import com.yuyi.tea.mapper.ShopBoxMapper;
+import com.yuyi.tea.service.CustomerService;
 import com.yuyi.tea.service.OrderService;
+import com.yuyi.tea.service.ShopBoxService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -31,6 +27,12 @@ public class OrderController {
 
     @Autowired
     private ShopBoxMapper shopBoxMapper;
+
+    @Autowired
+    private ShopBoxService shopBoxService;
+
+    @Autowired
+    private CustomerService customerService;
 
 
     /**
@@ -126,22 +128,31 @@ public class OrderController {
     }
 
     @PostMapping("/mobile/reserve")
-    @Transactional(rollbackFor = Exception.class)
     public Order reserve(@RequestBody Order order){
-        try{
+        try {
             orderService.saveReservation(order);
-            //检查账户余额
-            return order;
-        }catch(Exception e){
-            String msg="以下时间段：";
-            for(Reservation reservation:order.getReservations()){
-                Reservation result = shopBoxMapper.findReservation(reservation.getReservationTime(), reservation.getBoxId());
-                if (result!=null){
-                    msg+=TimeUtil.convertTimestampToTimeFormat(reservation.getReservationTime())+"\n";
-                }
+            //计算总价
+            float ingot = 0;
+            float credit = 0;
+            ShopBox box = shopBoxService.getShopBoxByUid(order.getReservations().get(0).getBoxId());
+            final float priceIngot = box.getPrice().getIngot();
+            final float priceCredit = box.getPrice().getCredit();
+            for (Reservation reservation : order.getReservations()) {
+                ingot += priceIngot;
+                credit += priceCredit;
             }
-            msg+="已被预约，请重新选择";
-            throw  new GlobalException(CodeMsg.RESERVATION_DUPLICATE(msg));
+            //检查账户余额
+            Amount balance = customerService.getCustomerBalance(order.getCustomer().getUid());
+            if (balance.getCredit() < credit || balance.getIngot() < ingot) {
+                String msg = "所需金额：" + ingot + "元宝 " + credit + "积分\n";
+                msg += "当前余额：" + balance.getIngot() + "元宝 " + balance.getCredit() + "积分";
+                throw new GlobalException(CodeMsg.INSUFFICIENT_BALANCE(msg));
+            }
+            //扣除金额
+            customerService.pay(ingot, credit, order.getCustomer().getUid());
+            return order;
+        }catch (GlobalException e){
+            throw e;
         }
     }
 

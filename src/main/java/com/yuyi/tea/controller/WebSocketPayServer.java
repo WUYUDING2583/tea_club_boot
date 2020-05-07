@@ -10,15 +10,15 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint("/websocket/face/{sid}")
+@ServerEndpoint("/websocket/pay/{sid}")
 @Component
 @Slf4j
-public class WebSocketFaceServer {
+public class WebSocketPayServer {
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     protected  int onlineCount = 0;
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    protected static CopyOnWriteArraySet<WebSocketFaceServer> webSocketSet = new CopyOnWriteArraySet<WebSocketFaceServer>();
+    protected static CopyOnWriteArraySet<WebSocketPayServer> webSocketSet = new CopyOnWriteArraySet<WebSocketPayServer>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     protected Session session;
@@ -32,7 +32,7 @@ public class WebSocketFaceServer {
         this.session = session;
         webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
-        log.info("WebSocketFaceServer！当前在线人数为" + getOnlineCount());
+        log.info("WebSocketPayServer！当前在线人数为" + getOnlineCount());
         this.sid=sid;
     }
 
@@ -54,7 +54,7 @@ public class WebSocketFaceServer {
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口"+sid+"的信息:"+message);
         //群发消息
-        for (WebSocketFaceServer item : webSocketSet) {
+        for (WebSocketPayServer item : webSocketSet) {
 //            try {
 //                item.sendMessage(message);
 //            } catch (IOException e) {
@@ -86,7 +86,7 @@ public class WebSocketFaceServer {
      * */
     public  void sendInfo(String message,@PathParam("sid") String sid) throws IOException {
         log.info("推送消息到窗口"+sid+"，推送内容:"+message);
-        for (WebSocketFaceServer item : webSocketSet) {
+        for (WebSocketPayServer item : webSocketSet) {
             try {
                 //这里可以设定只推送给这个sid的，为null则全部推送
                 if(sid==null) {
@@ -111,5 +111,4 @@ public class WebSocketFaceServer {
     public  synchronized void subOnlineCount() {
         onlineCount--;
     }
-
 }

@@ -37,6 +37,11 @@ public class CodeMsg {
     public static CodeMsg RESERVATION_DUPLICATE(String msg){
         return new CodeMsg(500600,msg);
     }
+    //付费模块 5007xx
+    public static CodeMsg INSUFFICIENT_BALANCE(String msg){
+        return new CodeMsg(500700,"余额不足\n"+msg);
+    }
+    public static final CodeMsg FAIL_IN_PAYMENT=new CodeMsg(500701,"扣费失败，请重试");
 
 
     private CodeMsg() {
