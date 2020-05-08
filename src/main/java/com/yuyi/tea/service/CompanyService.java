@@ -60,4 +60,13 @@ public class CompanyService {
         log.info("更新缓存数据"+company);
         return company;
     }
+
+    /**
+     * 获取兑换比例
+     * @return
+     */
+    public float getRechargeRate() {
+        Company company = companyMapper.getCompany();
+        return company.getRechargeRate();
+    }
 }

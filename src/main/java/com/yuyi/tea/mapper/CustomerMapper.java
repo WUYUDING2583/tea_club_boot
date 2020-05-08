@@ -115,4 +115,12 @@ public interface CustomerMapper {
 
     @Update("update customer set ingot=ingot-#{ingot}, credit=credit-#{credit} where uid=#{uid}")
     void pay(float ingot, float credit,int uid);
+
+    /**
+     * 账户余额增加
+     * @param customerId
+     * @param ingot
+     */
+    @Update("update customer set ingot=ingot+#{ingot} where uid=#{customerId}")
+    void addBalance(int customerId, float ingot);
 }

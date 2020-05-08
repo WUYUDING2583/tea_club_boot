@@ -368,4 +368,28 @@ public class OrderService {
             throw new GlobalException(CodeMsg.RESERVATION_DUPLICATE(msg));
         }
     }
+
+
+    /**
+     * 查询未付款预约包厢订单
+     * @param customerId
+     * @return
+     */
+    public List<Order> getUnpayReservationOrder(int customerId) {
+        List<Order> result=orderMapper.getUnpayReservationOrder(customerId);
+        return result;
+    }
+
+    /**
+     * 设置包厢预约订单为付款完成
+     * @param order
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateReservationComplete(Order order) {
+        long time=TimeUtil.getCurrentTimestamp();
+        OrderStatus pay=new OrderStatus(order.getUid(),CommConstants.OrderStatus.PATED,time,order.getClerk());
+        orderMapper.saveOrderStatus(pay);
+        OrderStatus complete=new OrderStatus(order.getUid(),CommConstants.OrderStatus.COMPLETE,time,order.getClerk());
+        orderMapper.saveOrderStatus(complete);
+    }
 }

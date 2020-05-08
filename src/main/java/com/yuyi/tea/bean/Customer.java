@@ -1,6 +1,7 @@
 package com.yuyi.tea.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.yuyi.tea.common.Amount;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Customer extends User {
     private String weChatId;
     private List<Order> orders;
     private List<Address> addresses;
+    private Amount balance=new Amount();
     private float ingot=0;
     private float credit=0;
 
@@ -40,7 +42,7 @@ public class Customer extends User {
         super(uid);
     }
 
-    public Customer(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, String email, CustomerType customerType, List<EnterpriseCustomerApplication> enterpriseCustomerApplications, String weChatId, List<Order> orders, List<Address> addresses, float ingot, float credit) {
+    public Customer(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, String email, CustomerType customerType, List<EnterpriseCustomerApplication> enterpriseCustomerApplications, String weChatId, List<Order> orders, List<Address> addresses, Amount balance, float ingot, float credit) {
         super(uid, name, contact, identityId, gender, address, avatar, password, enforceTerminal);
         this.email = email;
         this.customerType = customerType;
@@ -48,24 +50,33 @@ public class Customer extends User {
         this.weChatId = weChatId;
         this.orders = orders;
         this.addresses = addresses;
+        this.balance = balance;
         this.ingot = ingot;
         this.credit = credit;
     }
 
     public float getIngot() {
-        return ingot;
+        return balance.getIngot();
     }
 
     public void setIngot(float ingot) {
-        this.ingot = ingot;
+        this.balance.setIngot(ingot);
     }
 
     public float getCredit() {
-        return credit;
+        return balance.getCredit();
     }
 
     public void setCredit(float credit) {
-        this.credit = credit;
+        this.balance.setCredit(credit);
+    }
+
+    public Amount getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Amount balance) {
+        this.balance = balance;
     }
 
     public String getEmail() {

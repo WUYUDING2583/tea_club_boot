@@ -19,7 +19,7 @@ public class Order implements Serializable {
     private List<OrderProduct> products=new ArrayList<>();
     private ActivityRule activityRule;//全局购物满减活动规则
     private List<Activity> activities=new ArrayList<>();
-    private Amount amount;
+    private Amount amount=new Amount();
     private String buyerPs;//买家留言
     private String buyerRefundReason;//买家退款理由
     private String sellerPs;//卖家退款说明
@@ -27,6 +27,8 @@ public class Order implements Serializable {
     private String deliverMode;//配送方式
     private String address;
     private List<Reservation> reservations=new ArrayList<>();
+    private float ingot;
+    private float credit;
 
     public Order() {
     }
@@ -35,7 +37,7 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address) {
+    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address, List<Reservation> reservations, float ingot, float credit) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
@@ -52,6 +54,25 @@ public class Order implements Serializable {
         this.trackInfo = trackInfo;
         this.deliverMode = deliverMode;
         this.address = address;
+        this.reservations = reservations;
+        this.ingot = ingot;
+        this.credit = credit;
+    }
+
+    public float getIngot() {
+        return amount.getIngot();
+    }
+
+    public void setIngot(float ingot) {
+        this.amount.setIngot(ingot);
+    }
+
+    public float getCredit() {
+        return amount.getCredit();
+    }
+
+    public void setCredit(float credit) {
+        this.amount.setCredit(credit);
     }
 
     public List<Reservation> getReservations() {

@@ -138,7 +138,7 @@ public interface OrderMapper {
      * 保存包厢预约订单
      * @param order
      */
-    @Insert("insert orders(orderTime,customerId,clerkId) values(#{orderTime},#{customer.uid},#{clerk.uid})")
+    @Insert("insert orders(orderTime,customerId,clerkId,ingot,credit) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveReservationOrder(Order order);
 
@@ -150,5 +150,20 @@ public interface OrderMapper {
     @Insert("insert into reservation(reservationTime,boxId,orderId) values(#{reservation.reservationTime},#{reservation.boxId},#{orderId})")
     void saveReservation(Reservation reservation, int orderId);
 
-
+    /**
+     * 查询未付款预约包厢订单
+     * @param customerId
+     * @return
+     */
+    @Select("select uid,orderTime,ingot,credit from orders where customerId=#{customerId} and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='unpay')" +
+            "order by orderTime desc")
+    @Results(id="reservation",
+            value = {
+                    @Result(id = true,column = "uid",property = "uid"),
+                    @Result(column = "uid",property = "reservations",
+                            many = @Many(select="com.yuyi.tea.mapper.ShopBoxMapper.getReservationByOrderId",
+                                    fetchType = FetchType.LAZY))
+            })
+    List<Order> getUnpayReservationOrder(int customerId);
 }

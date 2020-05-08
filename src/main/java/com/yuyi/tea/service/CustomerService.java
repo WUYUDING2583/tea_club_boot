@@ -8,11 +8,7 @@ import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.CustomerMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +29,12 @@ public class CustomerService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private CompanyService companyService;
+
+    @Autowired
+    private CustomerService customerService;
 
     /**
      * 获取客户类型
@@ -188,7 +190,7 @@ public class CustomerService {
      */
     public Amount getCustomerBalance(int uid) {
         Customer customer = customerMapper.getCustomerByUid(uid);
-        Amount balance=new Amount(customer.getIngot(),customer.getCredit());
+        Amount balance=customer.getBalance();
         return balance;
     }
 
@@ -198,11 +200,58 @@ public class CustomerService {
      * @param credit
      */
     @Transactional(rollbackFor = Exception.class)
-    public void pay(float ingot, float credit,int uid) {
+    public Amount pay(float ingot, float credit,int uid) {
         try {
             customerMapper.pay(ingot, credit, uid);
+            Amount balance = customerService.getCustomerBalance(uid);
+            return balance;
         }catch (Exception e){
             throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);
+        }
+    }
+
+    /**
+     * 根据value改变客户账户余额
+     * @param customerId
+     * @param value
+     * @return 账户余额
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Amount addBalance(int customerId, float value) {
+        //获取币种兑换比例
+        float rate=companyService.getRechargeRate();
+        float ingot=rate*value;
+        customerMapper.addBalance(customerId,ingot);
+        Amount customerBalance = getCustomerBalance(customerId);
+        return customerBalance;
+    }
+
+    /**
+     * 检查账户余额
+     * @param ingot
+     * @param credit
+     * @param balance
+     */
+    public void checkBalance(float ingot,float credit,Amount balance){
+        if (balance.getCredit() < credit || balance.getIngot() < ingot) {
+            String msg = "所需金额：" + ingot + "元宝 " + credit + "积分\n";
+            msg += "当前余额：" + balance.getIngot() + "元宝 " + balance.getCredit() + "积分";
+            throw new GlobalException(CodeMsg.INSUFFICIENT_BALANCE(msg));
+        }
+    }
+
+    /**
+     * 检查账户余额
+     * @param ingot
+     * @param credit
+     * @param customerId
+     */
+    public void checkBalance(float ingot,float credit,int customerId){
+        Amount balance = customerService.getCustomerBalance(customerId);
+        if (balance.getCredit() < credit || balance.getIngot() < ingot) {
+            String msg = "所需金额：" + ingot + "元宝 " + credit + "积分\n";
+            msg += "当前余额：" + balance.getIngot() + "元宝 " + balance.getCredit() + "积分";
+            throw new GlobalException(CodeMsg.INSUFFICIENT_BALANCE(msg));
         }
     }
 }

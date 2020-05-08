@@ -130,7 +130,6 @@ public class OrderController {
     @PostMapping("/mobile/reserve")
     public Order reserve(@RequestBody Order order){
         try {
-            orderService.saveReservation(order);
             //计算总价
             float ingot = 0;
             float credit = 0;
@@ -141,13 +140,11 @@ public class OrderController {
                 ingot += priceIngot;
                 credit += priceCredit;
             }
+            order.setIngot(ingot);
+            order.setCredit(credit);
+            orderService.saveReservation(order);
             //检查账户余额
-            Amount balance = customerService.getCustomerBalance(order.getCustomer().getUid());
-            if (balance.getCredit() < credit || balance.getIngot() < ingot) {
-                String msg = "所需金额：" + ingot + "元宝 " + credit + "积分\n";
-                msg += "当前余额：" + balance.getIngot() + "元宝 " + balance.getCredit() + "积分";
-                throw new GlobalException(CodeMsg.INSUFFICIENT_BALANCE(msg));
-            }
+            customerService.checkBalance(ingot,credit,order.getCustomer().getUid());
             //扣除金额
             customerService.pay(ingot, credit, order.getCustomer().getUid());
             return order;
