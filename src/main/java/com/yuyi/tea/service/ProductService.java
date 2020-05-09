@@ -204,4 +204,15 @@ public class ProductService {
         }
         return product;
     }
+
+
+    /**
+     * 获取门店产品列表
+     * @param shopId
+     * @return
+     */
+    public List<Product> getProducts(int shopId) {
+        List<Product> products=productMapper.getShopProducts(shopId);
+        return products;
+    }
 }

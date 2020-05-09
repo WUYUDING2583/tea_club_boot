@@ -1,5 +1,6 @@
 package com.yuyi.tea.controller;
 
+import com.yuyi.tea.bean.ActivityRule;
 import com.yuyi.tea.bean.Product;
 import com.yuyi.tea.bean.ProductType;
 import com.yuyi.tea.service.ProductService;
@@ -102,5 +103,18 @@ public class ProductController {
     @Transactional(rollbackFor = Exception.class)
     public Product updateProduct(@RequestBody Product product){
         return productService.updateProduct(product);
+    }
+
+    @GetMapping("/mobile/products/{shopId}")
+    public List<Product> getShopProductList(@PathVariable int shopId){
+        List<Product> products=productService.getProducts(shopId);
+        for(Product product:products){
+            for(ActivityRule activityRule:product.getActivityRules()){
+                activityRule.setActivityApplyForProduct(null);
+                activityRule.getActivity().setPhotos(null);
+                activityRule.getActivity().setActivityRules(null);
+            }
+        }
+        return products;
     }
 }

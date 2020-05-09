@@ -19,6 +19,7 @@ public class Product implements Serializable {
     private List<Photo> photos;
     private List<ActivityRule> activityRules;
     private List<Activity> activities;
+    private Shop shop;
 
     public Product() {
     }
@@ -33,7 +34,7 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop) {
         this.uid = uid;
         this.name = name;
         this.type = type;
@@ -44,6 +45,7 @@ public class Product implements Serializable {
         this.photos = photos;
         this.activityRules = activityRules;
         this.activities = activities;
+        this.shop = shop;
     }
 
     @Override
@@ -60,6 +62,14 @@ public class Product implements Serializable {
                 ", activityRules=" + activityRules +
                 ", activities=" + activities +
                 '}';
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public List<Activity> getActivities() {

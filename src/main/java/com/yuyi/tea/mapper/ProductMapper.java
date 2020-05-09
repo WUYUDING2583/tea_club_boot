@@ -2,6 +2,7 @@ package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.Product;
 import com.yuyi.tea.bean.ProductType;
+import com.yuyi.tea.typehandler.ShopTypeHandler;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -93,11 +94,21 @@ public interface ProductMapper {
                             fetchType= FetchType.LAZY)),
             @Result(column="uid",property="activityRules",
                     one=@One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRulesByProduct",
-                            fetchType= FetchType.LAZY))
+                            fetchType= FetchType.LAZY)),
+            @Result(column="shopId",property="shop",typeHandler = ShopTypeHandler.class)
     })
     Product getProduct(int uid);
 
     //更新产品信息
     @Update("update product set name=#{name},type=#{type.uid},description=#{description},storage=#{storage} where uid=#{uid}")
     void updateProduct(Product product);
+
+    /**
+     * 获取门店产品列表
+     * @param shopId
+     * @return
+     */
+    @Select("select * from product where shopId=#{shopId} and enforceTerminal=false")
+    @ResultMap("product")
+    List<Product> getShopProducts(int shopId);
 }

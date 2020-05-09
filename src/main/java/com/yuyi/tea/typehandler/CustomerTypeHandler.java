@@ -1,6 +1,7 @@
 package com.yuyi.tea.typehandler;
 
 import com.yuyi.tea.bean.Customer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
@@ -15,9 +16,8 @@ import java.sql.SQLException;
 
 @MappedTypes(Customer.class)
 @MappedJdbcTypes(JdbcType.INTEGER)
+@Slf4j
 public class CustomerTypeHandler implements TypeHandler<Customer> {
-
-    private final Logger log = LoggerFactory.getLogger(CustomerTypeHandler.class);
 
     @Override
     public void setParameter(PreparedStatement preparedStatement, int i, Customer customer, JdbcType jdbcType) throws SQLException {
