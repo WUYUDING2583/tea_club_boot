@@ -123,4 +123,12 @@ public interface CustomerMapper {
      */
     @Update("update customer set ingot=ingot+#{ingot} where uid=#{customerId}")
     void addBalance(int customerId, float ingot);
+
+    /**
+     * 为客户账户余额新增积分
+     * @param customerId
+     * @param credit
+     */
+    @Update("update customer set credit=credit+#{credit} where uid=#{customerId}")
+    void addCredit(int customerId, float credit);
 }

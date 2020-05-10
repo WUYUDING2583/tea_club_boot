@@ -42,7 +42,10 @@ public class CodeMsg {
         return new CodeMsg(500700,"余额不足\n"+msg);
     }
     public static final CodeMsg FAIL_IN_PAYMENT=new CodeMsg(500701,"扣费失败，请重试");
-
+    public static final CodeMsg ADD_CREDIT_FAIL=new CodeMsg(500702,"积分赠送失败");
+    //订单模块 5008xx
+    public static final CodeMsg PLACE_ORDER_FAIL=new CodeMsg(500800,"下单失败");
+    public static final CodeMsg UPDATE_ORDER_STATUS_FAIL=new CodeMsg(500801,"修改订单状态失败");
 
     private CodeMsg() {
     }

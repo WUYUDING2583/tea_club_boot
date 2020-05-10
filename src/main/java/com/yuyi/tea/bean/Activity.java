@@ -18,6 +18,7 @@ public class Activity implements Serializable {
     private List<Photo> photos;
     private List<Activity> mutexActivities;
     private List<ActivityRule> activityRules;
+    private int priority;
 
     public Activity() {
     }
@@ -31,7 +32,7 @@ public class Activity implements Serializable {
         this.name = name;
     }
 
-    public Activity(int uid, String name, String description, long startTime, long endTime, boolean enforceTerminal, List<Photo> photos, List<Activity> mutexActivities, List<ActivityRule> activityRules) {
+    public Activity(int uid, String name, String description, long startTime, long endTime, boolean enforceTerminal, List<Photo> photos, List<Activity> mutexActivities, List<ActivityRule> activityRules, int priority) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -41,6 +42,15 @@ public class Activity implements Serializable {
         this.photos = photos;
         this.mutexActivities = mutexActivities;
         this.activityRules = activityRules;
+        this.priority = priority;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public int getUid() {

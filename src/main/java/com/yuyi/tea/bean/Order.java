@@ -29,6 +29,7 @@ public class Order implements Serializable {
     private List<Reservation> reservations=new ArrayList<>();
     private float ingot;
     private float credit;
+    private int clerkDiscount;
 
     public Order() {
     }
@@ -37,7 +38,7 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address, List<Reservation> reservations, float ingot, float credit) {
+    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
@@ -57,6 +58,15 @@ public class Order implements Serializable {
         this.reservations = reservations;
         this.ingot = ingot;
         this.credit = credit;
+        this.clerkDiscount = clerkDiscount;
+    }
+
+    public int getClerkDiscount() {
+        return clerkDiscount;
+    }
+
+    public void setClerkDiscount(int clerkDiscount) {
+        this.clerkDiscount = clerkDiscount;
     }
 
     public float getIngot() {
@@ -231,6 +241,9 @@ public class Order implements Serializable {
                 ", deliverMode='" + deliverMode + '\'' +
                 ", address='" + address + '\'' +
                 ", reservations=" + reservations +
+                ", ingot=" + ingot +
+                ", credit=" + credit +
+                ", clerkDiscount=" + clerkDiscount +
                 '}';
     }
 }

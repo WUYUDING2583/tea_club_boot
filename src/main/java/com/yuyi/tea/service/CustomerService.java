@@ -232,12 +232,13 @@ public class CustomerService {
      * @param credit
      * @param balance
      */
-    public void checkBalance(float ingot,float credit,Amount balance){
+    public boolean checkBalance(float ingot,float credit,Amount balance){
         if (balance.getCredit() < credit || balance.getIngot() < ingot) {
             String msg = "所需金额：" + ingot + "元宝 " + credit + "积分\n";
             msg += "当前余额：" + balance.getIngot() + "元宝 " + balance.getCredit() + "积分";
             throw new GlobalException(CodeMsg.INSUFFICIENT_BALANCE(msg));
         }
+        return true;
     }
 
     /**
@@ -246,12 +247,27 @@ public class CustomerService {
      * @param credit
      * @param customerId
      */
-    public void checkBalance(float ingot,float credit,int customerId){
+    public boolean checkBalance(float ingot,float credit,int customerId){
         Amount balance = customerService.getCustomerBalance(customerId);
         if (balance.getCredit() < credit || balance.getIngot() < ingot) {
             String msg = "所需金额：" + ingot + "元宝 " + credit + "积分\n";
             msg += "当前余额：" + balance.getIngot() + "元宝 " + balance.getCredit() + "积分";
             throw new GlobalException(CodeMsg.INSUFFICIENT_BALANCE(msg));
+        }
+        return true;
+    }
+
+    /**
+     * 为客户账户余额新增积分
+     * @param customerId
+     * @param credit
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void addCredit(int customerId, float credit) {
+        try {
+            customerMapper.addCredit(customerId, credit);
+        }catch (Exception e){
+            throw new GlobalException(CodeMsg.ADD_CREDIT_FAIL);
         }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -109,11 +110,16 @@ public class ProductController {
     public List<Product> getShopProductList(@PathVariable int shopId){
         List<Product> products=productService.getProducts(shopId);
         for(Product product:products){
+            List<ActivityRule> filterRules=new ArrayList<>();
             for(ActivityRule activityRule:product.getActivityRules()){
                 activityRule.setActivityApplyForProduct(null);
                 activityRule.getActivity().setPhotos(null);
                 activityRule.getActivity().setActivityRules(null);
+                if(activityRule.getActivityRuleType().getName().equals("折扣")||activityRule.getActivityRuleType().getName().equals("购物")){
+                    filterRules.add(activityRule);
+                }
             }
+            product.setActivityRules(filterRules);
         }
         return products;
     }

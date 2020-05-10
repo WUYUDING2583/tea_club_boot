@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.util.List;
 
 @Service
@@ -391,5 +392,38 @@ public class OrderService {
         orderMapper.saveOrderStatus(pay);
         OrderStatus complete=new OrderStatus(order.getUid(),CommConstants.OrderStatus.COMPLETE,time,order.getClerk());
         orderMapper.saveOrderStatus(complete);
+    }
+
+    /**
+     * 保存订单信息
+     * @param order
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOrder(Order order) {
+        try{
+            long time= TimeUtil.getCurrentTimestamp();
+            order.setOrderTime(time);
+            orderMapper.saveMobileOrder(order);
+            for(OrderProduct orderProduct:order.getProducts()) {
+                orderMapper.saveOrderProduct(orderProduct,order.getUid());
+            }
+            //TODO 保存店员优惠
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.PLACE_ORDER_FAIL);
+        }
+    }
+
+    /**
+     * 保存订单状态
+     * @param status
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOrderStatus(OrderStatus status) {
+        try {
+            orderMapper.saveOrderStatus(status);
+        }catch (Exception e){
+            throw new GlobalException(CodeMsg.UPDATE_ORDER_STATUS_FAIL);
+        }
     }
 }

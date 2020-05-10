@@ -166,4 +166,19 @@ public interface OrderMapper {
                                     fetchType = FetchType.LAZY))
             })
     List<Order> getUnpayReservationOrder(int customerId);
+
+    /**
+     * 保存移动端订单
+     * @param order
+     */
+    @Insert("insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount})")
+    @Options(useGeneratedKeys=true, keyProperty="uid")
+    void saveMobileOrder(Order order);
+
+    /**
+     * 保存订单产品
+     * @param orderProduct
+     */
+    @Insert("insert into orderProduct(productId,orderId,number,activityRuleId) values(#{orderProduct.product.uid},#{orderId},#{orderProduct.number},#{orderProduct.activityRule.uid})")
+    void saveOrderProduct(OrderProduct orderProduct,int orderId);
 }

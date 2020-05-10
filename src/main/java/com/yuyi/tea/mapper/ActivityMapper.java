@@ -26,7 +26,7 @@ public interface ActivityMapper {
      * 存储新增活动
      * @param activity
      */
-    @Insert("insert into activity(name,description,startTime,endTime,enforceTerminal) values(#{name},#{description},#{startTime},#{endTime},#{enforceTerminal})")
+    @Insert("insert into activity(name,description,startTime,endTime,enforceTerminal,priority) values(#{name},#{description},#{startTime},#{endTime},#{enforceTerminal},#{priority})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivity(Activity activity);
 

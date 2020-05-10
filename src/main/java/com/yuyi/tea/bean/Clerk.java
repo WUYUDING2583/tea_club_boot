@@ -11,6 +11,7 @@ public class Clerk  extends User{
     private Position position;
     private Shop shop;
     private List<PositionAutorityFrontDetail> positionAutorityFrontDetails;
+    private int leastDiscount;
 
     public Clerk() {
     }
@@ -23,11 +24,20 @@ public class Clerk  extends User{
         super(uid,name);
     }
 
-    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, Position position, Shop shop, List<PositionAutorityFrontDetail> positionAutorityFrontDetails) {
+    public Clerk(int uid, String name, String contact, String identityId, int gender, String address, Photo avatar, String password, boolean enforceTerminal, Position position, Shop shop, List<PositionAutorityFrontDetail> positionAutorityFrontDetails, int leastDiscount) {
         super(uid, name, contact, identityId, gender, address, avatar, password, enforceTerminal);
         this.position = position;
         this.shop = shop;
         this.positionAutorityFrontDetails = positionAutorityFrontDetails;
+        this.leastDiscount = leastDiscount;
+    }
+
+    public int getLeastDiscount() {
+        return leastDiscount;
+    }
+
+    public void setLeastDiscount(int leastDiscount) {
+        this.leastDiscount = leastDiscount;
     }
 
     public Position getPosition() {
@@ -60,6 +70,7 @@ public class Clerk  extends User{
                 "position=" + position +
                 ", shop=" + shop +
                 ", positionAutorityFrontDetails=" + positionAutorityFrontDetails +
+                ", leastDiscount=" + leastDiscount +
                 '}';
     }
 }
