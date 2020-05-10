@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 09/05/2020 22:05:50
+ Date: 10/05/2020 22:55:08
 */
 
 SET NAMES utf8mb4;
@@ -28,16 +28,17 @@ CREATE TABLE `activity`  (
   `startTime` bigint(0) NULL DEFAULT NULL,
   `endTime` bigint(0) NULL DEFAULT NULL,
   `enforceTerminal` tinyint(1) NULL DEFAULT 0,
+  `priority` int(0) NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of activity
 -- ----------------------------
-INSERT INTO `activity` VALUES (21, 'activity1', 'afdsfasdfasf', 1585315020000, 1588252620000, 1);
-INSERT INTO `activity` VALUES (25, 'activity2', 'asdfasdf', 1583845885000, 1584105085000, 0);
-INSERT INTO `activity` VALUES (26, 'hahah', 'hahahah', 1587042360000, 1589375160000, 0);
-INSERT INTO `activity` VALUES (30, 'asdfasdfasdfasdfas', 'asdfasdfasdf', 1585754344000, 1590247144000, 0);
+INSERT INTO `activity` VALUES (21, 'activity1', 'afdsfasdfasf', 1585315020000, 1588252620000, 1, 1);
+INSERT INTO `activity` VALUES (25, 'activity2', 'asdfasdf', 1583845885000, 1584105085000, 0, 2);
+INSERT INTO `activity` VALUES (26, 'hahah', 'hahahah', 1587042360000, 1589375160000, 0, 3);
+INSERT INTO `activity` VALUES (30, 'asdfasdfasdfasdfas', 'asdfasdfasdf', 1585754344000, 1590247144000, 0, 4);
 
 -- ----------------------------
 -- Table structure for activityApplyForCustomerType
@@ -603,7 +604,7 @@ CREATE TABLE `orderProduct`  (
   CONSTRAINT `orderProduct_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderProduct_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderProduct_ibfk_3` FOREIGN KEY (`activityRuleId`) REFERENCES `activityRule` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderProduct
@@ -612,6 +613,22 @@ INSERT INTO `orderProduct` VALUES (1, 1, 2, 1, 36);
 INSERT INTO `orderProduct` VALUES (2, 2, 2, 1, 36);
 INSERT INTO `orderProduct` VALUES (3, 3, 2, 1, 36);
 INSERT INTO `orderProduct` VALUES (4, 2, 4, 1, 36);
+INSERT INTO `orderProduct` VALUES (6, 1, 78, 2, 36);
+INSERT INTO `orderProduct` VALUES (7, 2, 78, 1, 36);
+INSERT INTO `orderProduct` VALUES (8, 5, 78, 1, NULL);
+INSERT INTO `orderProduct` VALUES (9, 1, 79, 1, 36);
+INSERT INTO `orderProduct` VALUES (10, 1, 80, 1, 36);
+INSERT INTO `orderProduct` VALUES (11, 2, 80, 1, 36);
+INSERT INTO `orderProduct` VALUES (12, 2, 81, 1, 36);
+INSERT INTO `orderProduct` VALUES (13, 1, 82, 1, 36);
+INSERT INTO `orderProduct` VALUES (14, 1, 83, 1, 36);
+INSERT INTO `orderProduct` VALUES (15, 1, 84, 1, 36);
+INSERT INTO `orderProduct` VALUES (16, 1, 85, 1, 36);
+INSERT INTO `orderProduct` VALUES (17, 1, 86, 1, 36);
+INSERT INTO `orderProduct` VALUES (18, 1, 87, 1, 36);
+INSERT INTO `orderProduct` VALUES (19, 1, 88, 1, 36);
+INSERT INTO `orderProduct` VALUES (20, 1, 89, 1, 36);
+INSERT INTO `orderProduct` VALUES (21, 1, 90, 1, 36);
 
 -- ----------------------------
 -- Table structure for orderStatus
@@ -628,7 +645,7 @@ CREATE TABLE `orderStatus`  (
   INDEX `handler`(`processer`) USING BTREE,
   CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 126 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderStatus
@@ -646,6 +663,19 @@ INSERT INTO `orderStatus` VALUES (109, 70, 'unpay', 1589009217887, 10);
 INSERT INTO `orderStatus` VALUES (110, 71, 'unpay', 1589009274039, 10);
 INSERT INTO `orderStatus` VALUES (111, 72, 'unpay', 1589009326298, 10);
 INSERT INTO `orderStatus` VALUES (112, 73, 'unpay', 1589009390384, 10);
+INSERT INTO `orderStatus` VALUES (113, 78, 'unpay', 1589117863670, 10);
+INSERT INTO `orderStatus` VALUES (114, 79, 'unpay', 1589118116951, 10);
+INSERT INTO `orderStatus` VALUES (115, 80, 'unpay', 1589118159499, 10);
+INSERT INTO `orderStatus` VALUES (116, 81, 'unpay', 1589118180522, 10);
+INSERT INTO `orderStatus` VALUES (117, 82, 'unpay', 1589118193561, 10);
+INSERT INTO `orderStatus` VALUES (118, 83, 'unpay', 1589118263060, 10);
+INSERT INTO `orderStatus` VALUES (119, 84, 'unpay', 1589118375430, 10);
+INSERT INTO `orderStatus` VALUES (120, 85, 'unpay', 1589118636381, 10);
+INSERT INTO `orderStatus` VALUES (121, 86, 'unpay', 1589122088764, 10);
+INSERT INTO `orderStatus` VALUES (122, 87, 'unpay', 1589122181622, 10);
+INSERT INTO `orderStatus` VALUES (123, 88, 'unpay', 1589122269446, 10);
+INSERT INTO `orderStatus` VALUES (124, 89, 'unpay', 1589122338560, 10);
+INSERT INTO `orderStatus` VALUES (125, 90, 'unpay', 1589122364134, 10);
 
 -- ----------------------------
 -- Table structure for orders
@@ -664,7 +694,8 @@ CREATE TABLE `orders`  (
   `deliverMode` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `addressId` int(0) NULL DEFAULT NULL,
   `ingot` float NULL DEFAULT 0,
-  `credit` float NULL DEFAULT 0,
+  `credit` float NULL DEFAULT 100,
+  `clerkDiscount` int(0) NULL DEFAULT 100,
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   INDEX `clerkId`(`clerkId`) USING BTREE,
@@ -676,18 +707,31 @@ CREATE TABLE `orders`  (
   CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`activityRuleId`) REFERENCES `activityRule` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_5` FOREIGN KEY (`addressId`) REFERENCES `customerAddress` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 74 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 86 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1, 0, 0);
-INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2, 0, 0);
-INSERT INTO `orders` VALUES (69, 1588947766505, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0);
-INSERT INTO `orders` VALUES (70, 1589009217887, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0);
-INSERT INTO `orders` VALUES (71, 1589009274039, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0);
-INSERT INTO `orders` VALUES (72, 1589009326298, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0);
-INSERT INTO `orders` VALUES (73, 1589009390384, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0);
+INSERT INTO `orders` VALUES (2, 1585488890144, 1, 9, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 9, 'sadfasdf', NULL, 'selfPickUp', 1, 0, 0, 100);
+INSERT INTO `orders` VALUES (4, 1583137145000, 1, 9, NULL, NULL, NULL, 'sdfasfasdf', NULL, 'selfPickUp', 2, 0, 0, 100);
+INSERT INTO `orders` VALUES (69, 1588947766505, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100);
+INSERT INTO `orders` VALUES (70, 1589009217887, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100);
+INSERT INTO `orders` VALUES (71, 1589009274039, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100);
+INSERT INTO `orders` VALUES (72, 1589009326298, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100);
+INSERT INTO `orders` VALUES (73, 1589009390384, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100);
+INSERT INTO `orders` VALUES (78, 1589117861355, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 381.3, 100);
+INSERT INTO `orders` VALUES (79, 1589118116938, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 100);
+INSERT INTO `orders` VALUES (80, 1589118159487, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 172.2, 100);
+INSERT INTO `orders` VALUES (81, 1589118180380, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 100);
+INSERT INTO `orders` VALUES (82, 1589118193545, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 100);
+INSERT INTO `orders` VALUES (83, 1589118263049, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 100);
+INSERT INTO `orders` VALUES (84, 1589118375415, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 100);
+INSERT INTO `orders` VALUES (85, 1589118636363, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 100);
+INSERT INTO `orders` VALUES (86, 1589122088741, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 86.1, 0);
+INSERT INTO `orders` VALUES (87, 1589122181600, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 123, 0);
+INSERT INTO `orders` VALUES (88, 1589122269430, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 123, 0);
+INSERT INTO `orders` VALUES (89, 1589122338550, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 84, 123, 100);
+INSERT INTO `orders` VALUES (90, 1589122364121, 1, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 8.4, 123, 10);
 
 -- ----------------------------
 -- Table structure for photo
@@ -754,15 +798,16 @@ DROP TABLE IF EXISTS `position`;
 CREATE TABLE `position`  (
   `uid` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `leastDiscount` int(0) NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of position
 -- ----------------------------
-INSERT INTO `position` VALUES (1, '管理员');
-INSERT INTO `position` VALUES (2, '店长');
-INSERT INTO `position` VALUES (3, '服务员');
+INSERT INTO `position` VALUES (1, '管理员', 0);
+INSERT INTO `position` VALUES (2, '店长', 80);
+INSERT INTO `position` VALUES (3, '服务员', 90);
 
 -- ----------------------------
 -- Table structure for positionAuthorityEndDetail
@@ -889,7 +934,7 @@ CREATE TABLE `price`  (
 INSERT INTO `price` VALUES (1, 120, 100);
 INSERT INTO `price` VALUES (3, 0, 0);
 INSERT INTO `price` VALUES (4, 12, 0);
-INSERT INTO `price` VALUES (5, 0, 123);
+INSERT INTO `price` VALUES (5, 120, 123);
 INSERT INTO `price` VALUES (6, 123, 12);
 INSERT INTO `price` VALUES (7, 0, 0);
 INSERT INTO `price` VALUES (8, 12, 12);
@@ -960,7 +1005,7 @@ CREATE TABLE `recharge`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `recharge_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of recharge
@@ -1033,7 +1078,7 @@ CREATE TABLE `shopBox`  (
   INDEX `shopBox_ibfk_2`(`priceId`) USING BTREE,
   CONSTRAINT `shopBox_ibfk_1` FOREIGN KEY (`shopId`) REFERENCES `shop` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shopBox_ibfk_2` FOREIGN KEY (`priceId`) REFERENCES `price` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shopBox
