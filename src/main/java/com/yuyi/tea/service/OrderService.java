@@ -235,7 +235,7 @@ public class OrderService {
         ActivityRule redisActivityRule = activityService.getRedisActivityRule(order.getActivityRule().getUid());
         ActivityService.clearActivityRule(redisActivityRule);
         order.setActivityRule(redisActivityRule);
-        order.setAmount(AmountUtil.computeAmount(order));
+//        order.setAmount(AmountUtil.computeAmount(order));
     }
 
     //从缓存中查询订单列表内部信息

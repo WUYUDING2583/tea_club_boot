@@ -270,4 +270,17 @@ public class CustomerService {
             throw new GlobalException(CodeMsg.ADD_CREDIT_FAIL);
         }
     }
+
+    /**
+     * 根据搜索信息搜索对应客户信息
+     * @param searchText
+     * @return
+     */
+    public List<Customer> searchCustomers(String searchText) {
+        List<Customer> customers=customerMapper.searchCustomers(searchText);
+        for(Customer customer:customers){
+            customer.setPassword(null);
+        }
+        return customers;
+    }
 }

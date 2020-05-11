@@ -5,7 +5,11 @@ import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.bean.EnterpriseCustomerApplication;
 import com.yuyi.tea.bean.Order;
+import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.dto.FaceUserInfo;
+import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.CustomerService;
 import com.yuyi.tea.service.OrderService;
 import com.yuyi.tea.service.interfaces.UserFaceInfoService;
@@ -118,26 +122,57 @@ public class CustomerController {
     }
 
     /**
+     * 若type==face
      * 根据user_face_info的uid获取客户信息
      * 若此face有对应的customer则返回
      * 否则返回null
+     * 若type==search
+     * uid为customer id，
+     * 据此返回对应customer
      * @param uid
+     * @param type
      * @return
      */
-    @GetMapping("/mobile/customer/{uid}")
-    public Customer fetchCustomerByFaceUid(@PathVariable int uid){
-        FaceUserInfo faceUserInfo = userFaceInfoService.getFaceUserInfo(uid);
-        if(faceUserInfo.getCustomer()!=null){
-            Customer customer=faceUserInfo.getCustomer();
-            customer.setPassword(null);
-            //获取该用户未完成的订单
-            List<Order> uncompleteOrders = orderService.getUncompleteOrders(customer.getUid());
-            System.out.println(uncompleteOrders);
-            customer.setOrders(uncompleteOrders);
-//            System.out.println(new Gson().toJson(customer));
-            return customer;
+    @GetMapping("/mobile/customer/{uid}/{type}")
+    public Customer fetchCustomerByFaceUid(@PathVariable int uid,@PathVariable String type){
+        switch (type) {
+            case "face":
+                FaceUserInfo faceUserInfo = userFaceInfoService.getFaceUserInfo(uid);
+                if (faceUserInfo.getCustomer() != null) {
+                    Customer customer = faceUserInfo.getCustomer();
+                    customer.setPassword(null);
+                    //获取该用户最近3个月的订单
+                    long startDate = TimeUtil.getNDayAgoStartTime(90);
+                    long endDate = TimeUtil.getNDayAgoStartTime(-1);
+                    TimeRange timeRange = new TimeRange(startDate, endDate);
+                    List<Order> orders = orderService.getOrdersByCustomer(customer.getUid(), timeRange);
+                    customer.setOrders(orders);
+                    return customer;
+                }
+                break;
+            case "search":
+                Customer customer=customerService.getRedisCustomer(uid);
+                customer.setPassword(null);
+                //获取该用户最近3个月的订单
+                long startDate = TimeUtil.getNDayAgoStartTime(90);
+                long endDate = TimeUtil.getNDayAgoStartTime(-1);
+                TimeRange timeRange = new TimeRange(startDate, endDate);
+                List<Order> orders = orderService.getOrdersByCustomer(customer.getUid(), timeRange);
+                customer.setOrders(orders);
+                return customer;
         }
-        return null;
+        throw new GlobalException(CodeMsg.NON_REGISTER_CUSTOMER);
+    }
+
+    /**
+     * 根据搜索信息搜索对应客户信息
+     * @param searchText
+     * @return
+     */
+    @GetMapping("/mobile/search/{searchText}")
+    public List<Customer> searchCustomer(@PathVariable String searchText){
+        List<Customer> customers=customerService.searchCustomers(searchText);
+        return customers;
     }
 
 }

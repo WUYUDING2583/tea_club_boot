@@ -30,6 +30,7 @@ public class Order implements Serializable {
     private float ingot;
     private float credit;
     private int clerkDiscount;
+    private Shop placeOrderWay=null;
 
     public Order() {
     }
@@ -38,7 +39,7 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount) {
+    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount, Shop placeOrderWay) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
@@ -59,6 +60,15 @@ public class Order implements Serializable {
         this.ingot = ingot;
         this.credit = credit;
         this.clerkDiscount = clerkDiscount;
+        this.placeOrderWay = placeOrderWay;
+    }
+
+    public Shop getPlaceOrderWay() {
+        return placeOrderWay;
+    }
+
+    public void setPlaceOrderWay(Shop placeOrderWay) {
+        this.placeOrderWay = placeOrderWay;
     }
 
     public int getClerkDiscount() {
@@ -244,6 +254,7 @@ public class Order implements Serializable {
                 ", ingot=" + ingot +
                 ", credit=" + credit +
                 ", clerkDiscount=" + clerkDiscount +
+                ", placeOrderWay=" + placeOrderWay +
                 '}';
     }
 }

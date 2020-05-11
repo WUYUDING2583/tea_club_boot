@@ -33,6 +33,7 @@ public class CodeMsg {
     public static final CodeMsg FILE_IS_NULL=new CodeMsg(500500,"文件为空");
     public static final CodeMsg GROUP_ID_IS_NULL=new CodeMsg(500501,"groupId为空");
     public static final CodeMsg NAME_IS_NULL=new CodeMsg(500502,"名字为空");
+    public static final CodeMsg NON_REGISTER_CUSTOMER=new CodeMsg(500503,"非注册客户");
     //包厢预约模块 5006xx
     public static CodeMsg RESERVATION_DUPLICATE(String msg){
         return new CodeMsg(500600,msg);

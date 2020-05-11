@@ -3,10 +3,7 @@ package com.yuyi.tea.mapper;
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.Amount;
 import com.yuyi.tea.common.TimeRange;
-import com.yuyi.tea.typehandler.ActivityRuleTypeHandler;
-import com.yuyi.tea.typehandler.ClerkTypeHandler;
-import com.yuyi.tea.typehandler.CustomerTypeHandler;
-import com.yuyi.tea.typehandler.ProductTypeHandler;
+import com.yuyi.tea.typehandler.*;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -48,6 +45,9 @@ public interface OrderMapper {
                     @Result(id = true,column = "uid",property = "uid"),
                     @Result(column = "customerId",property = "customer",typeHandler = CustomerTypeHandler.class),
                     @Result(column = "clerkId",property = "clerk",typeHandler = ClerkTypeHandler.class),
+                    @Result(column = "placeOrderWay",property = "placeOrderWay",
+                            one = @One(select="com.yuyi.tea.mapper.ShopMapper.getShopName",
+                                    fetchType = FetchType.LAZY)),
                     @Result(column = "deliverMode",property = "deliverMode"),
                     @Result(column = "uid",property = "products",
                             one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderProducts",
@@ -138,7 +138,7 @@ public interface OrderMapper {
      * 保存包厢预约订单
      * @param order
      */
-    @Insert("insert orders(orderTime,customerId,clerkId,ingot,credit) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit})")
+    @Insert("insert orders(orderTime,customerId,clerkId,ingot,credit,placeOrderWay) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{placeOrderWay.uid})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveReservationOrder(Order order);
 
@@ -155,7 +155,7 @@ public interface OrderMapper {
      * @param customerId
      * @return
      */
-    @Select("select uid,orderTime,ingot,credit from orders where customerId=#{customerId} and uid in " +
+    @Select("select uid,orderTime,ingot,credit from orders,reservation where customerId=#{customerId} and uid=reservation.orderId and uid in " +
             "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='unpay')" +
             "order by orderTime desc")
     @Results(id="reservation",
@@ -171,7 +171,7 @@ public interface OrderMapper {
      * 保存移动端订单
      * @param order
      */
-    @Insert("insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount})")
+    @Insert("insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount,placeOrderWay) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount},#{placeOrderWay.uid})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveMobileOrder(Order order);
 

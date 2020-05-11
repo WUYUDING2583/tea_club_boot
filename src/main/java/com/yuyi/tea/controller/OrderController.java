@@ -150,6 +150,8 @@ public class OrderController {
             customerService.checkBalance(ingot,credit,order.getCustomer().getUid());
             //扣除金额
             customerService.pay(ingot, credit, order.getCustomer().getUid());
+            //保存订单状态
+            orderService.updateReservationComplete(order);
             return order;
         }catch (GlobalException e){
             throw e;
