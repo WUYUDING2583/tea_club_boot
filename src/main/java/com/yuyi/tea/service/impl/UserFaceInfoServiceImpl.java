@@ -111,4 +111,14 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
         FaceUserInfo faceUserInfo=userFaceInfoMapper.getFaceUserInfo(uid);
         return faceUserInfo;
     }
+
+    /**
+     * 将人脸信息和客户信息匹配
+     * @param faceId
+     * @param uid
+     */
+    @Override
+    public void matchCustomer(int faceId, int uid) {
+        userFaceInfoMapper.matchCustomer(faceId,uid);
+    }
 }

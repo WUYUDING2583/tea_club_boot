@@ -9,7 +9,6 @@ import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.CustomerService;
 import com.yuyi.tea.service.OrderService;
 import com.yuyi.tea.service.interfaces.BalanceService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +20,7 @@ import java.util.List;
 public class PayController {
 
     @Autowired
-    private WebSocketPayServer ws;
+    private WebSocketBalanceServer ws;
 
     @Autowired
     private BalanceService balanceService;
@@ -52,7 +51,8 @@ public class PayController {
                 //改变订单状态
                 orderService.updateReservationComplete(order);
             }
-            Result result=new Result("支付成功");
+            Amount currentBalance = customerService.getCustomerBalance(customerId);
+            Result result=new Result(currentBalance);
             ws.sendInfo(new Gson().toJson(result), customerId + "");
         }catch (Exception e){
             throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yuyi.tea.common.Amount;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(value = { "handler" })
@@ -11,10 +12,10 @@ public class Customer extends User {
 
     private String email;
     private CustomerType customerType;
-    private List<EnterpriseCustomerApplication> enterpriseCustomerApplications;
+    private List<EnterpriseCustomerApplication> enterpriseCustomerApplications=new ArrayList<>();
     private String weChatId;
-    private List<Order> orders;
-    private List<Address> addresses;
+    private List<Order> orders=new ArrayList<>();
+    private List<Address> addresses=new ArrayList<>();
     private Amount balance=new Amount();
     private float ingot=0;
     private float credit=0;

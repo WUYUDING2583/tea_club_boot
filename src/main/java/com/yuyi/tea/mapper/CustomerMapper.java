@@ -140,4 +140,12 @@ public interface CustomerMapper {
     @Select("select * from customer where name like '%'||#{searchText}||'%' or contact like '%'||#{searchText}||'%' or identityId like '%'||#{searchText}||'%' or email like '%'||#{searchText}||'%' or weChatId like '%'||#{searchText}||'%' or address like '%'||#{searchText}||'%'")
     @ResultMap("customer")
     List<Customer> searchCustomers(String searchText);
+
+    /**
+     * 保存客户信息
+     * @param customer
+     */
+    @Insert("insert into customer(name,contact,identityId,email,type,gender,password,weChatId) values(#{name},#{contact},#{identityId},#{email},1,#{gender},#{password},#{weChatId})")
+    @Options(useGeneratedKeys=true, keyProperty="uid")
+    void saveCustomer(Customer customer);
 }

@@ -283,4 +283,12 @@ public class CustomerService {
         }
         return customers;
     }
+
+    /**
+     * 保存客户信息
+     * @param customer
+     */
+    public void saveCustomer(Customer customer) {
+        customerMapper.saveCustomer(customer);
+    }
 }

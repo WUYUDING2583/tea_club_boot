@@ -30,6 +30,10 @@ public class Photo implements Serializable {
         this.photo = photo;
     }
 
+    public Photo(byte[] photo) {
+        this.photo = photo;
+    }
+
     public int getArticleId() {
         return articleId;
     }

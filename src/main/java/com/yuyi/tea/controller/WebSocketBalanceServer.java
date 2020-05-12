@@ -13,12 +13,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/websocket/pay/{sid}")
 @Component
 @Slf4j
-public class WebSocketPayServer {
+public class WebSocketBalanceServer {
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     protected  int onlineCount = 0;
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    protected static CopyOnWriteArraySet<WebSocketPayServer> webSocketSet = new CopyOnWriteArraySet<WebSocketPayServer>();
+    protected static CopyOnWriteArraySet<WebSocketBalanceServer> webSocketSet = new CopyOnWriteArraySet<WebSocketBalanceServer>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     protected Session session;
@@ -32,7 +32,7 @@ public class WebSocketPayServer {
         this.session = session;
         webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
-        log.info("WebSocketPayServer！当前在线人数为" + getOnlineCount());
+        log.info("WebSocketBalanceServer！当前在线人数为" + getOnlineCount());
         this.sid=sid;
     }
 
@@ -54,7 +54,7 @@ public class WebSocketPayServer {
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口"+sid+"的信息:"+message);
         //群发消息
-        for (WebSocketPayServer item : webSocketSet) {
+        for (WebSocketBalanceServer item : webSocketSet) {
 //            try {
 //                item.sendMessage(message);
 //            } catch (IOException e) {
@@ -86,7 +86,7 @@ public class WebSocketPayServer {
      * */
     public  void sendInfo(String message,@PathParam("sid") String sid) throws IOException {
         log.info("推送消息到窗口"+sid+"，推送内容:"+message);
-        for (WebSocketPayServer item : webSocketSet) {
+        for (WebSocketBalanceServer item : webSocketSet) {
             try {
                 //这里可以设定只推送给这个sid的，为null则全部推送
                 if(sid==null) {

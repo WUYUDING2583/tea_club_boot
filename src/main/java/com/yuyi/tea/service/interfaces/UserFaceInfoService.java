@@ -15,4 +15,6 @@ public interface UserFaceInfoService {
     FaceUserInfo getFaceUserInfo(FaceUserInfo faceUserInfo);
 
     FaceUserInfo getFaceUserInfo(int uid);
+
+    void matchCustomer(int faceId, int uid);
 }

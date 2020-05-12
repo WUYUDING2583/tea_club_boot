@@ -1,10 +1,8 @@
 package com.yuyi.tea.controller;
 
+import com.google.gson.Gson;
 import com.yuyi.tea.bean.*;
-import com.yuyi.tea.common.Amount;
-import com.yuyi.tea.common.CodeMsg;
-import com.yuyi.tea.common.CommConstants;
-import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.common.*;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.ShopBoxMapper;
@@ -37,6 +35,9 @@ public class OrderController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private WebSocketBalanceServer ws;
 
     /**
      * 获取客户的订单列表
@@ -152,9 +153,15 @@ public class OrderController {
             customerService.pay(ingot, credit, order.getCustomer().getUid());
             //保存订单状态
             orderService.updateReservationComplete(order);
+            //查询账户余额
+            Amount customerBalance = customerService.getCustomerBalance(order.getCustomer().getUid());
+            Result result=new Result(customerBalance);
+            ws.sendInfo(new Gson().toJson(result), order.getCustomer().getUid()+"");
             return order;
         }catch (GlobalException e){
             throw e;
+        }catch (Exception e){
+            throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
     }
 
@@ -255,8 +262,15 @@ public class OrderController {
             if(giftCredit>0){
                 customerService.addCredit(order.getCustomer().getUid(),giftCredit);
             }
+            //查询账户余额
+            Amount currentBalance = customerService.getCustomerBalance(order.getCustomer().getUid());
+            Result result=new Result(currentBalance);
+            ws.sendInfo(new Gson().toJson(result), order.getCustomer().getUid()+"");
         }catch (GlobalException e){
             throw e;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
     }
 

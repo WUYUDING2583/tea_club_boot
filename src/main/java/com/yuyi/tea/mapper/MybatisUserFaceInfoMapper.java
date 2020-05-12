@@ -41,4 +41,12 @@ public interface MybatisUserFaceInfoMapper {
     @Select("select uid,face_id,customerId,clerkId,face_feature,face from user_face_info where uid=#{uid}")
     @ResultMap("userFace")
     FaceUserInfo getFaceUserInfo(int uid);
+
+    /**
+     * 将人脸信息和客户信息匹配
+     * @param faceId
+     * @param customerId
+     */
+    @Update("update user_face_info set customerId=#{customerId} where uid=#{faceId}")
+    void matchCustomer(int faceId, int customerId);
 }

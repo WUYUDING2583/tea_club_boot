@@ -1,10 +1,7 @@
 package com.yuyi.tea.controller;
 
 import com.google.gson.Gson;
-import com.yuyi.tea.bean.Customer;
-import com.yuyi.tea.bean.CustomerType;
-import com.yuyi.tea.bean.EnterpriseCustomerApplication;
-import com.yuyi.tea.bean.Order;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.common.utils.TimeUtil;
@@ -173,6 +170,18 @@ public class CustomerController {
     public List<Customer> searchCustomer(@PathVariable String searchText){
         List<Customer> customers=customerService.searchCustomers(searchText);
         return customers;
+    }
+
+    @PostMapping("/mobile/register/{faceId}")
+    public Customer mobileRegister(@PathVariable int faceId,@RequestBody Customer customer){
+        //保存客户信息
+        customerService.saveCustomer(customer);
+        //将人脸信息和客户信息匹配
+        userFaceInfoService.matchCustomer(faceId,customer.getUid());
+        FaceUserInfo faceUserInfo = userFaceInfoService.getFaceUserInfo(faceId);
+        Customer faceUserInfoCustomer = faceUserInfo.getCustomer();
+//        faceUserInfoCustomer.setAvatar(new Photo(faceUserInfo.getFace()));
+        return faceUserInfoCustomer;
     }
 
 }
