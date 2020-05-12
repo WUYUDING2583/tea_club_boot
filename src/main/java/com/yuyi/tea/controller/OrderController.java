@@ -274,5 +274,15 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/mobile/orders/{customerId}")
+    public List<Order> getRefreshOrders(@PathVariable int customerId){
+        //获取该用户最近3个月的订单
+        long startDate = TimeUtil.getNDayAgoStartTime(90);
+        long endDate = TimeUtil.getNDayAgoStartTime(-1);
+        TimeRange timeRange = new TimeRange(startDate, endDate);
+        List<Order> orders = orderService.getOrdersByCustomer(customerId, timeRange);
+        return orders;
+    }
+
 
 }
