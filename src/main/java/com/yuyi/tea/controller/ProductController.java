@@ -2,6 +2,7 @@ package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.ActivityRule;
 import com.yuyi.tea.bean.Product;
+import com.yuyi.tea.bean.ProductSale;
 import com.yuyi.tea.bean.ProductType;
 import com.yuyi.tea.service.ProductService;
 import org.apache.ibatis.annotations.Delete;
@@ -121,6 +122,16 @@ public class ProductController {
             }
             product.setActivityRules(filterRules);
         }
+        return products;
+    }
+
+    /**
+     * 获取最近一月销量最多的产品
+     * @return
+     */
+    @GetMapping("/mp/product/hot")
+    public List<ProductSale> getHotProduct(){
+        List<ProductSale> products=productService.getHotPorducts();
         return products;
     }
 }

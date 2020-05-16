@@ -262,4 +262,13 @@ public class ActivityService {
         activity.setMutexActivities(null);
         activity.setActivityRules(null);
     }
+
+    /**
+     * 获取小程序走马灯展示的文章，活动，产品，包厢
+     * @return
+     */
+    public List<Activity> getSwiperList() {
+        List<Activity> activities=activityMapper.getSwiperList();
+        return activities;
+    }
 }

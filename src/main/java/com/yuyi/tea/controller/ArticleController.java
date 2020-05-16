@@ -1,13 +1,16 @@
 package com.yuyi.tea.controller;
 
-import com.yuyi.tea.bean.Article;
-import com.yuyi.tea.bean.Tag;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.service.ActivityService;
 import com.yuyi.tea.service.ArticleService;
+import com.yuyi.tea.service.ProductService;
+import com.yuyi.tea.service.ShopBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,6 +18,15 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private ActivityService activityService;
+
+    @Autowired
+    private ShopBoxService shopBoxService;
+
+    @Autowired
+    private ProductService productService;
 
     /**
      * 获取文章标签列表
@@ -74,5 +86,40 @@ public class ArticleController {
     public String terminalArticle(@PathVariable int uid){
         articleService.terminalArticle(uid);
         return "success";
+    }
+
+
+    /**
+     * 获取小程序走马灯展示的文章，活动，产品，包厢
+     * @return
+     */
+    @GetMapping("/mp/swipers")
+    public List<Object> getSwiperList(){
+        List<Article> articles=articleService.getSwiperList();
+        List<Activity> activities=activityService.getSwiperList();
+        List<ShopBox> shopBoxes=shopBoxService.getSwiperList();
+        List<Product> products=productService.getSwiperList();
+        List<Object> list=new ArrayList<>();
+        if(articles!=null) {
+            for (Article article : articles) {
+                list.add(article.getPhoto());
+            }
+        }
+        if(activities!=null) {
+            for (Activity activity : activities) {
+                list.add(activity.getPhotos().get(0));
+            }
+        }
+        if(shopBoxes!=null) {
+            for (ShopBox shopBox : shopBoxes) {
+                list.add(shopBox.getPhotos().get(0));
+            }
+        }
+        if(products!=null) {
+            for (Product product : products) {
+                list.add(product.getPhotos().get(0));
+            }
+        }
+        return list;
     }
 }

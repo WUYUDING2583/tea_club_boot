@@ -21,7 +21,7 @@ public class ProductTypeHandler implements TypeHandler<Product> {
 
     @Override
     public void setParameter(PreparedStatement preparedStatement, int i, Product product, JdbcType jdbcType) throws SQLException {
-        log.info("设置clerk参数【"+product+"】");
+        log.info("设置product参数【"+product+"】");
         preparedStatement.setObject(i,product);
     }
 

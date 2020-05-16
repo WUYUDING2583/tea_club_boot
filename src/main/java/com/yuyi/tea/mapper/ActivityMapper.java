@@ -221,4 +221,12 @@ public interface ActivityMapper {
                             fetchType = FetchType.LAZY))
     })
     List<ActivityRule> getActivityRulesByProduct(int productId);
+
+    /**
+     * 获取小程序走马灯展示的活动
+     * @return
+     */
+    @Select("select * from activity where isShowOnHome=true")
+    @ResultMap("activity")
+    List<Activity> getSwiperList();
 }

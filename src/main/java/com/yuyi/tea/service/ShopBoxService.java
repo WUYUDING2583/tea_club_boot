@@ -158,4 +158,13 @@ public class ShopBoxService {
         List<Reservation> reservationByBoxId = shopBoxMapper.getReservationByBoxId(boxId, startTime, endTime);
         return reservationByBoxId;
     }
+
+    /**
+     * 获取小程序走马灯展示的包厢
+     * @return
+     */
+    public List<ShopBox> getSwiperList() {
+        List<ShopBox> shopBoxes=shopBoxMapper.getSwiperList();
+        return shopBoxes;
+    }
 }

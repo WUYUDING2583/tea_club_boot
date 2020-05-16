@@ -20,6 +20,7 @@ public class Product implements Serializable {
     private List<ActivityRule> activityRules;
     private List<Activity> activities;
     private Shop shop;
+    private boolean isShowOnHome=false;
 
     public Product() {
     }
@@ -34,7 +35,7 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean isShowOnHome) {
         this.uid = uid;
         this.name = name;
         this.type = type;
@@ -46,6 +47,7 @@ public class Product implements Serializable {
         this.activityRules = activityRules;
         this.activities = activities;
         this.shop = shop;
+        this.isShowOnHome = isShowOnHome;
     }
 
     @Override
@@ -62,6 +64,14 @@ public class Product implements Serializable {
                 ", activityRules=" + activityRules +
                 ", activities=" + activities +
                 '}';
+    }
+
+    public boolean isShowOnHome() {
+        return isShowOnHome;
+    }
+
+    public void setShowOnHome(boolean showOnHome) {
+        isShowOnHome = showOnHome;
     }
 
     public Shop getShop() {

@@ -1,7 +1,9 @@
 package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.Product;
+import com.yuyi.tea.bean.ProductSale;
 import com.yuyi.tea.bean.ProductType;
+import com.yuyi.tea.typehandler.ProductTypeHandler;
 import com.yuyi.tea.typehandler.ShopTypeHandler;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
@@ -111,4 +113,26 @@ public interface ProductMapper {
     @Select("select * from product where shopId=#{shopId} and enforceTerminal=false")
     @ResultMap("product")
     List<Product> getShopProducts(int shopId);
+
+    /**
+     * 获取小程序走马灯展示的产品
+     * @return
+     */
+    @Select("select * from product where isShowOnHome=true")
+    @ResultMap("product")
+    List<Product> getSwiperList();
+
+    /**
+     * 获取最近一月销量最多的产品
+     * @return
+     */
+    @Select("select * from lastMonthSalesView")
+    @Results(id = "productSales",
+            value = {
+                    @Result(id = true,column = "productId",property = "productId"),
+                    @Result(column="productId",property="product",
+                            one=@One(select="com.yuyi.tea.mapper.ProductMapper.getProduct",
+                                    fetchType= FetchType.LAZY))
+            })
+    List<ProductSale> getHotProducts();
 }

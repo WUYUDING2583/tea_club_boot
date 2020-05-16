@@ -111,4 +111,13 @@ public class ArticleService {
             redisService.set(REDIS_ARTICLE_NAME+":"+uid,redisArticle);
         }
     }
+
+    /**
+     * 获取小程序走马灯展示的文章
+     * @return
+     */
+    public List<Article> getSwiperList() {
+        List<Article> articles=articleMapper.getSwiperList();
+        return articles;
+    }
 }

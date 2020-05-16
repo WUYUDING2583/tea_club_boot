@@ -103,6 +103,14 @@ public interface ShopBoxMapper {
      */
     @Select("select * from reservation where reservationTime=#{reservationTime} and boxId=#{boxId}")
     Reservation findReservation(long reservationTime, int boxId);
+
+    /**
+     * 获取小程序走马灯展示的包厢
+     * @return
+     */
+    @Select("select * from shopBox where isShowOnHome=true")
+    @ResultMap("shopBox")
+    List<ShopBox> getSwiperList();
 }
 
 

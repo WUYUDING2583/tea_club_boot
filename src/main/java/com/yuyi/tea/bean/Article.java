@@ -15,6 +15,7 @@ public class Article implements Serializable {
     private Photo photo;
     private long time;
     private boolean enforceTerminal=false;
+    private boolean isShowOnHome=false;
 
     public Article() {
     }
@@ -23,7 +24,7 @@ public class Article implements Serializable {
         this.uid = uid;
     }
 
-    public Article(int uid, String name, String url, List<Tag> tags, Photo photo, long time, boolean enforceTerminal) {
+    public Article(int uid, String name, String url, List<Tag> tags, Photo photo, long time, boolean enforceTerminal, boolean isShowOnHome) {
         this.uid = uid;
         this.name = name;
         this.url = url;
@@ -31,6 +32,15 @@ public class Article implements Serializable {
         this.photo = photo;
         this.time = time;
         this.enforceTerminal = enforceTerminal;
+        this.isShowOnHome = isShowOnHome;
+    }
+
+    public boolean isShowOnHome() {
+        return isShowOnHome;
+    }
+
+    public void setShowOnHome(boolean showOnHome) {
+        isShowOnHome = showOnHome;
     }
 
     public boolean isEnforceTerminal() {

@@ -215,4 +215,27 @@ public class ProductService {
         List<Product> products=productMapper.getShopProducts(shopId);
         return products;
     }
+
+    /**
+     * 获取小程序走马灯展示的产品
+     * @return
+     */
+    public List<Product> getSwiperList() {
+        List<Product> products=productMapper.getSwiperList();
+        return products;
+    }
+
+    /**
+     * 获取最近一月销量最多的产品
+     * @return
+     */
+    public List<ProductSale> getHotPorducts() {
+        List<ProductSale> products=productMapper.getHotProducts();
+        for(ProductSale productSale:products){
+            productSale.getProduct().setActivityRules(null);
+            productSale.getProduct().setActivities(null);
+            productSale.getProduct().setShop(null);
+        }
+        return products;
+    }
 }

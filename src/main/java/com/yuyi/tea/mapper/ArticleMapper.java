@@ -3,6 +3,7 @@ package com.yuyi.tea.mapper;
 import com.yuyi.tea.bean.Article;
 import com.yuyi.tea.bean.Tag;
 import com.yuyi.tea.common.TimeRange;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -66,4 +67,12 @@ public interface ArticleMapper {
     //将文章失效不再展示
     @Update("update article set enforceTerminal=true where uid=#{uid}")
     void terminalArticle(int uid);
+
+    /**
+     * 获取小程序走马灯展示的文章
+     * @return
+     */
+    @Select("select * from article where isShowOnHome=true")
+    @ResultMap("article")
+    List<Article> getSwiperList();
 }
