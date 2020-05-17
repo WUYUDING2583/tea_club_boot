@@ -271,4 +271,13 @@ public class ActivityService {
         List<Activity> activities=activityMapper.getSwiperList();
         return activities;
     }
+
+    /**
+     * 获取阅读活动详情
+     * @return
+     */
+    public Activity getReadingActivity() {
+        Activity activity=activityMapper.getReadingActivity();
+        return activity;
+    }
 }

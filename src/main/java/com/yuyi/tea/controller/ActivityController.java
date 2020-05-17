@@ -1,6 +1,7 @@
 package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.Activity;
+import com.yuyi.tea.bean.ActivityRule;
 import com.yuyi.tea.bean.ActivityRuleType;
 import com.yuyi.tea.exception.ShopNotExistException;
 import com.yuyi.tea.service.ActivityService;
@@ -90,5 +91,18 @@ public class ActivityController {
     @Transactional(rollbackFor = Exception.class)
     public Activity updateActivity(@RequestBody Activity activity){
         return activityService.updateActivity(activity);
+    }
+
+    /**
+     * 获取阅读活动详情
+     * @return
+     */
+    @GetMapping("/mp/reading/activity")
+    public ActivityRule getReadingActivity(){
+        Activity activity=activityService.getReadingActivity();
+        if(activity==null){
+            return null;
+        }
+        return activity.getActivityRules().get(0);
     }
 }

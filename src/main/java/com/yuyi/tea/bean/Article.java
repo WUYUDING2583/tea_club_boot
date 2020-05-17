@@ -9,7 +9,8 @@ import java.util.List;
 public class Article implements Serializable {
 
     private int uid;
-    private String name;
+    private String title;
+    private String description;
     private String url;
     private List<Tag> tags;
     private Photo photo;
@@ -24,15 +25,24 @@ public class Article implements Serializable {
         this.uid = uid;
     }
 
-    public Article(int uid, String name, String url, List<Tag> tags, Photo photo, long time, boolean enforceTerminal, boolean isShowOnHome) {
+    public Article(int uid, String title, String description, String url, List<Tag> tags, Photo photo, long time, boolean enforceTerminal, boolean isShowOnHome) {
         this.uid = uid;
-        this.name = name;
+        this.title = title;
+        this.description = description;
         this.url = url;
         this.tags = tags;
         this.photo = photo;
         this.time = time;
         this.enforceTerminal = enforceTerminal;
         this.isShowOnHome = isShowOnHome;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isShowOnHome() {
@@ -75,12 +85,12 @@ public class Article implements Serializable {
         this.uid = uid;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUrl() {
@@ -103,12 +113,14 @@ public class Article implements Serializable {
     public String toString() {
         return "Article{" +
                 "uid=" + uid +
-                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
                 ", url='" + url + '\'' +
                 ", tags=" + tags +
                 ", photo=" + photo +
                 ", time=" + time +
                 ", enforceTerminal=" + enforceTerminal +
+                ", isShowOnHome=" + isShowOnHome +
                 '}';
     }
 }

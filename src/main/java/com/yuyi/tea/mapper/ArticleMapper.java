@@ -21,7 +21,7 @@ public interface ArticleMapper {
     void saveTag(Tag tag);
 
     //新增文章
-    @Insert("insert into article(name,url,time,enforceTerminal) values(#{name},#{url},#{time},#{enforceTerminal})")
+    @Insert("insert into article(title,description,url,time,enforceTerminal) values(#{title},#{description},#{url},#{time},#{enforceTerminal})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveArticle(Article article);
 
@@ -31,7 +31,7 @@ public interface ArticleMapper {
 
     /**
      * 获取文章列表
-     * @param status
+     * @param status 文章状态 all 所有状态 valid 未撤销文章 invalid 已撤销文章
      * @param timeRange
      * @return
      */
@@ -75,4 +75,6 @@ public interface ArticleMapper {
     @Select("select * from article where isShowOnHome=true")
     @ResultMap("article")
     List<Article> getSwiperList();
+
+
 }

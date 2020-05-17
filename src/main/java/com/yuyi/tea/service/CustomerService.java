@@ -263,9 +263,11 @@ public class CustomerService {
      * @param credit
      */
     @Transactional(rollbackFor = Exception.class)
-    public void addCredit(int customerId, float credit) {
+    public float addCredit(int customerId, float credit) {
         try {
             customerMapper.addCredit(customerId, credit);
+            Customer customerByUid = customerMapper.getCustomerByUid(customerId);
+            return  customerByUid.getCredit();
         }catch (Exception e){
             throw new GlobalException(CodeMsg.ADD_CREDIT_FAIL);
         }
@@ -290,5 +292,18 @@ public class CustomerService {
      */
     public void saveCustomer(Customer customer) {
         customerMapper.saveCustomer(customer);
+    }
+
+    /**
+     * 增加元宝
+     * @param userId
+     * @param ingot
+     * @return 最新元宝数
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public float addIngot(int userId, float ingot) {
+        customerMapper.addIngot(userId,ingot);
+        Customer customerByUid = customerMapper.getCustomerByUid(userId);
+        return customerByUid.getIngot();
     }
 }

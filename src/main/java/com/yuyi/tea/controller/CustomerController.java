@@ -184,4 +184,28 @@ public class CustomerController {
         return faceUserInfoCustomer;
     }
 
+    /**
+     * 新增元宝
+     * @param userId
+     * @param ingot
+     * @return
+     */
+    @GetMapping("/mp//balance/ingot/add/{userId}/{ingot}")
+    public float addIngot(@PathVariable int userId,@PathVariable float ingot){
+        float updatedIngot=customerService.addIngot(userId,ingot);
+        return updatedIngot;
+    }
+
+    /**
+     * 新增积分
+     * @param userId
+     * @param credit
+     * @return
+     */
+    @GetMapping("/mp//balance/credit/add/{userId}/{credit}")
+    public float addCredit(@PathVariable int userId,@PathVariable float credit){
+        float updatedCredit=customerService.addCredit(userId,credit);
+        return updatedCredit;
+    }
+
 }

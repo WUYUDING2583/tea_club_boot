@@ -229,4 +229,16 @@ public interface ActivityMapper {
     @Select("select * from activity where isShowOnHome=true")
     @ResultMap("activity")
     List<Activity> getSwiperList();
+
+    /**
+     * 获取阅读活动详情
+     * @return
+     */
+    @Select("select * from activity where enforceTerminal=false and" +
+            " UNIX_TIMESTAMP(NOW())*1000<endTime and UNIX_TIMESTAMP(NOW())*1000>startTime and " +
+            " uid in (" +
+            "select activityId from activityRule where typeId=1" +
+            ") limit 1")
+    @ResultMap("activity")
+    Activity getReadingActivity();
 }

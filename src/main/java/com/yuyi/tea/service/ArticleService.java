@@ -91,9 +91,6 @@ public class ArticleService {
      */
     public List<Article> getArticles(String status, TimeRange timeRange) {
         List<Article> articles = articleMapper.getArticles(status,timeRange);
-        for(Article article:articles){
-            article.setPhoto(null);
-        }
         return articles;
     }
 
@@ -120,4 +117,5 @@ public class ArticleService {
         List<Article> articles=articleMapper.getSwiperList();
         return articles;
     }
+
 }

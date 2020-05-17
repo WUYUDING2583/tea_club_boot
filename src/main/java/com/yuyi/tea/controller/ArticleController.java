@@ -2,6 +2,7 @@ package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.service.ActivityService;
 import com.yuyi.tea.service.ArticleService;
 import com.yuyi.tea.service.ProductService;
@@ -73,6 +74,9 @@ public class ArticleController {
     public List<Article> getArticles(@PathVariable String status,@PathVariable long startDate,@PathVariable long endDate){
         TimeRange timeRange=new TimeRange(startDate,endDate);
         List<Article> articles = articleService.getArticles(status,timeRange);
+        for(Article article:articles){
+            article.setPhoto(null);
+        }
         return articles;
     }
 
@@ -121,5 +125,16 @@ public class ArticleController {
             }
         }
         return list;
+    }
+
+    /**
+     * 获取所有有效文章
+     * @return
+     */
+    @GetMapping("/mp/article")
+    public List<Article> getArticles(){
+        TimeRange timeRange=new TimeRange(-1, TimeUtil.getCurrentTimestamp());
+        List<Article> articles = articleService.getArticles("valid", timeRange);
+        return articles;
     }
 }

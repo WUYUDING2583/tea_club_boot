@@ -148,4 +148,12 @@ public interface CustomerMapper {
     @Insert("insert into customer(name,contact,identityId,email,type,gender,password,weChatId) values(#{name},#{contact},#{identityId},#{email},1,#{gender},#{password},#{weChatId})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveCustomer(Customer customer);
+
+    /**
+     * 新增元宝
+     * @param userId
+     * @param ingot
+     */
+    @Update("update customer set ingot=ingot+#{ingot} where uid=#{customerId}")
+    void addIngot(int userId, float ingot);
 }
