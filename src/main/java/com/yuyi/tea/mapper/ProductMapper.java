@@ -126,7 +126,7 @@ public interface ProductMapper {
      * 获取最近一月销量最多的产品
      * @return
      */
-    @Select("select * from lastMonthSalesView")
+    @Select("select * from lastMonthSalesView order by sales desc")
     @Results(id = "productSales",
             value = {
                     @Result(id = true,column = "productId",property = "productId"),

@@ -10,7 +10,7 @@ public class ProductSale implements Serializable {
 
     private int productId;
     private Product product;
-    private BigDecimal sales;
+    private BigDecimal sales=BigDecimal.valueOf(0);
 
     public ProductSale(int productId) {
         this.productId = productId;

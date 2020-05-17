@@ -1,3 +1,3 @@
 CREATE VIEW totalSalesView
   AS
-SELECT productId,sum(productId) as sales FROM `orderProduct` GROUP BY productId;
+SELECT p.uid as productId,s.sales from product p LEFT JOIN (select productId, sum(productId) as sales from orderProduct GROUP BY productId) s on p.uid=s.productId;

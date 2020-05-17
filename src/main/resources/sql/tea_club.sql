@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 16/05/2020 22:53:44
+ Date: 17/05/2020 12:52:27
 */
 
 SET NAMES utf8mb4;
@@ -1124,7 +1124,7 @@ INSERT INTO `user_face_info` VALUES (12, 101, 'o4gk8sga3g', 13, NULL, 0x0080FA44
 -- View structure for lastMonthSalesView
 -- ----------------------------
 DROP VIEW IF EXISTS `lastMonthSalesView`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `lastMonthSalesView` AS select `A`.`productId` AS `productId`,sum(`A`.`productId`) AS `sales` from (`orderProduct` `A` join `orders` `B`) where ((`A`.`orderId` = `B`.`uid`) and (`B`.`orderTime` > ((unix_timestamp(now()) * 1000) - ((((1000 * 60) * 60) * 24) * 30)))) group by `A`.`productId`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `lastMonthSalesView` AS select `p`.`uid` AS `productId`,`s`.`sales` AS `sales` from (`product` `p` left join (select `A`.`productId` AS `productId`,sum(`A`.`productId`) AS `sales` from (`orderProduct` `A` join `orders` `B`) where ((`A`.`orderId` = `B`.`uid`) and (`B`.`orderTime` > ((unix_timestamp(now()) * 1000) - ((((1000 * 60) * 60) * 24) * 30)))) group by `A`.`productId`) `s` on((`p`.`uid` = `s`.`productId`)));
 
 -- ----------------------------
 -- View structure for orderCurrentTime
@@ -1136,6 +1136,6 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `orderCurrentTime` AS sel
 -- View structure for totalSalesView
 -- ----------------------------
 DROP VIEW IF EXISTS `totalSalesView`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `totalSalesView` AS select `orderProduct`.`productId` AS `productId`,sum(`orderProduct`.`productId`) AS `sales` from `orderProduct` group by `orderProduct`.`productId`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `totalSalesView` AS select `p`.`uid` AS `productId`,`s`.`sales` AS `sales` from (`product` `p` left join (select `orderProduct`.`productId` AS `productId`,sum(`orderProduct`.`productId`) AS `sales` from `orderProduct` group by `orderProduct`.`productId`) `s` on((`p`.`uid` = `s`.`productId`)));
 
 SET FOREIGN_KEY_CHECKS = 1;
