@@ -1,5 +1,6 @@
 package com.yuyi.tea.mapper;
 
+import com.yuyi.tea.bean.BoxReservation;
 import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.bean.ShopBox;
 import org.apache.ibatis.annotations.*;
@@ -111,6 +112,20 @@ public interface ShopBoxMapper {
     @Select("select * from shopBox where isShowOnHome=true")
     @ResultMap("shopBox")
     List<ShopBox> getSwiperList();
+
+    /**
+     * 获取近期热门包厢
+     * @return
+     */
+    @Select("select * from lastMonthReservationView order by number desc")
+    @Results(id = "boxReservation",
+            value = {
+                    @Result(id = true,column = "boxId",property = "boxId"),
+                    @Result(column="boxId",property="box",
+                            one=@One(select="com.yuyi.tea.mapper.ShopBoxMapper.getShopBoxByUid",
+                                    fetchType= FetchType.LAZY))
+            })
+    List<BoxReservation> getHotBoxes();
 }
 
 

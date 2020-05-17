@@ -1,5 +1,6 @@
 package com.yuyi.tea.controller;
 
+import com.yuyi.tea.bean.BoxReservation;
 import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.bean.ShopBox;
 import com.yuyi.tea.service.RedisService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -95,5 +97,19 @@ public class ShopBoxController {
     public List<Reservation> getReservations(@PathVariable int boxId,@PathVariable long startTime,@PathVariable long endTime){
         List<Reservation> reservations=shopBoxService.getReservations(boxId,startTime,endTime);
         return reservations;
+    }
+
+    /**
+     * 获取近期热门包厢
+     * @return
+     */
+    @GetMapping("/mp/box/hot")
+    public List<BoxReservation> getHotBoxes(){
+        List<BoxReservation> boxes=shopBoxService.getHotBoxes();
+        List<BoxReservation> list=new ArrayList<>();
+        for(int i=0;i<3;i++){
+            list.add(boxes.get(i));
+        }
+        return list;
     }
 }

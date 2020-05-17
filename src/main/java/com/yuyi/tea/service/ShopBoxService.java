@@ -1,9 +1,6 @@
 package com.yuyi.tea.service;
 
-import com.yuyi.tea.bean.Photo;
-import com.yuyi.tea.bean.Reservation;
-import com.yuyi.tea.bean.Shop;
-import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.PriceMapper;
@@ -166,5 +163,18 @@ public class ShopBoxService {
     public List<ShopBox> getSwiperList() {
         List<ShopBox> shopBoxes=shopBoxMapper.getSwiperList();
         return shopBoxes;
+    }
+
+    /**
+     * 获取近期热门包厢
+     * @return
+     */
+    public List<BoxReservation> getHotBoxes() {
+        List<BoxReservation> boxes=shopBoxMapper.getHotBoxes();
+        for(BoxReservation boxReservation:boxes){
+            boxReservation.getBox().setShop(null);
+            boxReservation.getBox().setReservations(null);
+        }
+        return boxes;
     }
 }
