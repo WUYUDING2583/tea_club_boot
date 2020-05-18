@@ -138,4 +138,33 @@ public class ProductController {
         }
         return list;
     }
+
+    /**
+     * 微信小程序获取产品列表
+     * @return
+     */
+    @GetMapping("/mp/product")
+    public List<Product> getMpProducts(){
+        List<Product> products=productService.getProducts();
+        for(Product product:products){
+            product.setActivities(null);
+            product.setActivityRules(null);
+        }
+        return products;
+    }
+
+    @GetMapping("/mp/product/{uid}")
+    public Product getMpProduct(@PathVariable int uid){
+        Product product = productService.getProduct(uid);
+        product.getShop().setShopBoxes(null);
+        product.getShop().setClerks(null);
+        product.getShop().setPhotos(null);
+        product.getShop().setOpenHours(null);
+        for(ActivityRule activityRule:product.getActivityRules()){
+            activityRule.setActivityApplyForProduct(null);
+            activityRule.getActivity().setActivityRules(null);
+            activityRule.getActivity().setMutexActivities(null);
+        }
+        return product;
+    }
 }

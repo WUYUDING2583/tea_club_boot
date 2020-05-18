@@ -8,6 +8,7 @@ import com.yuyi.tea.typehandler.ShopTypeHandler;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductMapper {
@@ -55,15 +56,7 @@ public interface ProductMapper {
      * @return
      */
     @Select("select * from product")
-    @Results({
-            @Result(id = true,column = "uid",property = "uid"),
-            @Result(column="type",property="type",
-                    one=@One(select="com.yuyi.tea.mapper.ProductMapper.getProductType",
-                            fetchType= FetchType.LAZY)),
-            @Result(column="priceId",property="price",
-                    one=@One(select="com.yuyi.tea.mapper.PriceMapper.getPrice",
-                            fetchType= FetchType.LAZY))
-    })
+    @ResultMap("product")
     List<Product> getProducts();
 
     /**
@@ -97,7 +90,12 @@ public interface ProductMapper {
             @Result(column="uid",property="activityRules",
                     one=@One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRulesByProduct",
                             fetchType= FetchType.LAZY)),
-            @Result(column="shopId",property="shop",typeHandler = ShopTypeHandler.class)
+            @Result(column="shopId",property="shop",
+                    one=@One(select="com.yuyi.tea.mapper.ShopMapper.getShopByUid",
+                    fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="sales",
+                    one=@One(select="com.yuyi.tea.mapper.ProductMapper.getProductMonthSales",
+                            fetchType= FetchType.LAZY))
     })
     Product getProduct(int uid);
 
@@ -135,4 +133,12 @@ public interface ProductMapper {
                                     fetchType= FetchType.LAZY))
             })
     List<ProductSale> getHotProducts();
+
+    /**
+     * 获取产品最近30天销量
+     * @param productId
+     * @return
+     */
+    @Select("select sales from lastMonthSalesView where productId=#{productId}")
+    BigDecimal getProductMonthSales(int productId);
 }

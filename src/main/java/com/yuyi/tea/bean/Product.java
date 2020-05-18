@@ -3,6 +3,7 @@ package com.yuyi.tea.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Product implements Serializable {
     private List<Activity> activities;
     private Shop shop;
     private boolean isShowOnHome=false;
+    private BigDecimal sales=BigDecimal.valueOf(0);
 
     public Product() {
     }
@@ -35,7 +37,7 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean isShowOnHome) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean isShowOnHome, BigDecimal sales) {
         this.uid = uid;
         this.name = name;
         this.type = type;
@@ -48,6 +50,7 @@ public class Product implements Serializable {
         this.activities = activities;
         this.shop = shop;
         this.isShowOnHome = isShowOnHome;
+        this.sales = sales;
     }
 
     @Override
@@ -64,6 +67,14 @@ public class Product implements Serializable {
                 ", activityRules=" + activityRules +
                 ", activities=" + activities +
                 '}';
+    }
+
+    public BigDecimal getSales() {
+        return sales;
+    }
+
+    public void setSales(BigDecimal sales) {
+        this.sales = sales;
     }
 
     public boolean isShowOnHome() {
