@@ -1,5 +1,6 @@
 package com.yuyi.tea.common;
 
+import com.yuyi.tea.bean.Customer;
 import com.yuyi.tea.common.utils.StringUtil;
 
 public class CommConstants {
@@ -28,6 +29,13 @@ public class CommConstants {
         public static final String PENDING="pending";
         public static final String APPROVE="approve";
         public static final String REJECT="reject";
+    }
+
+    public static class CustomerType{
+        public static final com.yuyi.tea.bean.CustomerType REGISTER_USER=new com.yuyi.tea.bean.CustomerType(1,"注册用户");
+        public static final com.yuyi.tea.bean.CustomerType CHARGE_USER=new com.yuyi.tea.bean.CustomerType(2,"充值用户");
+        public static final com.yuyi.tea.bean.CustomerType SUPER_VIP=new com.yuyi.tea.bean.CustomerType(3,"超级vip用户");
+        public static final com.yuyi.tea.bean.CustomerType ENTERPRISE_USER=new com.yuyi.tea.bean.CustomerType(4,"企业用户");
     }
 //
 //    public static final String[] FilterUrl={"/admin/*","/verifyToken"};

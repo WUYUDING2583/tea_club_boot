@@ -33,6 +33,9 @@ public interface PhotoMapper {
     @Select("select * from photo where enterpriseId=#{enterpriseId} limit 1")
     Photo getBusinessLicenseByEnterpriseId(int enterpriseId);
 
+    @Select("select * from photo where productDetailId=#{productDetailId}")
+    List<Photo> getProductDetailPhotos(int productDetailId);
+
 
     @Select("select * from photo where customerId=#{customerId} limit 1")
     Photo getAvatarByCustomerId(int customerId);
@@ -69,4 +72,6 @@ public interface PhotoMapper {
     //保存文章图片
     @Update("update photo set articleId=#{articleId} where uid=#{uid}")
     void saveArticlePhoto(Photo photo);
+
+
 }

@@ -172,4 +172,8 @@ public class ClerkService {
         return clerk;
     }
 
+    public User getClerkByContact(String contact) {
+        Clerk clerkByContact = clerkMapper.getClerkByContact(contact);
+        return clerkByContact;
+    }
 }

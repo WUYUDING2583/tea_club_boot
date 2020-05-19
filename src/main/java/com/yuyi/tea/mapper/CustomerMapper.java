@@ -145,7 +145,7 @@ public interface CustomerMapper {
      * 保存客户信息
      * @param customer
      */
-    @Insert("insert into customer(name,contact,identityId,email,type,gender,password,weChatId) values(#{name},#{contact},#{identityId},#{email},1,#{gender},#{password},#{weChatId})")
+    @Insert("insert into customer(name,contact,identityId,email,type,gender,password,weChatId) values(#{name},#{contact},#{identityId},#{email},#{customerType.uid},#{gender},#{password},#{weChatId})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveCustomer(Customer customer);
 
@@ -156,4 +156,13 @@ public interface CustomerMapper {
      */
     @Update("update customer set ingot=ingot+#{ingot} where uid=#{customerId}")
     void addIngot(int userId, float ingot);
+
+    /**
+     * 根据手机号获取客户信息
+     * @param contact
+     * @return
+     */
+    @Select("select * from customer where contact=#{contact}")
+    @ResultMap("customer")
+    Customer getCustomerByContact(String contact);
 }

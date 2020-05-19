@@ -23,6 +23,7 @@ public class Product implements Serializable {
     private Shop shop;
     private boolean isShowOnHome=false;
     private BigDecimal sales=BigDecimal.valueOf(0);
+    private List<Photo> productDetails;
 
     public Product() {
     }
@@ -37,7 +38,7 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean isShowOnHome, BigDecimal sales) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean isShowOnHome, BigDecimal sales, List<Photo> productDetails) {
         this.uid = uid;
         this.name = name;
         this.type = type;
@@ -51,6 +52,7 @@ public class Product implements Serializable {
         this.shop = shop;
         this.isShowOnHome = isShowOnHome;
         this.sales = sales;
+        this.productDetails = productDetails;
     }
 
     @Override
@@ -67,6 +69,14 @@ public class Product implements Serializable {
                 ", activityRules=" + activityRules +
                 ", activities=" + activities +
                 '}';
+    }
+
+    public List<Photo> getProductDetails() {
+        return productDetails;
+    }
+
+    public void setProductDetails(List<Photo> productDetails) {
+        this.productDetails = productDetails;
     }
 
     public BigDecimal getSales() {

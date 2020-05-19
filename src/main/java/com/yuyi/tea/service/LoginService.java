@@ -83,7 +83,7 @@ public class LoginService {
      * @param response
      * @param token
      */
-    private void addCookie(HttpServletResponse response, String token) {
+    public void addCookie(HttpServletResponse response, String token) {
         log.info("将token存入cookie");
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge((int)JwtUtil.EXPIRATION);
@@ -95,7 +95,7 @@ public class LoginService {
      * 获取职员前端路由权限
      * @return
      */
-    private List<PositionAutorityFrontDetail> getPositionAutorityFrontDetails(Position position){
+    public List<PositionAutorityFrontDetail> getPositionAutorityFrontDetails(Position position){
         boolean hasKey=redisService.exists(REDIS_AUTHORITY_NAME+":"+position.getUid());
         List<PositionAutorityFrontDetail> positionAutorityFrontDetails=null;
         if(hasKey){
@@ -112,12 +112,11 @@ public class LoginService {
 
     /**
      * 短信验证码登陆
-     * @param response
      * @param contact
      * @param otp
      * @return
      */
-    public User otpLogin(HttpServletResponse response,String contact, String otp) {
+    public boolean otpLogin(String contact, String otp) {
         //判断验证码是否失效
         boolean hasKey = redisService.exists(SMSService.OTP_TOKEN_NAME + ":" + contact);
         if(hasKey){//此号码在5分钟内发送过验证码
@@ -125,14 +124,7 @@ public class LoginService {
             if(otp.equals(redisOtp)){
                 log.info("登陆成功，清除redis验证码缓存");
                 redisService.remove(SMSService.OTP_TOKEN_NAME + ":" + contact);
-                User clerk = clerkMapper.getClerkByContact(contact);
-                String token = JwtUtil.createToken(clerk);
-                ClerkService.clearClerk((Clerk) clerk);
-                Position position = ((Clerk) clerk).getPosition();
-                List<PositionAutorityFrontDetail> positionAutorityFrontDetails = getPositionAutorityFrontDetails(position);
-                ((Clerk) clerk).setPositionAutorityFrontDetails(positionAutorityFrontDetails);
-                addCookie(response,token);
-                return clerk;
+                return true;
             }else{
                 log.info("验证码错误");
                 throw new GlobalException(CodeMsg.OTP_ERROR);

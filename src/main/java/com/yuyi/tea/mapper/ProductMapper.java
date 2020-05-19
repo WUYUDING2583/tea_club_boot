@@ -95,6 +95,9 @@ public interface ProductMapper {
                     fetchType= FetchType.LAZY)),
             @Result(column="uid",property="sales",
                     one=@One(select="com.yuyi.tea.mapper.ProductMapper.getProductMonthSales",
+                            fetchType= FetchType.LAZY)),
+            @Result(column="uid",property="productDetails",
+                    one=@One(select="com.yuyi.tea.mapper.PhotoMapper.getProductDetailPhotos",
                             fetchType= FetchType.LAZY))
     })
     Product getProduct(int uid);

@@ -306,4 +306,28 @@ public class CustomerService {
         Customer customerByUid = customerMapper.getCustomerByUid(userId);
         return customerByUid.getIngot();
     }
+
+    /**
+     * 根据手机号获取客户信息
+     * @param contact
+     * @return
+     */
+    public Customer getCustomer(String contact) {
+        Customer customer=customerMapper.getCustomerByContact(contact);
+        return customer;
+    }
+
+    /**
+     * 客户注册
+     * @param customer
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void register(Customer customer) {
+        try {
+            customer.setCustomerType(CommConstants.CustomerType.REGISTER_USER);
+            customerMapper.saveCustomer(customer);
+        }catch (Exception e){
+            throw new GlobalException(CodeMsg.REGISTER_FAIL);
+        }
+    }
 }
