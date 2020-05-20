@@ -77,4 +77,20 @@ public class ShopController {
         return shop;
     }
 
+    /**
+     * 获取门店名字列表
+     * @return
+     */
+    @GetMapping("/mp/shopName")
+    public List<Shop> getShopNameList(){
+        List<Shop> shopList = shopService.getShopList();
+        for(Shop shop:shopList){
+            shop.setOpenHours(null);
+            shop.setPhotos(null);
+            shop.setClerks(null);
+            shop.setShopBoxes(null);
+        }
+        return shopList;
+    }
+
 }
