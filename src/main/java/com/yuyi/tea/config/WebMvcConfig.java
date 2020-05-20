@@ -18,7 +18,7 @@ public class WebMvcConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         //可进行同源请求的url一下依次为后台host，移动端host
-        String[] urls={"http://localhost:3000","http://localhost:8081","http://127.0.0.1:31960"};
+        String[] urls={"http://localhost:3000","http://localhost:8081","http://127.0.0.1:20236"};
         return new WebMvcConfigurer() {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")

@@ -1,10 +1,7 @@
 package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.CartProduct;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
@@ -17,7 +14,7 @@ public interface CartMapper {
      * @return
      */
     @Select("select * from cartDetail where customerId=#{customerId}")
-    @Results(id = "cartDetail",
+    @Results(id = "cartItem",
             value = {
                     @Result(id = true,column = "uid",property = "uid"),
                     @Result(column="customerId",property="customer",
@@ -28,4 +25,29 @@ public interface CartMapper {
                                     fetchType= FetchType.LAZY))
             })
     List<CartProduct> getCartDetail(int customerId);
+
+    /**
+     * 加入购物车
+     * @param cartProduct
+     */
+    @Insert("insert into cartDetail(customerId,productId,number) values(#{customer.uid},#{product.uid},#{number})")
+    @Options(useGeneratedKeys=true, keyProperty="uid")
+    void addToCart(CartProduct cartProduct);
+
+    /**
+     * 查找购物车内是否有此类产品记录
+     * @param customerId
+     * @param productId
+     * @return
+     */
+    @Select("select * from cartDetail where customerId=#{customerId} and productId=#{productId} limit 1")
+    @ResultMap("cartItem")
+    CartProduct findCartItem(int customerId, int productId);
+
+    /**
+     * 更新购物车数量
+     * @param cartItem
+     */
+    @Update("update cartDetail set number=#{number} where customerId=#{customer.uid} and productId=#{product.uid}")
+    void updateCartItem(CartProduct cartItem);
 }

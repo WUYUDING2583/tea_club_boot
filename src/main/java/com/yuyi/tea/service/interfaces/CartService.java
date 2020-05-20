@@ -11,5 +11,11 @@ public interface CartService {
      * @param customerId
      * @return
      */
-    List<CartProduct> getCartDetail(int customerId);
+    List<CartProduct> getCartList(int customerId);
+
+    /**
+     * 加入购物车
+     * @param cartProduct
+     */
+    void addToCart(CartProduct cartProduct);
 }

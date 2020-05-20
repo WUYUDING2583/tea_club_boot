@@ -50,6 +50,8 @@ public class CodeMsg {
     //注册模块 5009xx
     public static final CodeMsg REGISTER_FAIL=new CodeMsg(500900,"注册失败，请重试");
     public static final CodeMsg DUPLICATE_REGISTER=new CodeMsg(500901,"重复注册");
+    //购物车模块 5010xx
+    public static final CodeMsg ADD_TO_CART_FAIL=new CodeMsg(501000,"加入购物车失败");
 
     private CodeMsg() {
     }
