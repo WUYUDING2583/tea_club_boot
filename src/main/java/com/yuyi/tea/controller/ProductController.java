@@ -163,7 +163,7 @@ public class ProductController {
         for(ActivityRule activityRule:product.getActivityRules()){
             activityRule.setActivityApplyForProduct(null);
             activityRule.getActivity().setActivityRules(null);
-            activityRule.getActivity().setMutexActivities(null);
+            activityRule.getActivity().setPhotos(null);
         }
         return product;
     }

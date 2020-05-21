@@ -99,11 +99,11 @@ public interface CustomerMapper {
     })
     List<Customer> getCustomers();
 
-    @Select("select * from customerAddress where customerId=#{uid}")
+    @Select("select * from address where customerId=#{uid}")
     List<Address> getAddressByCustomerId(int uid);
 
-    @Select("select address from customerAddress where uid=#{uid}")
-    String getAddress(int uid);
+    @Select("select * from address where uid=#{uid}")
+    Address getAddress(int uid);
 
     //根据uid获取客户类型
     @Select("select * from customerType where uid=#{uid}")

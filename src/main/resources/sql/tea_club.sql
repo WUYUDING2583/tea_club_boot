@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 20/05/2020 22:06:08
+ Date: 21/05/2020 23:32:33
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `activity`  (
   `startTime` bigint(0) NULL DEFAULT NULL,
   `endTime` bigint(0) NULL DEFAULT NULL,
   `enforceTerminal` tinyint(1) NULL DEFAULT 0,
-  `priority` int(0) NULL DEFAULT NULL,
+  `priority` int(0) NULL DEFAULT NULL COMMENT '优先级数字越小等级越高',
   `isShowOnHome` tinyint(0) NULL DEFAULT 0 COMMENT '是否在小程序首页走马灯展示',
   PRIMARY KEY (`uid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -148,7 +148,7 @@ CREATE TABLE `activityRuleType`  (
   `uid` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of activityRuleType
@@ -159,6 +159,31 @@ INSERT INTO `activityRuleType` VALUES (3, '折扣');
 INSERT INTO `activityRuleType` VALUES (4, '分享产品');
 INSERT INTO `activityRuleType` VALUES (5, '充值');
 INSERT INTO `activityRuleType` VALUES (6, '分享文章');
+
+-- ----------------------------
+-- Table structure for address
+-- ----------------------------
+DROP TABLE IF EXISTS `address`;
+CREATE TABLE `address`  (
+  `uid` int(0) NOT NULL AUTO_INCREMENT,
+  `province` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `city` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `district` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `detail` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细门牌号',
+  `phone` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `isDefaultAddress` tinyint(0) NULL DEFAULT 0 COMMENT '是否是默认地址',
+  `customerId` int(0) NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`uid`) USING BTREE,
+  INDEX `customerId`(`customerId`) USING BTREE,
+  CONSTRAINT `address_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of address
+-- ----------------------------
+INSERT INTO `address` VALUES (6, '浙江省', '杭州市', '西湖区', '留下街道留和路288号浙江工业大学', '15868859587', 0, 16, '吴宇丁');
+INSERT INTO `address` VALUES (7, '浙江省', '宁波市', '海曙区', '横街镇桃源村横里20号', '15868859587', 1, 16, '吴宇丁');
 
 -- ----------------------------
 -- Table structure for article
@@ -353,7 +378,7 @@ CREATE TABLE `cartDetail`  (
   INDEX `productId`(`productId`) USING BTREE,
   CONSTRAINT `cartDetail_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `cartDetail_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cartDetail

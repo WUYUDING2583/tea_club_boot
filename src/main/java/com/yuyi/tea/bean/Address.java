@@ -9,9 +9,14 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     private int uid;
-    private String address;
+    private String province;
+    private String city;
+    private String district;
+    private String detail;
+    private String phone;
     private Customer customer;
-    private boolean isDefault;
+    private boolean isDefaultAddress;
+    private String name;
 
     public Address() {
     }
@@ -20,19 +25,40 @@ public class Address implements Serializable {
         this.uid = uid;
     }
 
-    public Address(int uid, String address, Customer customer, boolean isDefault) {
+    public Address(int uid, String province, String city, String district, String detail, String phone, Customer customer, boolean isDefaultAddress, String name) {
         this.uid = uid;
-        this.address = address;
+        this.province = province;
+        this.city = city;
+        this.district = district;
+        this.detail = detail;
+        this.phone = phone;
         this.customer = customer;
-        this.isDefault = isDefault;
+        this.isDefaultAddress = isDefaultAddress;
+        this.name = name;
     }
 
-    public boolean isDefault() {
-        return isDefault;
+    public String getName() {
+        return name;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public boolean getIsDefaultAddress() {
+        return isDefaultAddress;
+    }
+
+    public void setIsDefaultAddress(boolean defaultAddress) {
+        isDefaultAddress = defaultAddress;
     }
 
     public int getUid() {
@@ -43,12 +69,36 @@ public class Address implements Serializable {
         this.uid = uid;
     }
 
-    public String getAddress() {
-        return address;
+    public String getProvince() {
+        return province;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public Customer getCustomer() {
@@ -59,13 +109,4 @@ public class Address implements Serializable {
         this.customer = customer;
     }
 
-    @Override
-    public String toString() {
-        return "Address{" +
-                "uid=" + uid +
-                ", address='" + address + '\'' +
-                ", customer=" + customer +
-                ", isDefault=" + isDefault +
-                '}';
-    }
 }
