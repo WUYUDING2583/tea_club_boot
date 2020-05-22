@@ -90,7 +90,7 @@ public class LoginController {
     }
 
     /**
-     * 短信验证码登陆
+     * 小程序短信验证码登陆
      * @param contact
      * @param otp
      * @return
@@ -105,6 +105,7 @@ public class LoginController {
         if(user==null){
             throw new GlobalException(CodeMsg.CONTACT_NOT_EXIST);
         }
+        user.setPassword(null);
         return user;
     }
 
@@ -154,15 +155,22 @@ public class LoginController {
         if(hasCustomer==null) {
             //根据手机号获取客户信息
             customerService.register(customer);
+            customer.setPassword(null);
             return customer;
         }else{
             return hasCustomer;
         }
     }
 
+    /**
+     * 小程序根据手机号获取客户信息
+     * @param contact
+     * @return
+     */
     @GetMapping("/mp/customer/{contact}")
     public Customer getCustomer(@PathVariable String contact){
         Customer customer = customerService.getCustomer(contact);
+        customer.setPassword(null);
         return customer;
     }
 }

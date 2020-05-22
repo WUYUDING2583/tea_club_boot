@@ -25,11 +25,11 @@ public class Order implements Serializable {
     private String sellerPs;//卖家退款说明
     private TrackInfo trackInfo;
     private String deliverMode;//配送方式
-    private String address;
+    private Address address;
     private List<Reservation> reservations=new ArrayList<>();
     private float ingot;
     private float credit;
-    private int clerkDiscount;
+    private int clerkDiscount=100;
     private Shop placeOrderWay=null;
 
     public Order() {
@@ -39,7 +39,7 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, String address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount, Shop placeOrderWay) {
+    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, Address address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount, Shop placeOrderWay) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
@@ -103,11 +103,11 @@ public class Order implements Serializable {
         this.reservations = reservations;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

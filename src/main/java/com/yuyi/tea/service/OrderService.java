@@ -1,11 +1,11 @@
 package com.yuyi.tea.service;
 
+import com.google.gson.Gson;
 import com.yuyi.tea.bean.*;
-import com.yuyi.tea.common.CodeMsg;
-import com.yuyi.tea.common.CommConstants;
+import com.yuyi.tea.common.*;
 import com.yuyi.tea.common.utils.AmountUtil;
 import com.yuyi.tea.common.utils.TimeUtil;
-import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.controller.WebSocketBalanceServer;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -55,6 +58,9 @@ public class OrderService {
 
     @Autowired
     private ShopBoxMapper shopBoxMapper;
+
+    @Autowired
+    private WebSocketBalanceServer ws;
 
     /**
      * 获取客户的订单列表
@@ -220,9 +226,11 @@ public class OrderService {
         order.setCustomer(redisCustomer);
         //查询服务员信息
         Clerk redisClerk = clerkService.getRedisClerk(order.getClerk().getUid());
-        redisClerk.setPassword(null);
-        redisClerk.setAvatar(null);
-        order.setClerk(redisClerk);
+        if(redisClerk!=null) {
+            redisClerk.setPassword(null);
+            redisClerk.setAvatar(null);
+            order.setClerk(redisClerk);
+        }
         //查询产品信息
         for(OrderProduct orderProduct:order.getProducts()){
             Product redisProduct = productService.getRedisProduct(orderProduct.getProduct().getUid());
@@ -424,6 +432,121 @@ public class OrderService {
             orderMapper.saveOrderStatus(status);
         }catch (Exception e){
             throw new GlobalException(CodeMsg.UPDATE_ORDER_STATUS_FAIL);
+        }
+    }
+
+    /**
+     * 计算订单总价
+     * @param order
+     */
+    public float calculateAmount(Order order){
+        //计算总价
+        float ingot=0;
+        float credit=0;
+        Map<Integer,List<OrderProduct>> moneyOffMap=new HashMap<>();
+        for(OrderProduct orderProduct:order.getProducts()){
+            //获取商品详情
+            Product product = productService.getProduct(orderProduct.getProduct().getUid());
+            ActivityRule activityRule = orderProduct.getActivityRule();
+            if(activityRule==null){
+                //此产品不参与优惠活动
+                ingot+=orderProduct.getNumber()*product.getPrice().getIngot();
+                credit+=orderProduct.getNumber()*product.getPrice().getCredit();
+            }else{
+                //产品参与优惠活动
+                ActivityRule redisActivityRule = activityService.getRedisActivityRule(activityRule.getUid());
+                ActivityRule2 activityRule2 = redisActivityRule.getActivityRule2();
+                if(activityRule2==null){
+                    //折扣
+                    ingot+=orderProduct.getNumber()*product.getPrice().getIngot()*(100-redisActivityRule.getActivityRule1())/100;
+                    credit+=orderProduct.getNumber()*product.getPrice().getCredit();
+                }else{
+                    //购物
+                    if(moneyOffMap.containsKey(activityRule.getUid())){
+                        List<OrderProduct> products = moneyOffMap.get(activityRule.getUid());
+                        products.add(orderProduct);
+                    }else{
+                        List<OrderProduct> products=new ArrayList<>();
+                        products.add(orderProduct);
+                        moneyOffMap.put(activityRule.getUid(),products);
+                    }
+                }
+            }
+        }
+        //计算购物活动的总额
+        float giftCredit=0;
+        for(Integer key : moneyOffMap.keySet()){
+            ActivityRule redisActivityRule = activityService.getRedisActivityRule(key);
+            List<OrderProduct> orderProducts = moneyOffMap.get(key);
+            float moneyOffIngot=0;
+            float moneyOffCredit=0;
+            for(OrderProduct orderProduct: orderProducts){  //获取商品详情
+                Product product = productService.getProduct(orderProduct.getProduct().getUid());
+                moneyOffCredit+=orderProduct.getNumber()*product.getPrice().getCredit();
+                moneyOffIngot+=orderProduct.getNumber()*product.getPrice().getIngot();
+            }
+            if(moneyOffIngot>redisActivityRule.getActivityRule1()){
+                //满足条件
+                ActivityRule2 activityRule2 = redisActivityRule.getActivityRule2();
+                if(activityRule2.getCurrency().equals("ingot")){//TODO 规则2改为元宝满减，积分满赠
+                    //满xx减xx元宝
+                    moneyOffIngot-=activityRule2.getNumber();
+                }else{
+                    //满xx赠xx积分
+                    giftCredit+=activityRule2.getNumber();
+                }
+            }
+            ingot+=moneyOffIngot;
+            credit+=moneyOffCredit;
+        }
+        // 计算店员优惠,只用于元宝
+        ingot*=order.getClerkDiscount()/100.0;
+        order.setCredit(credit);
+        order.setIngot(ingot);
+        return giftCredit;
+    }
+
+    public Amount placeOrder(Order order){
+        try{
+            //计算总价
+            float giftCredit = calculateAmount(order);
+            float ingot = order.getIngot();
+            float credit = order.getCredit();
+            //保存订单
+            saveOrder(order);
+            //设置订单状态为未付款
+            OrderStatus unpay=new OrderStatus(order.getUid(), CommConstants.OrderStatus.UNPAY, TimeUtil.getCurrentTimestamp(),order.getClerk());
+            saveOrderStatus(unpay);
+            //查询客户余额
+            Amount customerBalance = customerService.getCustomerBalance(order.getCustomer().getUid());
+            //检查客户余额
+            try {
+                if (customerService.checkBalance(ingot, credit, customerBalance)) {
+                    //余额充足,自动扣费
+                    customerService.pay(ingot, credit, order.getCustomer().getUid());
+                    //设置订单状态为付款、完成
+                    OrderStatus payed = new OrderStatus(order.getUid(), CommConstants.OrderStatus.PATED, TimeUtil.getCurrentTimestamp(), order.getClerk());
+                    saveOrderStatus(payed);
+                    OrderStatus complete = new OrderStatus(order.getUid(), CommConstants.OrderStatus.COMPLETE, TimeUtil.getCurrentTimestamp(), order.getClerk());
+                    saveOrderStatus(complete);
+                }
+            }catch (GlobalException e){
+                if(e.getCodeMsg().getCode()!=500700){
+                    throw  e;
+                }
+            }
+            //赠送积分
+            if(giftCredit>0){
+                customerService.addCredit(order.getCustomer().getUid(),giftCredit);
+            }
+            //查询账户余额
+            Amount currentBalance = customerService.getCustomerBalance(order.getCustomer().getUid());
+            return currentBalance;
+        }catch (GlobalException e){
+            throw e;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
     }
 }

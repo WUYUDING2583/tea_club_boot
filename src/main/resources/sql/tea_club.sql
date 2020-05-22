@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 21/05/2020 23:32:33
+ Date: 22/05/2020 20:19:16
 */
 
 SET NAMES utf8mb4;
@@ -182,8 +182,7 @@ CREATE TABLE `address`  (
 -- ----------------------------
 -- Records of address
 -- ----------------------------
-INSERT INTO `address` VALUES (6, '浙江省', '杭州市', '西湖区', '留下街道留和路288号浙江工业大学', '15868859587', 0, 16, '吴宇丁');
-INSERT INTO `address` VALUES (7, '浙江省', '宁波市', '海曙区', '横街镇桃源村横里20号', '15868859587', 1, 16, '吴宇丁');
+INSERT INTO `address` VALUES (9, '浙江省', '杭州市', '西湖区', '留下街道留和路288号浙江工业大学', '15868859587', 1, 17, '吴宇丁');
 
 -- ----------------------------
 -- Table structure for article
@@ -381,12 +380,6 @@ CREATE TABLE `cartDetail`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of cartDetail
--- ----------------------------
-INSERT INTO `cartDetail` VALUES (1, 1, 1, 3);
-INSERT INTO `cartDetail` VALUES (7, 16, 1, 3);
-
--- ----------------------------
 -- Table structure for clerk
 -- ----------------------------
 DROP TABLE IF EXISTS `clerk`;
@@ -464,7 +457,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (16, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, NULL, NULL, NULL, 0, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, '123456', NULL, NULL, 0, 0);
 
 -- ----------------------------
 -- Table structure for customerAddress
@@ -655,8 +648,10 @@ CREATE TABLE `orderProduct`  (
 -- ----------------------------
 -- Records of orderProduct
 -- ----------------------------
-INSERT INTO `orderProduct` VALUES (46, 1, 143, 2, NULL);
-INSERT INTO `orderProduct` VALUES (47, 1, 144, 1, NULL);
+INSERT INTO `orderProduct` VALUES (53, 1, 154, 1, NULL);
+INSERT INTO `orderProduct` VALUES (54, 1, 155, 1, NULL);
+INSERT INTO `orderProduct` VALUES (55, 1, 156, 1, NULL);
+INSERT INTO `orderProduct` VALUES (56, 1, 157, 1, NULL);
 
 -- ----------------------------
 -- Table structure for orderStatus
@@ -678,17 +673,10 @@ CREATE TABLE `orderStatus`  (
 -- ----------------------------
 -- Records of orderStatus
 -- ----------------------------
-INSERT INTO `orderStatus` VALUES (250, 143, 'unpay', 1589289533263, 10);
-INSERT INTO `orderStatus` VALUES (251, 144, 'unpay', 1589289606431, 10);
-INSERT INTO `orderStatus` VALUES (252, 145, 'unpay', 1589289631997, 10);
-INSERT INTO `orderStatus` VALUES (253, 145, 'payed', 1589289632028, 10);
-INSERT INTO `orderStatus` VALUES (254, 145, 'complete', 1589289632028, 10);
-INSERT INTO `orderStatus` VALUES (255, 146, 'unpay', 1589289659946, 10);
-INSERT INTO `orderStatus` VALUES (256, 146, 'payed', 1589289659975, 10);
-INSERT INTO `orderStatus` VALUES (257, 146, 'complete', 1589289659975, 10);
-INSERT INTO `orderStatus` VALUES (258, 147, 'unpay', 1589289822991, 10);
-INSERT INTO `orderStatus` VALUES (259, 147, 'payed', 1589289823021, 10);
-INSERT INTO `orderStatus` VALUES (260, 147, 'complete', 1589289823021, 10);
+INSERT INTO `orderStatus` VALUES (271, 154, 'unpay', 1590149116193, NULL);
+INSERT INTO `orderStatus` VALUES (272, 155, 'unpay', 1590149316835, NULL);
+INSERT INTO `orderStatus` VALUES (273, 156, 'unpay', 1590149398357, NULL);
+INSERT INTO `orderStatus` VALUES (274, 157, 'unpay', 1590149816555, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -728,11 +716,10 @@ CREATE TABLE `orders`  (
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (143, 1589289533251, 13, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, 26);
-INSERT INTO `orders` VALUES (144, 1589289606419, 13, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, 26);
-INSERT INTO `orders` VALUES (145, 1589289631997, 13, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, 26);
-INSERT INTO `orders` VALUES (146, 1589289659946, 13, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, 26);
-INSERT INTO `orders` VALUES (147, 1589289822991, 13, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, 26);
+INSERT INTO `orders` VALUES (154, 1590149116170, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
+INSERT INTO `orders` VALUES (155, 1590149316790, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
+INSERT INTO `orders` VALUES (156, 1590149398324, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
+INSERT INTO `orders` VALUES (157, 1590149816523, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1048,13 +1035,6 @@ CREATE TABLE `reservation`  (
   CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`boxId`) REFERENCES `shopBox` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of reservation
--- ----------------------------
-INSERT INTO `reservation` VALUES (1589331600000, 4, 145);
-INSERT INTO `reservation` VALUES (1589338800000, 4, 146);
-INSERT INTO `reservation` VALUES (1589346000000, 4, 147);
 
 -- ----------------------------
 -- Table structure for shop
