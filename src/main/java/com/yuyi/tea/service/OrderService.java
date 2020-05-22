@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -514,6 +516,7 @@ public class OrderService {
             float credit = order.getCredit();
             //保存订单
             saveOrder(order);
+            //TODO 减少产品库存
             //设置订单状态为未付款
             OrderStatus unpay=new OrderStatus(order.getUid(), CommConstants.OrderStatus.UNPAY, TimeUtil.getCurrentTimestamp(),order.getClerk());
             saveOrderStatus(unpay);
@@ -533,6 +536,24 @@ public class OrderService {
             }catch (GlobalException e){
                 if(e.getCodeMsg().getCode()!=500700){
                     throw  e;
+                }else{
+                    //设置订单有效时间为15分钟，15分钟后若还没有付款则自动取消订单
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            // task to run goes here
+                            Order currentOrder = orderMapper.getOrder(order.getUid());
+                            if(currentOrder.getStatus().getStatus().equals(CommConstants.OrderStatus.UNPAY)){
+                                log.info("未付款，取消订单");
+                                for(OrderProduct orderProduct:currentOrder.getProducts()){
+                                    orderMapper.deleteOrderProduct(orderProduct.getUid());
+                                }
+                                orderMapper.deleteOrder(currentOrder.getUid());
+                                //TODO 恢复产品库存
+                            }
+                        }
+                    };
+                    ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
+                    executor.schedule(runnable, 15,  TimeUnit.MINUTES);
                 }
             }
             //赠送积分

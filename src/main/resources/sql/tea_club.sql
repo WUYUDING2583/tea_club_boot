@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 22/05/2020 20:19:16
+ Date: 22/05/2020 21:59:08
 */
 
 SET NAMES utf8mb4;
@@ -177,7 +177,7 @@ CREATE TABLE `address`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `address_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of address
@@ -646,14 +646,6 @@ CREATE TABLE `orderProduct`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of orderProduct
--- ----------------------------
-INSERT INTO `orderProduct` VALUES (53, 1, 154, 1, NULL);
-INSERT INTO `orderProduct` VALUES (54, 1, 155, 1, NULL);
-INSERT INTO `orderProduct` VALUES (55, 1, 156, 1, NULL);
-INSERT INTO `orderProduct` VALUES (56, 1, 157, 1, NULL);
-
--- ----------------------------
 -- Table structure for orderStatus
 -- ----------------------------
 DROP TABLE IF EXISTS `orderStatus`;
@@ -669,14 +661,6 @@ CREATE TABLE `orderStatus`  (
   CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 260 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of orderStatus
--- ----------------------------
-INSERT INTO `orderStatus` VALUES (271, 154, 'unpay', 1590149116193, NULL);
-INSERT INTO `orderStatus` VALUES (272, 155, 'unpay', 1590149316835, NULL);
-INSERT INTO `orderStatus` VALUES (273, 156, 'unpay', 1590149398357, NULL);
-INSERT INTO `orderStatus` VALUES (274, 157, 'unpay', 1590149816555, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -712,14 +696,6 @@ CREATE TABLE `orders`  (
   CONSTRAINT `orders_ibfk_5` FOREIGN KEY (`addressId`) REFERENCES `customerAddress` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_6` FOREIGN KEY (`placeOrderWay`) REFERENCES `shop` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 148 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of orders
--- ----------------------------
-INSERT INTO `orders` VALUES (154, 1590149116170, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
-INSERT INTO `orders` VALUES (155, 1590149316790, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
-INSERT INTO `orders` VALUES (156, 1590149398324, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
-INSERT INTO `orders` VALUES (157, 1590149816523, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 120, 0, 100, NULL);
 
 -- ----------------------------
 -- Table structure for photo

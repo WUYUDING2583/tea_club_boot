@@ -181,4 +181,18 @@ public interface OrderMapper {
      */
     @Insert("insert into orderProduct(productId,orderId,number,activityRuleId) values(#{orderProduct.product.uid},#{orderId},#{orderProduct.number},#{orderProduct.activityRule.uid})")
     void saveOrderProduct(OrderProduct orderProduct,int orderId);
+
+    /**
+     * 删除订单产品表的内容
+     * @param uid
+     */
+    @Delete("delete from orderProduct where uid=#{uid}")
+    void deleteOrderProduct(int uid);
+
+    /**
+     * 删除订单
+     * @param uid
+     */
+    @Delete("delete from orders where uid=#{uid}")
+    void deleteOrder(int uid);
 }
