@@ -398,7 +398,7 @@ public class OrderService {
     @Transactional(rollbackFor = Exception.class)
     public void updateReservationComplete(Order order) {
         long time=TimeUtil.getCurrentTimestamp();
-        OrderStatus pay=new OrderStatus(order.getUid(),CommConstants.OrderStatus.PATED,time,order.getClerk());
+        OrderStatus pay=new OrderStatus(order.getUid(),CommConstants.OrderStatus.PAYED,time,order.getClerk());
         orderMapper.saveOrderStatus(pay);
         OrderStatus complete=new OrderStatus(order.getUid(),CommConstants.OrderStatus.COMPLETE,time,order.getClerk());
         orderMapper.saveOrderStatus(complete);
@@ -413,7 +413,7 @@ public class OrderService {
         try{
             long time= TimeUtil.getCurrentTimestamp();
             order.setOrderTime(time);
-            orderMapper.saveMobileOrder(order);
+            orderMapper.saveOrder(order);
             for(OrderProduct orderProduct:order.getProducts()) {
                 orderMapper.saveOrderProduct(orderProduct,order.getUid());
             }
@@ -527,11 +527,11 @@ public class OrderService {
                 if (customerService.checkBalance(ingot, credit, customerBalance)) {
                     //余额充足,自动扣费
                     customerService.pay(ingot, credit, order.getCustomer().getUid());
-                    //设置订单状态为付款、完成
-                    OrderStatus payed = new OrderStatus(order.getUid(), CommConstants.OrderStatus.PATED, TimeUtil.getCurrentTimestamp(), order.getClerk());
+                    //设置订单状态为付款
+                    OrderStatus payed = new OrderStatus(order.getUid(), CommConstants.OrderStatus.PAYED, TimeUtil.getCurrentTimestamp(), order.getClerk());
                     saveOrderStatus(payed);
-                    OrderStatus complete = new OrderStatus(order.getUid(), CommConstants.OrderStatus.COMPLETE, TimeUtil.getCurrentTimestamp(), order.getClerk());
-                    saveOrderStatus(complete);
+//                    OrderStatus complete = new OrderStatus(order.getUid(), CommConstants.OrderStatus.COMPLETE, TimeUtil.getCurrentTimestamp(), order.getClerk());
+//                    saveOrderStatus(complete);
                 }
             }catch (GlobalException e){
                 if(e.getCodeMsg().getCode()!=500700){
@@ -554,6 +554,7 @@ public class OrderService {
                     };
                     ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
                     executor.schedule(runnable, 15,  TimeUnit.MINUTES);
+                    throw e;
                 }
             }
             //赠送积分
@@ -569,5 +570,24 @@ public class OrderService {
             e.printStackTrace();
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
+    }
+
+    /**
+     * 获取最近一次未付费订单
+     * @param customerId
+     * @return
+     */
+    public Order getLatestUnpayOrder(int customerId) {
+        Order latestUnpayOrder=orderMapper.getLatestUnpayOrder(customerId);
+        return latestUnpayOrder;
+    }
+
+    /**
+     * 将订单状态更改为已付款
+     * @param order
+     */
+    public void updateOrderPayed(Order order) {
+        OrderStatus payed=new OrderStatus(order.getUid(),CommConstants.OrderStatus.PAYED,TimeUtil.getCurrentTimestamp());
+        orderMapper.saveOrderStatus(payed);
     }
 }

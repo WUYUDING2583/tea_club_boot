@@ -10,8 +10,10 @@ import com.yuyi.tea.service.CustomerService;
 import com.yuyi.tea.service.OrderService;
 import com.yuyi.tea.service.interfaces.BalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -57,5 +59,48 @@ public class PayController {
         }catch (Exception e){
             throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);
         }
+    }
+
+    /**
+     * 小程序模拟充值
+     * @param customerId
+     * @param value
+     * @return
+     */
+    @PostMapping("/mp/simulateCharge/{customerId}/{value}")
+    public String mpSimulatePay(@PathVariable int customerId,@PathVariable float value){
+        try{
+            //添加充值记录
+            balanceService.recharge(customerId,value);
+            //改变账户余额
+            Amount balance = customerService.addBalance(customerId, value);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);
+        }
+        return "success";
+    }
+
+    @PostMapping("/mp/pay/{customerId}/{orderId}")
+    @Transactional(rollbackFor = Exception.class)
+    public String mpPay(@PathVariable int customerId,@PathVariable int orderId){
+        Order order;
+        if(orderId==-1){
+            //为最近一次未付款订单付款
+            order=orderService.getLatestUnpayOrder(customerId);
+        }else{
+            order=orderService.getOrder(orderId);
+        }
+        //自动扣费
+        Amount balance = customerService.getCustomerBalance(customerId);
+        float ingot = order.getIngot();
+        float credit = order.getCredit();
+        //检查账户余额
+        customerService.checkBalance(ingot,credit,balance);
+        //扣费
+        customerService.pay(ingot,credit,customerId);
+        //改变订单状态
+        orderService.updateOrderPayed(order);
+        return "success";
     }
 }

@@ -211,4 +211,10 @@ public class OrderController {
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
     }
+
+    @GetMapping("/mp/order/{orderId}")
+    public Order getMpOrder(@PathVariable int orderId){
+        Order order = orderService.getOrder(orderId);
+        return order;
+    }
 }

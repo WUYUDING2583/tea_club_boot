@@ -116,7 +116,9 @@ public interface OrderMapper {
     OrderStatus getOrderCurrentStatus(int orderId);
 
     //将订单状态更新为已发货
-    @Insert("insert into orderStatus(orderId,status,time,processer) values(#{orderId},#{status},#{time},#{processer.uid})")
+    @Insert("<script>" +
+            "insert into orderStatus(orderId,status,time,processer) values(#{orderId},#{status},#{time},<if test='#{processer}!=null'>#{processer.uid}</if><if test='#{processer}==null'>null</if>)" +
+            "</script>")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveOrderStatus(OrderStatus status);
 
@@ -171,9 +173,11 @@ public interface OrderMapper {
      * 保存移动端订单
      * @param order
      */
-    @Insert("insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount,placeOrderWay) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount},#{placeOrderWay.uid})")
+    @Insert("<script>" +
+            "insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount,placeOrderWay,addressId,deliverMode,buyerPs) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount},#{placeOrderWay.uid},<if test='#{address}!=null'>#{address.uid}</if><if test='#{address}==null'>null</if>,#{deliverMode},#{buyerPs})" +
+            "</script>")
     @Options(useGeneratedKeys=true, keyProperty="uid")
-    void saveMobileOrder(Order order);
+    void saveOrder(Order order);
 
     /**
      * 保存订单产品
@@ -195,4 +199,14 @@ public interface OrderMapper {
      */
     @Delete("delete from orders where uid=#{uid}")
     void deleteOrder(int uid);
+
+    /**
+     * 获取最近一次未付费订单
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='unpay')" +
+            "order by orderTime desc limit 1")
+    Order getLatestUnpayOrder(int customerId);
 }

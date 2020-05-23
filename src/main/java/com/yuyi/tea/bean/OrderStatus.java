@@ -34,6 +34,12 @@ public class OrderStatus implements Serializable {
         this.processer = processer;
     }
 
+    public OrderStatus(int orderId, String status, long time) {
+        this.orderId = orderId;
+        this.status = status;
+        this.time = time;
+    }
+
     public User getProcesser() {
         return processer;
     }

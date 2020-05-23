@@ -15,7 +15,7 @@ public class CommConstants {
 
     public static class OrderStatus{
         public static final String SHIPPED="shipped";
-        public static final String PATED="payed";
+        public static final String PAYED="payed";
         public static final String UNPAY="unpay";
         public static  final String COMPLETE="complete";
         public static final String REQUEST_REFUND="requestRefund";
