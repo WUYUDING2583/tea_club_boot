@@ -238,4 +238,15 @@ public class OrderController {
         }
         return latestUnpayOrder;
     }
+
+    /**
+     * 小程序取消订单
+     * @param orderId
+     * @return
+     */
+    @PostMapping("/mp/order/cancel/{orderId}")
+    public String mpCancelOrder(@PathVariable int orderId){
+        orderService.deleteOrder(orderId);
+        return "success";
+    }
 }

@@ -590,4 +590,17 @@ public class OrderService {
         OrderStatus payed=new OrderStatus(order.getUid(),CommConstants.OrderStatus.PAYED,TimeUtil.getCurrentTimestamp());
         orderMapper.saveOrderStatus(payed);
     }
+
+    /**
+     * 取消订单
+     * @param orderId
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteOrder(int orderId) {
+        Order order = orderMapper.getOrder(orderId);
+        for(OrderProduct orderProduct:order.getProducts()){
+            orderMapper.deleteOrderProduct(orderProduct.getUid());
+        }
+        orderMapper.deleteOrder(orderId);
+    }
 }
