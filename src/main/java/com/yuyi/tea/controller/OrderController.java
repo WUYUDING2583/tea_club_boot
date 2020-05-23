@@ -212,9 +212,30 @@ public class OrderController {
         }
     }
 
+    /**
+     * 小程序获取对应订单
+     * @param orderId
+     * @return
+     */
     @GetMapping("/mp/order/{orderId}")
     public Order getMpOrder(@PathVariable int orderId){
         Order order = orderService.getOrder(orderId);
         return order;
+    }
+
+    /**
+     * 小程序获取客户最近的未付款订单
+     * @param customerId
+     * @return
+     */
+    @GetMapping("/mp/latestUnpayOrder/{customerId}")
+    public Order getLatestUnPayOrder(@PathVariable int customerId){
+        Order latestUnpayOrder = orderService.getLatestUnpayOrder(customerId);
+        for(OrderProduct orderProduct:latestUnpayOrder.getProducts()){
+            orderProduct.getProduct().setActivityRules(null);
+            orderProduct.getProduct().setShop(null);
+            orderProduct.getProduct().setProductDetails(null);
+        }
+        return latestUnpayOrder;
     }
 }

@@ -91,7 +91,7 @@ public class PayController {
         }else{
             order=orderService.getOrder(orderId);
         }
-        //自动扣费
+        //查询账户余额
         Amount balance = customerService.getCustomerBalance(customerId);
         float ingot = order.getIngot();
         float credit = order.getCredit();

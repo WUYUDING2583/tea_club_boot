@@ -24,7 +24,9 @@ public interface OrderMapper {
     @Select("select * from orderProduct where orderId=#{orderId}")
     @Results({
             @Result(id = true,column = "uid",property = "uid"),
-            @Result(column = "productId",property = "product",typeHandler = ProductTypeHandler.class),
+            @Result(column = "productId",property = "product",
+                one=@One(select="com.yuyi.tea.mapper.ProductMapper.getProduct",
+                        fetchType = FetchType.LAZY)),
             @Result(column = "activityRuleId",property = "activityRule",typeHandler = ActivityRuleTypeHandler.class)
     })
     List<OrderProduct> getOrderProducts(int orderId);
@@ -208,5 +210,6 @@ public interface OrderMapper {
     @Select("select * from orders where customerId=#{customerId} and uid in " +
             "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='unpay')" +
             "order by orderTime desc limit 1")
+    @ResultMap("order")
     Order getLatestUnpayOrder(int customerId);
 }

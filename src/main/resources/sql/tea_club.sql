@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 23/05/2020 16:36:44
+ Date: 23/05/2020 20:58:09
 */
 
 SET NAMES utf8mb4;
@@ -457,7 +457,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, '123456', NULL, NULL, 40, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, '123456', NULL, NULL, 20, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -628,8 +628,17 @@ CREATE TABLE `orderProduct`  (
 -- ----------------------------
 -- Records of orderProduct
 -- ----------------------------
-INSERT INTO `orderProduct` VALUES (95, 1, 197, 1, NULL);
 INSERT INTO `orderProduct` VALUES (96, 1, 198, 2, NULL);
+INSERT INTO `orderProduct` VALUES (97, 1, 199, 1, NULL);
+INSERT INTO `orderProduct` VALUES (98, 1, 200, 1, NULL);
+INSERT INTO `orderProduct` VALUES (99, 1, 201, 1, NULL);
+INSERT INTO `orderProduct` VALUES (100, 1, 202, 1, NULL);
+INSERT INTO `orderProduct` VALUES (102, 1, 204, 1, NULL);
+INSERT INTO `orderProduct` VALUES (103, 1, 205, 1, NULL);
+INSERT INTO `orderProduct` VALUES (104, 1, 206, 1, NULL);
+INSERT INTO `orderProduct` VALUES (105, 1, 207, 2, NULL);
+INSERT INTO `orderProduct` VALUES (106, 1, 208, 1, NULL);
+INSERT INTO `orderProduct` VALUES (107, 1, 209, 2, NULL);
 
 -- ----------------------------
 -- Table structure for orderStatus
@@ -651,9 +660,22 @@ CREATE TABLE `orderStatus`  (
 -- ----------------------------
 -- Records of orderStatus
 -- ----------------------------
-INSERT INTO `orderStatus` VALUES (324, 197, 'unpay', 1590222649398, NULL);
 INSERT INTO `orderStatus` VALUES (325, 198, 'unpay', 1590222744329, NULL);
 INSERT INTO `orderStatus` VALUES (326, 198, 'payed', 1590222744355, NULL);
+INSERT INTO `orderStatus` VALUES (327, 199, 'unpay', 1590228593959, NULL);
+INSERT INTO `orderStatus` VALUES (328, 200, 'unpay', 1590228691968, NULL);
+INSERT INTO `orderStatus` VALUES (329, 201, 'unpay', 1590228732715, NULL);
+INSERT INTO `orderStatus` VALUES (330, 202, 'unpay', 1590228947025, NULL);
+INSERT INTO `orderStatus` VALUES (332, 204, 'unpay', 1590237867663, NULL);
+INSERT INTO `orderStatus` VALUES (333, 205, 'unpay', 1590238023661, NULL);
+INSERT INTO `orderStatus` VALUES (334, 206, 'unpay', 1590238190519, NULL);
+INSERT INTO `orderStatus` VALUES (335, 206, 'payed', 1590238260339, NULL);
+INSERT INTO `orderStatus` VALUES (336, 207, 'unpay', 1590238361686, NULL);
+INSERT INTO `orderStatus` VALUES (337, 207, 'payed', 1590238383859, NULL);
+INSERT INTO `orderStatus` VALUES (338, 208, 'unpay', 1590238478182, NULL);
+INSERT INTO `orderStatus` VALUES (339, 208, 'payed', 1590238509435, NULL);
+INSERT INTO `orderStatus` VALUES (340, 209, 'unpay', 1590238593029, NULL);
+INSERT INTO `orderStatus` VALUES (341, 209, 'payed', 1590238624219, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -693,8 +715,17 @@ CREATE TABLE `orders`  (
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (197, 1590222649236, 17, NULL, NULL, '123', NULL, NULL, NULL, 'selfPick', 120, 0, 100, 25, NULL);
 INSERT INTO `orders` VALUES (198, 1590222744310, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 240, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (199, 1590228593835, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (200, 1590228691952, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (201, 1590228732702, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (202, 1590228947012, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (204, 1590237867648, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (205, 1590238023645, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (206, 1590238190497, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (207, 1590238361673, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 240, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (208, 1590238478167, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
+INSERT INTO `orders` VALUES (209, 1590238592975, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 240, 0, 100, NULL, 9);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1000,6 +1031,11 @@ INSERT INTO `recharge` VALUES (35, 200, 1590217048657, 17);
 INSERT INTO `recharge` VALUES (36, 200, 1590217121758, 17);
 INSERT INTO `recharge` VALUES (37, 200, 1590221713810, 17);
 INSERT INTO `recharge` VALUES (38, 200, 1590222668001, 17);
+INSERT INTO `recharge` VALUES (39, 500, 1590238074977, 17);
+INSERT INTO `recharge` VALUES (40, 200, 1590238245299, 17);
+INSERT INTO `recharge` VALUES (41, 200, 1590238371427, 17);
+INSERT INTO `recharge` VALUES (42, 200, 1590238503261, 17);
+INSERT INTO `recharge` VALUES (43, 100, 1590238618756, 17);
 
 -- ----------------------------
 -- Table structure for reservation
