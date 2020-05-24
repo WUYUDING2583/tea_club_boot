@@ -112,4 +112,28 @@ public class ShopBoxController {
         }
         return list;
     }
+
+    /**
+     * 小程序获取门店包厢列表及其当天预约信息
+     * @param shopId
+     * @return
+     */
+    @GetMapping("/mp/shop/box/{shopId}")
+    public List<ShopBox> getMpShopBoxList(@PathVariable int shopId){
+        List<ShopBox> shopBoxes = shopBoxService.getShopBoxes(shopId);
+        return shopBoxes;
+    }
+
+    /**
+     * 小程序根据boxId,开始时间，结束时间获取包厢预约列表
+     * @param boxId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @GetMapping("/mp/reservations/{boxId}/{startTime}/{endTime}")
+    public List<Reservation> getMpReservations(@PathVariable int boxId,@PathVariable long startTime,@PathVariable long endTime){
+        List<Reservation> reservations=shopBoxService.getReservations(boxId,startTime,endTime);
+        return reservations;
+    }
 }

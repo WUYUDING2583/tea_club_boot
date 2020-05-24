@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 23/05/2020 21:37:08
+ Date: 24/05/2020 22:15:45
 */
 
 SET NAMES utf8mb4;
@@ -177,7 +177,7 @@ CREATE TABLE `address`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `address_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of address
@@ -197,7 +197,7 @@ CREATE TABLE `article`  (
   `isShowOnHome` tinyint(0) NULL DEFAULT 0 COMMENT '是否在小程序首页走马灯展示',
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章简介',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -450,7 +450,7 @@ CREATE TABLE `customer`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `type`(`type`) USING BTREE,
   CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`type`) REFERENCES `customerType` (`uid`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of customer
@@ -467,7 +467,7 @@ CREATE TABLE `customerType`  (
   `uid` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of customerType
@@ -510,7 +510,7 @@ CREATE TABLE `enterpriseCustomerApplication`  (
   INDEX `applicantId`(`applicantId`) USING BTREE,
   CONSTRAINT `enterpriseCustomerApplication_ibfk_1` FOREIGN KEY (`enterpriseId`) REFERENCES `enterprise` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `enterpriseCustomerApplication_ibfk_2` FOREIGN KEY (`applicantId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of enterpriseCustomerApplication
@@ -604,7 +604,7 @@ CREATE TABLE `orderActivityRule`  (
   INDEX `orderId`(`orderId`) USING BTREE,
   CONSTRAINT `orderActivityRule_ibfk_1` FOREIGN KEY (`activityRuleId`) REFERENCES `activityRule` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderActivityRule_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for orderProduct
@@ -623,7 +623,7 @@ CREATE TABLE `orderProduct`  (
   CONSTRAINT `orderProduct_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderProduct_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderProduct_ibfk_3` FOREIGN KEY (`activityRuleId`) REFERENCES `activityRule` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 107 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderProduct
@@ -652,7 +652,7 @@ CREATE TABLE `orderStatus`  (
   INDEX `handler`(`processer`) USING BTREE,
   CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 278 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 341 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderStatus
@@ -704,7 +704,7 @@ CREATE TABLE `orders`  (
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_6` FOREIGN KEY (`placeOrderWay`) REFERENCES `shop` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_7` FOREIGN KEY (`addressId`) REFERENCES `address` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 162 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 209 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -753,7 +753,7 @@ CREATE TABLE `photo`  (
   CONSTRAINT `photo_ibfk_7` FOREIGN KEY (`enterpriseId`) REFERENCES `enterprise` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `photo_ibfk_8` FOREIGN KEY (`articleId`) REFERENCES `article` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `photo_ibfk_9` FOREIGN KEY (`productDetailId`) REFERENCES `product` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 97 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of photo
@@ -914,7 +914,7 @@ CREATE TABLE `price`  (
   `ingot` float NULL DEFAULT NULL,
   `credit` float NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of price
@@ -949,7 +949,7 @@ CREATE TABLE `product`  (
   CONSTRAINT `product_ibfk_1` FOREIGN KEY (`type`) REFERENCES `productType` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `product_ibfk_2` FOREIGN KEY (`priceId`) REFERENCES `price` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `product_ibfk_3` FOREIGN KEY (`shopId`) REFERENCES `shop` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product
@@ -970,7 +970,7 @@ CREATE TABLE `productType`  (
   `uid` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of productType
@@ -994,7 +994,7 @@ CREATE TABLE `recharge`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `recharge_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of recharge
@@ -1053,7 +1053,7 @@ CREATE TABLE `shop`  (
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '门店地址',
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '门店描述',
   `contact` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '门店联系方式',
-  `enforceTerminal` tinyint(0) NULL DEFAULT NULL COMMENT '门店是否失效（倒闭）',
+  `enforceTerminal` tinyint(0) NULL DEFAULT 0 COMMENT '门店是否失效（倒闭）',
   PRIMARY KEY (`uid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '门店信息' ROW_FORMAT = Dynamic;
 
@@ -1061,7 +1061,7 @@ CREATE TABLE `shop`  (
 -- Records of shop
 -- ----------------------------
 INSERT INTO `shop` VALUES (25, 'shop1', 'shop1', 'shop1', '15342268675', 1);
-INSERT INTO `shop` VALUES (26, '123', '123123', 'asdfasdf', '15868859587', NULL);
+INSERT INTO `shop` VALUES (26, '123', '123123', 'asdfasdf', '15868859587', 0);
 
 -- ----------------------------
 -- Table structure for shopBox
@@ -1082,7 +1082,7 @@ CREATE TABLE `shopBox`  (
   INDEX `shopBox_ibfk_2`(`priceId`) USING BTREE,
   CONSTRAINT `shopBox_ibfk_1` FOREIGN KEY (`shopId`) REFERENCES `shop` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shopBox_ibfk_2` FOREIGN KEY (`priceId`) REFERENCES `price` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shopBox

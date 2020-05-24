@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ShopBoxMapper {
 
-    @Select("select * from shopBox where shopId=#{shopId}")
+    @Select("select * from shopBox where shopId=#{shopId} and enforceTerminal=false")
     @ResultMap("shopBox")
     List<ShopBox> getShopBoxByShopId(int shopId);
 

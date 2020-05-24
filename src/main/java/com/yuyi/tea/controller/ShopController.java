@@ -93,4 +93,18 @@ public class ShopController {
         return shopList;
     }
 
+    /**
+     * 获取门店名字列表
+     * @return
+     */
+    @GetMapping("/mp/shop")
+    public List<Shop> getMpShopList(){
+        List<Shop> shopList = shopService.getShopList();
+        for(Shop shop:shopList){
+            shop.setClerks(null);
+        }
+        return shopList;
+    }
+
+
 }

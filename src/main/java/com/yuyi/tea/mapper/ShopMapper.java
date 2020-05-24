@@ -15,7 +15,7 @@ public interface ShopMapper {
      * 获取门店列表
      * @return
      */
-    @Select("select * from shop")
+    @Select("select * from shop where enforceTerminal=false")
     @ResultMap("shop")
     List<Shop> getShopList();
 

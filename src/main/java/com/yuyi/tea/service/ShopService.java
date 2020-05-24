@@ -47,12 +47,6 @@ public class ShopService {
     public List<Shop> getShopList(){
         log.info("从数据库中获取门店列表");
         List<Shop> shopList = shopMapper.getShopList();
-        for (Shop shop : shopList) {
-            shop.setOpenHours(null);
-            shop.setClerks(null);
-            shop.setShopBoxes(null);
-            shop.setPhotos(null);
-        }
         return shopList;
     }
 
