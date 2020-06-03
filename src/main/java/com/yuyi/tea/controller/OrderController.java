@@ -249,4 +249,44 @@ public class OrderController {
         orderService.deleteOrder(orderId);
         return "success";
     }
+
+    /**
+     * 小程序预约包厢
+     * @param order
+     * @return
+     */
+    @PostMapping("/mp/reserve")
+    public Order mpReserve(@RequestBody Order order){
+        try {
+            //计算总价
+            float ingot = 0;
+            float credit = 0;
+            ShopBox box = shopBoxService.getShopBoxByUid(order.getReservations().get(0).getBoxId());
+            final float priceIngot = box.getPrice().getIngot();
+            final float priceCredit = box.getPrice().getCredit();
+            for (Reservation reservation : order.getReservations()) {
+                ingot += priceIngot;
+                credit += priceCredit;
+            }
+            order.setIngot(ingot);
+            order.setCredit(credit);
+            orderService.saveReservation(order);
+            //检查账户余额
+            customerService.checkBalance(ingot,credit,order.getCustomer().getUid());
+            //扣除金额
+            customerService.pay(ingot, credit, order.getCustomer().getUid());
+            //保存订单状态
+            orderService.updateReservationComplete(order);
+            //查询账户余额
+            Amount customerBalance = customerService.getCustomerBalance(order.getCustomer().getUid());
+            Result result=new Result(customerBalance);
+            ws.sendInfo(new Gson().toJson(result), order.getCustomer().getUid()+"");
+            return order;
+        }catch (GlobalException e){
+            throw e;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SERVER_ERROR);
+        }
+    }
 }

@@ -94,7 +94,7 @@ public class ShopController {
     }
 
     /**
-     * 获取门店名字列表
+     * 获取门店列表
      * @return
      */
     @GetMapping("/mp/shop")
@@ -104,6 +104,12 @@ public class ShopController {
             shop.setClerks(null);
         }
         return shopList;
+    }
+
+    @GetMapping("/mp/shop/{shopId}")
+    public Shop getMpShop(@PathVariable int shopId){
+        Shop shopByUid = shopService.getShopByUid(shopId);
+        return shopByUid;
     }
 
 

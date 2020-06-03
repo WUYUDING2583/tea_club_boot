@@ -15,6 +15,11 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    /**
+     * 保存地址
+     * @param address
+     * @return
+     */
     @PostMapping("/mp/address")
     public List<Address> saveAddress(@RequestBody Address address){
         List<Address> addresses = addressService.saveAddress(address);

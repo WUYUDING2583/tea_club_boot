@@ -368,6 +368,7 @@ public class OrderService {
                 orderMapper.saveReservation(reservation,order.getUid());
             }
         }catch (Exception e){
+            e.printStackTrace();
             String msg="以下时间段：";
             for(Reservation reservation:order.getReservations()){
                 Reservation result = shopBoxMapper.findReservation(reservation.getReservationTime(), reservation.getBoxId());
@@ -602,5 +603,6 @@ public class OrderService {
             orderMapper.deleteOrderProduct(orderProduct.getUid());
         }
         orderMapper.deleteOrder(orderId);
+        //TODO 删除redis中的order
     }
 }

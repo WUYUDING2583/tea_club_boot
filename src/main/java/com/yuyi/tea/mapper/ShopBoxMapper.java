@@ -3,6 +3,7 @@ package com.yuyi.tea.mapper;
 import com.yuyi.tea.bean.BoxReservation;
 import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.bean.ShopBoxInfo;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -61,8 +62,19 @@ public interface ShopBoxMapper {
             @Result(column="uid",property="photos",
                     many=@Many(select="com.yuyi.tea.mapper.PhotoMapper.getPhotosByShopBoxId",
                             fetchType= FetchType.LAZY)),
+                @Result(column="uid",property="infos",
+                        many=@Many(select="com.yuyi.tea.mapper.ShopBoxMapper.getShopBoxInfo",
+                                fetchType= FetchType.LAZY)),
     })
     ShopBox getShopBoxByUid(int uid);
+
+    /**
+     * 获取包厢预约须知
+     * @param boxId
+     * @return
+     */
+    @Select("select * from shopBoxInfo where boxId=#{boxId}")
+    List<ShopBoxInfo> getShopBoxInfo(int boxId);
 
     @Update("update shopBox set name=#{name},description=#{description},priceId=#{price.uid},duration=#{duration},boxNum=#{boxNum},shopId=#{shop.uid} where uid=#{uid}")
     void updateShopBox(ShopBox shopBox);

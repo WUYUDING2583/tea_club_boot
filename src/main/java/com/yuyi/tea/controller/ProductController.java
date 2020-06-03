@@ -131,7 +131,7 @@ public class ProductController {
      */
     @GetMapping("/mp/product/hot")
     public List<ProductSale> getHotProduct(){
-        List<ProductSale> products=productService.getHotPorducts();
+            List<ProductSale> products=productService.getHotPorducts();
         List<ProductSale> list=new ArrayList<>();
         for(int i=0;i<3;i++){
             list.add(products.get(i));

@@ -65,6 +65,7 @@ public class ShopService {
             shop = shopMapper.getShopByUid(uid);
             log.info("从数据库获取门店数据");
             log.info("将门店信息存入redis"+shop);
+            shop.setShopBoxes(null);
             redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
         }
         return shop;
@@ -88,8 +89,6 @@ public class ShopService {
             photo.setShopId(shop.getUid());
             photoMapper.saveShopPhotos(photo);
         }
-        log.info("将新增门店存入redis"+shop);
-        redisService.set(REDIS_SHOP_NAME+":"+shop.getUid(),shop);
     }
 
     /**
