@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -271,16 +273,19 @@ public class OrderController {
             order.setIngot(ingot);
             order.setCredit(credit);
             orderService.saveReservation(order);
-            //检查账户余额
-            customerService.checkBalance(ingot,credit,order.getCustomer().getUid());
-            //扣除金额
-            customerService.pay(ingot, credit, order.getCustomer().getUid());
-            //保存订单状态
-            orderService.updateReservationComplete(order);
-            //查询账户余额
-            Amount customerBalance = customerService.getCustomerBalance(order.getCustomer().getUid());
-            Result result=new Result(customerBalance);
-            ws.sendInfo(new Gson().toJson(result), order.getCustomer().getUid()+"");
+            //设置订单有效时间为15分钟，15分钟后若还没有付款则自动取消订单
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    // task to run goes here
+                    Order currentOrder = orderService.getOrder(order.getUid());
+                    if(currentOrder.getStatus().getStatus().equals(CommConstants.OrderStatus.UNPAY)){
+                        log.info("未付款，取消订单");
+                        orderService.deleteOrder(order.getUid());
+                    }
+                }
+            };
+            ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
+            executor.schedule(runnable, 15,  TimeUnit.MINUTES);
             return order;
         }catch (GlobalException e){
             throw e;

@@ -603,6 +603,6 @@ public class OrderService {
             orderMapper.deleteOrderProduct(orderProduct.getUid());
         }
         orderMapper.deleteOrder(orderId);
-        //TODO 删除redis中的order
+        redisService.remove(REDIS_ORDER_NAME+":"+orderId);
     }
 }

@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 03/06/2020 21:12:16
+ Date: 04/06/2020 21:47:31
 */
 
 SET NAMES utf8mb4;
@@ -461,7 +461,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, '123456', NULL, NULL, 8, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, '123456', NULL, NULL, 80, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -656,7 +656,7 @@ CREATE TABLE `orderStatus`  (
   INDEX `handler`(`processer`) USING BTREE,
   CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 346 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 371 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderStatus
@@ -677,6 +677,25 @@ INSERT INTO `orderStatus` VALUES (341, 209, 'payed', 1590238624219, NULL);
 INSERT INTO `orderStatus` VALUES (343, 216, 'unpay', 1591171031490, NULL);
 INSERT INTO `orderStatus` VALUES (344, 216, 'payed', 1591171031550, NULL);
 INSERT INTO `orderStatus` VALUES (345, 216, 'complete', 1591171031550, NULL);
+INSERT INTO `orderStatus` VALUES (346, 217, 'unpay', 1591251610830, NULL);
+INSERT INTO `orderStatus` VALUES (358, 229, 'unpay', 1591254621332, NULL);
+INSERT INTO `orderStatus` VALUES (359, 230, 'unpay', 1591254707493, NULL);
+INSERT INTO `orderStatus` VALUES (360, 231, 'unpay', 1591254779619, NULL);
+INSERT INTO `orderStatus` VALUES (362, 233, 'unpay', 1591254836583, NULL);
+INSERT INTO `orderStatus` VALUES (363, 234, 'unpay', 1591255901625, NULL);
+INSERT INTO `orderStatus` VALUES (364, 235, 'unpay', 1591260857382, NULL);
+INSERT INTO `orderStatus` VALUES (365, 236, 'unpay', 1591261148067, NULL);
+INSERT INTO `orderStatus` VALUES (379, 246, 'unpay', 1591277679052, NULL);
+INSERT INTO `orderStatus` VALUES (380, 246, 'payed', 1591277690108, NULL);
+INSERT INTO `orderStatus` VALUES (381, 247, 'unpay', 1591277801902, NULL);
+INSERT INTO `orderStatus` VALUES (382, 247, 'payed', 1591277807561, NULL);
+INSERT INTO `orderStatus` VALUES (383, 248, 'unpay', 1591277879170, NULL);
+INSERT INTO `orderStatus` VALUES (384, 248, 'payed', 1591277884705, NULL);
+INSERT INTO `orderStatus` VALUES (385, 249, 'unpay', 1591277947311, NULL);
+INSERT INTO `orderStatus` VALUES (386, 249, 'payed', 1591277971600, NULL);
+INSERT INTO `orderStatus` VALUES (387, 250, 'unpay', 1591278219514, NULL);
+INSERT INTO `orderStatus` VALUES (388, 251, 'unpay', 1591278369942, NULL);
+INSERT INTO `orderStatus` VALUES (389, 251, 'payed', 1591278376843, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -711,7 +730,7 @@ CREATE TABLE `orders`  (
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_6` FOREIGN KEY (`placeOrderWay`) REFERENCES `shop` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_7` FOREIGN KEY (`addressId`) REFERENCES `address` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 217 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 241 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -725,6 +744,20 @@ INSERT INTO `orders` VALUES (207, 1590238361673, 17, NULL, NULL, '', NULL, NULL,
 INSERT INTO `orders` VALUES (208, 1590238478167, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 120, 0, 100, NULL, 9);
 INSERT INTO `orders` VALUES (209, 1590238592975, 17, NULL, NULL, '', NULL, NULL, NULL, 'delivery', 240, 0, 100, NULL, 9);
 INSERT INTO `orders` VALUES (216, 1591171031490, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (217, 1591251610830, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (229, 1591254621332, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (230, 1591254707493, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (231, 1591254779619, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (233, 1591254836583, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (234, 1591255901625, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (235, 1591260857382, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (236, 1591261148067, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (246, 1591277679052, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (247, 1591277801902, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (248, 1591277879170, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (249, 1591277947311, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (250, 1591278219514, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (251, 1591278369942, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1002,7 +1035,7 @@ CREATE TABLE `recharge`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `recharge_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户充值记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户充值记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of recharge
@@ -1035,6 +1068,9 @@ INSERT INTO `recharge` VALUES (40, 200, 1590238245299, 17);
 INSERT INTO `recharge` VALUES (41, 200, 1590238371427, 17);
 INSERT INTO `recharge` VALUES (42, 200, 1590238503261, 17);
 INSERT INTO `recharge` VALUES (43, 100, 1590238618756, 17);
+INSERT INTO `recharge` VALUES (44, 50, 1591276853339, 17);
+INSERT INTO `recharge` VALUES (45, 100, 1591277119736, 17);
+INSERT INTO `recharge` VALUES (46, 100, 1591277968288, 17);
 
 -- ----------------------------
 -- Table structure for reservation
@@ -1046,15 +1082,29 @@ CREATE TABLE `reservation`  (
   `orderId` int(0) NULL DEFAULT NULL COMMENT '订单id',
   PRIMARY KEY (`reservationTime`, `boxId`) USING BTREE,
   INDEX `boxId`(`boxId`) USING BTREE,
-  INDEX `orderId`(`orderId`) USING BTREE,
+  INDEX `reservation_ibfk_2`(`orderId`) USING BTREE,
   CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`boxId`) REFERENCES `shopBox` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '包厢预约记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of reservation
 -- ----------------------------
 INSERT INTO `reservation` VALUES (1591182000000, 4, 216);
+INSERT INTO `reservation` VALUES (1591268400000, 4, 217);
+INSERT INTO `reservation` VALUES (1591261200000, 4, 229);
+INSERT INTO `reservation` VALUES (1591254000000, 4, 230);
+INSERT INTO `reservation` VALUES (1591318800000, 4, 231);
+INSERT INTO `reservation` VALUES (1591326000000, 4, 233);
+INSERT INTO `reservation` VALUES (1591333200000, 4, 234);
+INSERT INTO `reservation` VALUES (1591340400000, 4, 235);
+INSERT INTO `reservation` VALUES (1591347600000, 4, 236);
+INSERT INTO `reservation` VALUES (1591434000000, 4, 246);
+INSERT INTO `reservation` VALUES (1591354800000, 4, 247);
+INSERT INTO `reservation` VALUES (1591405200000, 4, 248);
+INSERT INTO `reservation` VALUES (1591441200000, 4, 249);
+INSERT INTO `reservation` VALUES (1591412400000, 4, 250);
+INSERT INTO `reservation` VALUES (1591419600000, 4, 251);
 
 -- ----------------------------
 -- Table structure for shop

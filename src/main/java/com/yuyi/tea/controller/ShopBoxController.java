@@ -136,4 +136,10 @@ public class ShopBoxController {
         List<Reservation> reservations=shopBoxService.getReservations(boxId,startTime,endTime);
         return reservations;
     }
+
+    @GetMapping("/mp/box/{boxId}")
+    public ShopBox getMpBox(@PathVariable int boxId){
+        ShopBox shopBoxByUid = shopBoxService.getShopBoxByUid(boxId);
+        return shopBoxByUid;
+    }
 }
