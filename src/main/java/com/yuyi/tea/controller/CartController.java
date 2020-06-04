@@ -3,9 +3,7 @@ package com.yuyi.tea.controller;
 import com.yuyi.tea.bean.CartProduct;
 import com.yuyi.tea.service.interfaces.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +28,12 @@ public class CartController {
         }catch (Exception e){
             throw e;
         }
+    }
+
+    @GetMapping("/mp/cart/{customerId}")
+    public List<CartProduct> getCart(@PathVariable int customerId){
+        List<CartProduct> cartList = cartService.getCartList(customerId);
+        return cartList;
     }
 
 

@@ -1,5 +1,6 @@
 package com.yuyi.tea.service.impl;
 
+import com.yuyi.tea.bean.ActivityRule;
 import com.yuyi.tea.bean.CartProduct;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.exception.GlobalException;
@@ -20,6 +21,18 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartProduct> getCartList(int customerId) {
         List<CartProduct> cartProducts= cartMapper.getCartDetail(customerId);
+        for(CartProduct cartProduct:cartProducts){
+            cartProduct.getCustomer().setIdentityId(null);
+            cartProduct.getCustomer().setAvatar(null);
+            cartProduct.getCustomer().setPassword(null);
+            for(ActivityRule rule:cartProduct.getProduct().getActivityRules()){
+                rule.setActivityApplyForProduct(null);
+                rule.getActivity().setPhotos(null);
+                rule.getActivity().setActivityRules(null);
+            }
+            cartProduct.getProduct().setShop(null);
+            cartProduct.getProduct().setProductDetails(null);
+        }
         return cartProducts;
     }
 

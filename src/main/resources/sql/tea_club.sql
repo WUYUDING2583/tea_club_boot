@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 04/06/2020 21:47:31
+ Date: 04/06/2020 23:05:27
 */
 
 SET NAMES utf8mb4;
@@ -384,6 +384,11 @@ CREATE TABLE `cartDetail`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of cartDetail
+-- ----------------------------
+INSERT INTO `cartDetail` VALUES (8, 17, 1, 2);
+
+-- ----------------------------
 -- Table structure for clerk
 -- ----------------------------
 DROP TABLE IF EXISTS `clerk`;
@@ -685,17 +690,6 @@ INSERT INTO `orderStatus` VALUES (362, 233, 'unpay', 1591254836583, NULL);
 INSERT INTO `orderStatus` VALUES (363, 234, 'unpay', 1591255901625, NULL);
 INSERT INTO `orderStatus` VALUES (364, 235, 'unpay', 1591260857382, NULL);
 INSERT INTO `orderStatus` VALUES (365, 236, 'unpay', 1591261148067, NULL);
-INSERT INTO `orderStatus` VALUES (379, 246, 'unpay', 1591277679052, NULL);
-INSERT INTO `orderStatus` VALUES (380, 246, 'payed', 1591277690108, NULL);
-INSERT INTO `orderStatus` VALUES (381, 247, 'unpay', 1591277801902, NULL);
-INSERT INTO `orderStatus` VALUES (382, 247, 'payed', 1591277807561, NULL);
-INSERT INTO `orderStatus` VALUES (383, 248, 'unpay', 1591277879170, NULL);
-INSERT INTO `orderStatus` VALUES (384, 248, 'payed', 1591277884705, NULL);
-INSERT INTO `orderStatus` VALUES (385, 249, 'unpay', 1591277947311, NULL);
-INSERT INTO `orderStatus` VALUES (386, 249, 'payed', 1591277971600, NULL);
-INSERT INTO `orderStatus` VALUES (387, 250, 'unpay', 1591278219514, NULL);
-INSERT INTO `orderStatus` VALUES (388, 251, 'unpay', 1591278369942, NULL);
-INSERT INTO `orderStatus` VALUES (389, 251, 'payed', 1591278376843, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -752,12 +746,6 @@ INSERT INTO `orders` VALUES (233, 1591254836583, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (234, 1591255901625, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (235, 1591260857382, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (236, 1591261148067, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (246, 1591277679052, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (247, 1591277801902, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (248, 1591277879170, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (249, 1591277947311, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (250, 1591278219514, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (251, 1591278369942, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1099,12 +1087,6 @@ INSERT INTO `reservation` VALUES (1591326000000, 4, 233);
 INSERT INTO `reservation` VALUES (1591333200000, 4, 234);
 INSERT INTO `reservation` VALUES (1591340400000, 4, 235);
 INSERT INTO `reservation` VALUES (1591347600000, 4, 236);
-INSERT INTO `reservation` VALUES (1591434000000, 4, 246);
-INSERT INTO `reservation` VALUES (1591354800000, 4, 247);
-INSERT INTO `reservation` VALUES (1591405200000, 4, 248);
-INSERT INTO `reservation` VALUES (1591441200000, 4, 249);
-INSERT INTO `reservation` VALUES (1591412400000, 4, 250);
-INSERT INTO `reservation` VALUES (1591419600000, 4, 251);
 
 -- ----------------------------
 -- Table structure for shop
