@@ -18,4 +18,10 @@ public interface CartService {
      * @param cartProduct
      */
     void addToCart(CartProduct cartProduct);
+
+    /**
+     * 修改购物车商品数量
+     * @param cartProduct
+     */
+    void changeCartProductNumber(CartProduct cartProduct);
 }

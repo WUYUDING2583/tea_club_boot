@@ -50,4 +50,7 @@ public interface CartMapper {
      */
     @Update("update cartDetail set number=#{number} where customerId=#{customer.uid} and productId=#{product.uid}")
     void updateCartItem(CartProduct cartItem);
+
+    @Update("update cartDetail set number=#{number} where uid=#{uid}")
+    void changeCartProductNumber(CartProduct cartProduct);
 }

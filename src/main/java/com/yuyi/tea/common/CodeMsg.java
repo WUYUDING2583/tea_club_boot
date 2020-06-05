@@ -52,6 +52,8 @@ public class CodeMsg {
     public static final CodeMsg DUPLICATE_REGISTER=new CodeMsg(500901,"重复注册");
     //购物车模块 5010xx
     public static final CodeMsg ADD_TO_CART_FAIL=new CodeMsg(501000,"加入购物车失败");
+    public static final CodeMsg FAIL_CHANGE_CART_PRODUCT_NUMBER = new CodeMsg(501001,"修改数量失败");
+    public static final CodeMsg OUT_OF_STORATE =new CodeMsg(501002,"商品库存不足");
 
     private CodeMsg() {
     }

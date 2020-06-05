@@ -55,4 +55,15 @@ public class CartServiceImpl implements CartService {
             throw new GlobalException(CodeMsg.ADD_TO_CART_FAIL);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changeCartProductNumber(CartProduct cartProduct) {
+        try{
+            cartMapper.updateCartItem(cartProduct);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.FAIL_CHANGE_CART_PRODUCT_NUMBER);
+        }
+    }
 }
