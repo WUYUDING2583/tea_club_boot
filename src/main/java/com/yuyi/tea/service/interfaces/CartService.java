@@ -24,4 +24,10 @@ public interface CartService {
      * @param cartProduct
      */
     void changeCartProductNumber(CartProduct cartProduct);
+
+    /**
+     * 删除购物车商品
+     * @param uid
+     */
+    void deleteCartProduct(int uid);
 }

@@ -6,6 +6,7 @@ import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.ProductService;
 import com.yuyi.tea.service.interfaces.CartService;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +58,15 @@ public class CartController {
         }
         cartService.changeCartProductNumber(cartProduct);
         return "success";
+    }
+
+    @DeleteMapping("/mp/cart")
+    public List<CartProduct> deleteCartItem(@RequestBody List<CartProduct> cartProducts){
+        for(CartProduct cartProduct:cartProducts){
+            cartService.deleteCartProduct(cartProduct.getUid());
+        }
+        List<CartProduct> cartList = cartService.getCartList(cartProducts.get(0).getCustomer().getUid());
+        return cartList;
     }
 
 

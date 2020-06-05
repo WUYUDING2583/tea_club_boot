@@ -53,4 +53,11 @@ public interface CartMapper {
 
     @Update("update cartDetail set number=#{number} where uid=#{uid}")
     void changeCartProductNumber(CartProduct cartProduct);
+
+    /**
+     * 删除购物车商品
+     * @param uid
+     */
+    @Delete("delete from cartDetail where uid=#{uid}")
+    void deleteCartProduct(int uid);
 }

@@ -66,4 +66,15 @@ public class CartServiceImpl implements CartService {
             throw new GlobalException(CodeMsg.FAIL_CHANGE_CART_PRODUCT_NUMBER);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCartProduct(int uid) {
+        try{
+            cartMapper.deleteCartProduct(uid);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.FAIL_DELETE_CART_ITEM);
+        }
+    }
 }

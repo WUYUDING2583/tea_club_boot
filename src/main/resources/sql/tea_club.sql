@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 04/06/2020 23:05:27
+ Date: 05/06/2020 15:07:58
 */
 
 SET NAMES utf8mb4;
@@ -386,7 +386,8 @@ CREATE TABLE `cartDetail`  (
 -- ----------------------------
 -- Records of cartDetail
 -- ----------------------------
-INSERT INTO `cartDetail` VALUES (8, 17, 1, 2);
+INSERT INTO `cartDetail` VALUES (11, 17, 1, 2);
+INSERT INTO `cartDetail` VALUES (12, 17, 2, 2);
 
 -- ----------------------------
 -- Table structure for clerk
