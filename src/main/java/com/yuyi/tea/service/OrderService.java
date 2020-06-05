@@ -605,4 +605,8 @@ public class OrderService {
         orderMapper.deleteOrder(orderId);
         redisService.remove(REDIS_ORDER_NAME+":"+orderId);
     }
+
+    public void deleteOrderProduct(int uid) {
+        orderMapper.deleteOrderProduct(uid);
+    }
 }

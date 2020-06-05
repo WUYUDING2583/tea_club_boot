@@ -202,16 +202,51 @@ public class OrderController {
      */
     @PostMapping("/mp/order")
     public Order placeMpOrder(@RequestBody Order order){
+//        try{
+//           orderService.placeOrder(order);
+//            Order currentOrder = orderService.getOrder(order.getUid());
+//            return currentOrder;
+//        }catch (GlobalException e){
+//            throw e;
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new GlobalException(CodeMsg.SERVER_ERROR);
+//        }
         try{
-           orderService.placeOrder(order);
-            Order currentOrder = orderService.getOrder(order.getUid());
-            return currentOrder;
+            //计算总价
+            float giftCredit = orderService.calculateAmount(order);
+            float ingot = order.getIngot();
+            float credit = order.getCredit();
+            //保存订单
+            orderService.saveOrder(order);
+            //TODO 减少产品库存
+            //设置订单状态为未付款
+            OrderStatus unpay=new OrderStatus(order.getUid(), CommConstants.OrderStatus.UNPAY, TimeUtil.getCurrentTimestamp(),order.getClerk());
+            orderService.saveOrderStatus(unpay);
+            //设置订单有效时间为15分钟，15分钟后若还没有付款则自动取消订单
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    // task to run goes here
+                    Order currentOrder = orderService.getOrder(order.getUid());
+                    if(currentOrder.getStatus().getStatus().equals(CommConstants.OrderStatus.UNPAY)){
+                        log.info("未付款，取消订单");
+                        for(OrderProduct orderProduct:currentOrder.getProducts()){
+                            orderService.deleteOrderProduct(orderProduct.getUid());
+                        }
+                        orderService.deleteOrder(currentOrder.getUid());
+                        //TODO 恢复产品库存
+                    }
+                }
+            };
+            ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
+            executor.schedule(runnable, 150,  TimeUnit.MINUTES);
         }catch (GlobalException e){
             throw e;
         }catch (Exception e){
             e.printStackTrace();
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
+        return order;
     }
 
     /**

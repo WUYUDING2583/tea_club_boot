@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 05/06/2020 15:07:58
+ Date: 05/06/2020 23:53:56
 */
 
 SET NAMES utf8mb4;
@@ -381,12 +381,12 @@ CREATE TABLE `cartDetail`  (
   INDEX `productId`(`productId`) USING BTREE,
   CONSTRAINT `cartDetail_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `cartDetail_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cartDetail
 -- ----------------------------
-INSERT INTO `cartDetail` VALUES (11, 17, 1, 2);
+INSERT INTO `cartDetail` VALUES (11, 17, 1, 3);
 INSERT INTO `cartDetail` VALUES (12, 17, 2, 2);
 
 -- ----------------------------
@@ -467,7 +467,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 1, 1, '123456', NULL, NULL, 80, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 80, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -633,7 +633,7 @@ CREATE TABLE `orderProduct`  (
   CONSTRAINT `orderProduct_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderProduct_ibfk_2` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orderProduct_ibfk_3` FOREIGN KEY (`activityRuleId`) REFERENCES `activityRule` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 111 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderProduct
@@ -646,6 +646,7 @@ INSERT INTO `orderProduct` VALUES (104, 1, 206, 1, NULL);
 INSERT INTO `orderProduct` VALUES (105, 1, 207, 2, NULL);
 INSERT INTO `orderProduct` VALUES (106, 1, 208, 1, NULL);
 INSERT INTO `orderProduct` VALUES (107, 1, 209, 2, NULL);
+INSERT INTO `orderProduct` VALUES (110, 1, 253, 3, 36);
 
 -- ----------------------------
 -- Table structure for orderStatus
@@ -662,7 +663,7 @@ CREATE TABLE `orderStatus`  (
   INDEX `handler`(`processer`) USING BTREE,
   CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 371 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 392 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderStatus
@@ -691,6 +692,7 @@ INSERT INTO `orderStatus` VALUES (362, 233, 'unpay', 1591254836583, NULL);
 INSERT INTO `orderStatus` VALUES (363, 234, 'unpay', 1591255901625, NULL);
 INSERT INTO `orderStatus` VALUES (364, 235, 'unpay', 1591260857382, NULL);
 INSERT INTO `orderStatus` VALUES (365, 236, 'unpay', 1591261148067, NULL);
+INSERT INTO `orderStatus` VALUES (391, 253, 'unpay', 1591369033860, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -725,7 +727,7 @@ CREATE TABLE `orders`  (
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_6` FOREIGN KEY (`placeOrderWay`) REFERENCES `shop` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_7` FOREIGN KEY (`addressId`) REFERENCES `address` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 241 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 253 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -747,6 +749,7 @@ INSERT INTO `orders` VALUES (233, 1591254836583, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (234, 1591255901625, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (235, 1591260857382, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (236, 1591261148067, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (253, 1591369033771, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 252, 0, 100, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1024,7 +1027,7 @@ CREATE TABLE `recharge`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `recharge_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户充值记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户充值记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of recharge

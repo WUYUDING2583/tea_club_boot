@@ -11,10 +11,7 @@ import com.yuyi.tea.service.OrderService;
 import com.yuyi.tea.service.interfaces.BalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -81,6 +78,12 @@ public class PayController {
         return "success";
     }
 
+    /**
+     * 小程序支付订单
+     * @param customerId
+     * @param orderId
+     * @return
+     */
     @PostMapping("/mp/pay/{customerId}/{orderId}")
     @Transactional(rollbackFor = Exception.class)
     public String mpPay(@PathVariable int customerId,@PathVariable int orderId){
@@ -101,6 +104,16 @@ public class PayController {
         customerService.pay(ingot,credit,customerId);
         //改变订单状态
         orderService.updateOrderPayed(order);
+        return "success";
+    }
+
+    /**
+     * 小程序支付由购物车生成的订单
+     * @param order
+     * @return
+     */
+    @PostMapping("/mp/payCart")
+    public String payCart(@RequestBody Order order){
         return "success";
     }
 }
