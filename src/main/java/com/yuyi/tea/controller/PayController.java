@@ -118,20 +118,24 @@ public class PayController {
      */
     @PostMapping("/mp/payCart")
     public String payCart(@RequestBody Order order){
-        order=orderService.getOrder(order.getUid());
+        Order currentOrder=orderService.getOrder(order.getUid());
+        currentOrder.setBuyerPs(order.getBuyerPs());
+        currentOrder.setDeliverMode(order.getDeliverMode());
+        currentOrder.setPlaceOrderWay(order.getPlaceOrderWay());
+        currentOrder.setAddress(order.getAddress());
         //设置收货地址和买家留言
-        orderService.updateOrderAddressAndPs(order); //查询账户余额
-        Amount balance = customerService.getCustomerBalance(order.getCustomer().getUid());
-        float ingot = order.getIngot();
-        float credit = order.getCredit();
+        orderService.updateOrderAddressAndPs(currentOrder); //查询账户余额
+        Amount balance = customerService.getCustomerBalance(currentOrder.getCustomer().getUid());
+        float ingot = currentOrder.getIngot();
+        float credit = currentOrder.getCredit();
         //检查账户余额
         customerService.checkBalance(ingot,credit,balance);
         //扣费
-        customerService.pay(ingot,credit,order.getCustomer().getUid());
+        customerService.pay(ingot,credit,currentOrder.getCustomer().getUid());
         //改变订单状态
-        orderService.updateOrderPayed(order);
+        orderService.updateOrderPayed(currentOrder);
         //删除购物车相应内容
-        cartService.deleteCartProductByOrder(order);
+        cartService.deleteCartProductByOrder(currentOrder);
         return "success";
     }
 }

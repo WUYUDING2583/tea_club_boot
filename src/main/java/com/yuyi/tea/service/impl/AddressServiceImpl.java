@@ -28,4 +28,25 @@ public class AddressServiceImpl implements AddressService {
         List<Address> addresses=addressMapper.getAddresses(address.getCustomer().getUid());
         return addresses;
     }
+
+    @Override
+    public Address getAddress(int addressId) {
+        Address address=addressMapper.getAddress(addressId);
+        return address;
+    }
+
+    @Override
+    public List<Address> updateAddress(Address address) {
+        if(address.getIsDefaultAddress()){
+            //判断当前客户是否有默认地址
+            Address defaultAddress=addressMapper.getDefaultAddress(address.getCustomer().getUid());
+            if(defaultAddress!=null){
+                //将其设置未非默认地址
+                addressMapper.setUnDefaultAddress(defaultAddress.getUid());
+            }
+        }
+        addressMapper.updateAddress(address);
+        List<Address> addresses=addressMapper.getAddresses(address.getCustomer().getUid());
+        return addresses;
+    }
 }

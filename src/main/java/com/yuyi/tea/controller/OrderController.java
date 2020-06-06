@@ -196,22 +196,31 @@ public class OrderController {
     }
 
     /**
-     * 小程序提交订单
+     * 小程序直接购买商品下单
+     * @param order
+     * @return
+     */
+    @PostMapping("/mp/order/product")
+    public Order placeMpOrderProduct(@RequestBody Order order){
+        try{
+           orderService.placeOrder(order);
+            Order currentOrder = orderService.getOrder(order.getUid());
+            return currentOrder;
+        }catch (GlobalException e){
+            throw e;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 小程序提交购物车订单
      * @param order
      * @return
      */
     @PostMapping("/mp/order")
     public Order placeMpOrder(@RequestBody Order order){
-//        try{
-//           orderService.placeOrder(order);
-//            Order currentOrder = orderService.getOrder(order.getUid());
-//            return currentOrder;
-//        }catch (GlobalException e){
-//            throw e;
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new GlobalException(CodeMsg.SERVER_ERROR);
-//        }
         try{
             //计算总价
             float giftCredit = orderService.calculateAmount(order);
@@ -239,7 +248,7 @@ public class OrderController {
                 }
             };
             ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
-            executor.schedule(runnable, 150,  TimeUnit.MINUTES);
+            executor.schedule(runnable, 15,  TimeUnit.MINUTES);
         }catch (GlobalException e){
             throw e;
         }catch (Exception e){

@@ -11,4 +11,18 @@ public interface AddressService {
      * @param address
      */
     List<Address> saveAddress(Address address);
+
+    /**
+     * 获取地址
+     * @param addressId
+     * @return
+     */
+    Address getAddress(int addressId);
+
+    /**
+     * 更新地址
+     * @param address
+     * @return
+     */
+    List<Address> updateAddress(Address address);
 }

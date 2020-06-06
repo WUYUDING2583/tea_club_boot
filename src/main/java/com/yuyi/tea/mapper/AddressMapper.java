@@ -42,4 +42,19 @@ public interface AddressMapper {
      */
     @Select("select * from address where customerId=#{customerId}")
     List<Address> getAddresses(int customerId);
+
+    /**
+     * 获取地址
+     * @param addressId
+     * @return
+     */
+    @Select("select * from address where uid=#{addressId}")
+    Address getAddress(int addressId);
+
+    /**
+     * 更新地址
+     * @param address
+     */
+    @Update("update address set province=#{province}, city=#{city},district=#{district},detail=#{detail},phone=#{phone},isDefaultAddress=#{isDefaultAddress},name=#{name} where uid=#{uid}")
+    void updateAddress(Address address);
 }
