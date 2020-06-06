@@ -2,6 +2,8 @@ package com.yuyi.tea.service.impl;
 
 import com.yuyi.tea.bean.ActivityRule;
 import com.yuyi.tea.bean.CartProduct;
+import com.yuyi.tea.bean.Order;
+import com.yuyi.tea.bean.OrderProduct;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.CartMapper;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -75,6 +78,25 @@ public class CartServiceImpl implements CartService {
         }catch (Exception e){
             e.printStackTrace();
             throw new GlobalException(CodeMsg.FAIL_DELETE_CART_ITEM);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCartProductByOrder(Order order) {
+        //获取客户购物车内容
+        List<CartProduct> cartList = getCartList(order.getCustomer().getUid());
+        List<Integer> deleteCartItem=new ArrayList<>();
+        for(CartProduct cartProduct:cartList){
+            for(OrderProduct orderProduct:order.getProducts()){
+                if(orderProduct.getProduct().getUid()==cartProduct.getProduct().getUid()){
+                    deleteCartItem.add(cartProduct.getUid());
+                    break;
+                }
+            }
+        }
+        for(Integer uid:deleteCartItem){
+            cartMapper.deleteCartProduct(uid);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.yuyi.tea.service.interfaces;
 
 import com.yuyi.tea.bean.CartProduct;
+import com.yuyi.tea.bean.Order;
 
 import java.util.List;
 
@@ -30,4 +31,10 @@ public interface CartService {
      * @param uid
      */
     void deleteCartProduct(int uid);
+
+    /**
+     * 根据订单内容删除购物车商品
+     * @param order
+     */
+    void deleteCartProductByOrder(Order order);
 }

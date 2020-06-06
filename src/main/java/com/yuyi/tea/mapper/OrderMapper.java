@@ -212,4 +212,11 @@ public interface OrderMapper {
             "order by orderTime desc limit 1")
     @ResultMap("order")
     Order getLatestUnpayOrder(int customerId);
+
+    /**
+     * 设置收货地址和买家留言
+     * @param order
+     */
+    @Update("update orders set deliverMode=#{deliverMode}, placeOrderWay=#{placeOrderWay.uid},addressId=#{address.uid} where uid=#{uid}")
+    void updateOrderAddressAndPs(Order order);
 }

@@ -609,4 +609,13 @@ public class OrderService {
     public void deleteOrderProduct(int uid) {
         orderMapper.deleteOrderProduct(uid);
     }
+
+    /**
+     * 设置收货地址和买家留言
+     * @param order
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOrderAddressAndPs(Order order) {
+        orderMapper.updateOrderAddressAndPs(order);
+    }
 }

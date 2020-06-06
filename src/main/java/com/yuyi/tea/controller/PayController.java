@@ -9,6 +9,7 @@ import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.CustomerService;
 import com.yuyi.tea.service.OrderService;
 import com.yuyi.tea.service.interfaces.BalanceService;
+import com.yuyi.tea.service.interfaces.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,9 @@ public class PayController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/mobile/simulatePay/{customerId}/{value}")
     public void simulatePay(@PathVariable int customerId,@PathVariable float value){
@@ -114,6 +118,20 @@ public class PayController {
      */
     @PostMapping("/mp/payCart")
     public String payCart(@RequestBody Order order){
+        order=orderService.getOrder(order.getUid());
+        //设置收货地址和买家留言
+        orderService.updateOrderAddressAndPs(order); //查询账户余额
+        Amount balance = customerService.getCustomerBalance(order.getCustomer().getUid());
+        float ingot = order.getIngot();
+        float credit = order.getCredit();
+        //检查账户余额
+        customerService.checkBalance(ingot,credit,balance);
+        //扣费
+        customerService.pay(ingot,credit,order.getCustomer().getUid());
+        //改变订单状态
+        orderService.updateOrderPayed(order);
+        //删除购物车相应内容
+        cartService.deleteCartProductByOrder(order);
         return "success";
     }
 }
