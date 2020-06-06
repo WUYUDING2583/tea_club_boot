@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 06/06/2020 19:48:42
+ Date: 06/06/2020 23:28:02
 */
 
 SET NAMES utf8mb4;
@@ -669,7 +669,6 @@ INSERT INTO `orderProduct` VALUES (127, 1, 270, 3, 36);
 INSERT INTO `orderProduct` VALUES (128, 1, 271, 3, 36);
 INSERT INTO `orderProduct` VALUES (133, 1, 277, 2, 36);
 INSERT INTO `orderProduct` VALUES (134, 1, 278, 2, 36);
-INSERT INTO `orderProduct` VALUES (135, 1, 279, 2, 36);
 
 -- ----------------------------
 -- Table structure for orderStatus
@@ -742,7 +741,6 @@ INSERT INTO `orderStatus` VALUES (415, 270, 'unpay', 1591434609159, NULL);
 INSERT INTO `orderStatus` VALUES (416, 271, 'unpay', 1591434702749, NULL);
 INSERT INTO `orderStatus` VALUES (423, 277, 'unpay', 1591441904794, NULL);
 INSERT INTO `orderStatus` VALUES (424, 278, 'unpay', 1591441986857, NULL);
-INSERT INTO `orderStatus` VALUES (425, 279, 'unpay', 1591444033949, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -777,7 +775,7 @@ CREATE TABLE `orders`  (
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`trackingId`) REFERENCES `trackInfo` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_6` FOREIGN KEY (`placeOrderWay`) REFERENCES `shop` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `orders_ibfk_7` FOREIGN KEY (`addressId`) REFERENCES `address` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 253 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 280 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -819,7 +817,6 @@ INSERT INTO `orders` VALUES (270, 1591434609147, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (271, 1591434702741, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 252, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (277, 1591441904780, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 168, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (278, 1591441986843, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 168, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (279, 1591444033841, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 168, 0, 100, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo

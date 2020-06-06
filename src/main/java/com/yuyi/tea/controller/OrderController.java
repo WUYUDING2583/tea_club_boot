@@ -338,4 +338,16 @@ public class OrderController {
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
     }
+
+    /**
+     * 小程序获取客户所有状态的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/orders/all/{page}/{customerId}")
+    public List<Order> getMpOrders(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getAllOrders(page,customerId);
+        return orders;
+    }
 }

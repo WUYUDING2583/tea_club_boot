@@ -618,4 +618,16 @@ public class OrderService {
     public void updateOrderAddressAndPs(Order order) {
         orderMapper.updateOrderAddressAndPs(order);
     }
+
+
+    /**
+     * 小程序获取客户所有状态的订单（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getAllOrders(int page, int customerId) {
+        List<Order> orders=orderMapper.getAllOrders(page*10,customerId);
+        return orders;
+    }
 }

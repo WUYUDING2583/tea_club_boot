@@ -219,4 +219,15 @@ public interface OrderMapper {
      */
     @Update("update orders set deliverMode=#{deliverMode}, placeOrderWay=#{placeOrderWay.uid},addressId=#{address.uid} where uid=#{uid}")
     void updateOrderAddressAndPs(Order order);
+
+
+    /**
+     * 小程序获取客户所有状态的订单（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} limit #{offset},10")
+    @ResultMap("order")
+    List<Order> getAllOrders(int offset, int customerId);
 }
