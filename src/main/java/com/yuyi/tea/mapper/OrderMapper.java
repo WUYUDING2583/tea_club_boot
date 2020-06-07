@@ -274,4 +274,26 @@ public interface OrderMapper {
             " order by orderTime desc limit #{offset},10")
     @ResultMap("order")
     List<Order> getShippedOrders(int offset, int customerId);
+
+    /**
+     * 更新买家退款理由
+     * @param orderId
+     * @param reason
+     */
+    @Update("update orders set buyerRefundReason=#{reason} where uid=#{orderId}")
+    void updateOrderRequestRefundReason(int orderId, String reason);
+
+    /**
+     * 小程序获取客户所有申请退款的订单（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid not in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and (A.status='requestRefund' or A.status='refunded'))" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("order")
+    List<Order> getRefundOrders(int offset, int customerId);
 }

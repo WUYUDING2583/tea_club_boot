@@ -296,6 +296,15 @@ public class OrderController {
         return "success";
     }
 
+
+    @PostMapping("/mp/order/refund/{orderId}")
+    public String mpRefundOrder(@PathVariable int orderId,@RequestBody String reason){
+        Order order = orderService.getOrder(orderId);
+        //更新订单状态
+        orderService.updateOrderRequestRefund(orderId,reason);
+        return "success";
+    }
+
     /**
      * 小程序预约包厢
      * @param order
@@ -387,6 +396,19 @@ public class OrderController {
     @GetMapping("/mp/orders/shipped/{page}/{customerId}")
     public List<Order> getMpShippedOrders(@PathVariable int page,@PathVariable int customerId){
         List<Order> orders = orderService.getShippedOrders(page,customerId);
+        orderService.clearOrders(orders);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有申请退款的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/orders/refund/{page}/{customerId}")
+    public List<Order> getMpRefundOrders(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getRefundOrders(page,customerId);
         orderService.clearOrders(orders);
         return orders;
     }

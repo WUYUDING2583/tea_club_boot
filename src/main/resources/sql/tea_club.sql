@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 07/06/2020 17:18:25
+ Date: 07/06/2020 20:17:43
 */
 
 SET NAMES utf8mb4;
@@ -470,7 +470,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 13, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 11, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -665,7 +665,6 @@ INSERT INTO `orderProduct` VALUES (123, 1, 266, 1, 36);
 INSERT INTO `orderProduct` VALUES (124, 1, 267, 1, 36);
 INSERT INTO `orderProduct` VALUES (125, 1, 268, 1, 36);
 INSERT INTO `orderProduct` VALUES (126, 2, 269, 2, 36);
-INSERT INTO `orderProduct` VALUES (127, 1, 270, 3, 36);
 INSERT INTO `orderProduct` VALUES (128, 1, 271, 3, 36);
 
 -- ----------------------------
@@ -735,8 +734,9 @@ INSERT INTO `orderStatus` VALUES (411, 268, 'unpay', 1591434397515, NULL);
 INSERT INTO `orderStatus` VALUES (412, 268, 'payed', 1591434434343, NULL);
 INSERT INTO `orderStatus` VALUES (413, 269, 'unpay', 1591434493983, NULL);
 INSERT INTO `orderStatus` VALUES (414, 269, 'payed', 1591434514044, NULL);
-INSERT INTO `orderStatus` VALUES (415, 270, 'unpay', 1591434609159, NULL);
 INSERT INTO `orderStatus` VALUES (416, 271, 'unpay', 1591434702749, NULL);
+INSERT INTO `orderStatus` VALUES (426, 271, 'payed', 1591522497321, NULL);
+INSERT INTO `orderStatus` VALUES (427, 271, 'requestRefund', 1591529800917, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -809,8 +809,7 @@ INSERT INTO `orders` VALUES (266, 1591433934226, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (267, 1591434177322, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'delivery', 84, 0, 100, NULL, 9);
 INSERT INTO `orders` VALUES (268, 1591434397500, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'selfPick', 84, 0, 100, 26, NULL);
 INSERT INTO `orders` VALUES (269, 1591434493975, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'delivery', 168, 0, 100, NULL, 9);
-INSERT INTO `orders` VALUES (270, 1591434609147, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'delivery', 252, 0, 100, NULL, 9);
-INSERT INTO `orders` VALUES (271, 1591434702741, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 252, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (271, 1591434702741, 17, NULL, NULL, NULL, NULL, NULL, '数量拍错了', NULL, 252, 0, 100, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1130,6 +1129,8 @@ INSERT INTO `recharge` VALUES (49, 200, 1591430231541, 17);
 INSERT INTO `recharge` VALUES (50, 100, 1591434201271, 17);
 INSERT INTO `recharge` VALUES (51, 200, 1591434421586, 17);
 INSERT INTO `recharge` VALUES (52, 100, 1591434510399, 17);
+INSERT INTO `recharge` VALUES (53, 200, 1591522480781, 17);
+INSERT INTO `recharge` VALUES (54, 50, 1591522491922, 17);
 
 -- ----------------------------
 -- Table structure for reservation

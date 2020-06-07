@@ -687,4 +687,27 @@ public class OrderService {
             }
         }
     }
+
+    /**
+     * 买家申请退款
+     * @param orderId
+     * @param reason
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOrderRequestRefund(int orderId,String reason) {
+        OrderStatus requestRefund=new OrderStatus(orderId,CommConstants.OrderStatus.REQUEST_REFUND,TimeUtil.getCurrentTimestamp(),null);
+        orderMapper.saveOrderStatus(requestRefund);
+        orderMapper.updateOrderRequestRefundReason(orderId,reason);
+    }
+
+    /**
+     * 小程序获取客户所有申请退款的订单（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getRefundOrders(int page, int customerId) {
+        List<Order> orders=orderMapper.getRefundOrders(page*10,customerId);
+        return orders;
+    }
 }
