@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Reservation implements Serializable {
 
     private long reservationTime;
-    private int boxId;
+    private ShopBox box;
     private int orderId;
 
     public Reservation() {
@@ -19,9 +19,9 @@ public class Reservation implements Serializable {
         this.reservationTime = reservationTime;
     }
 
-    public Reservation(long reservationTime, int boxId, int orderId) {
+    public Reservation(long reservationTime, ShopBox box, int orderId) {
         this.reservationTime = reservationTime;
-        this.boxId = boxId;
+        this.box = box;
         this.orderId = orderId;
     }
 
@@ -33,12 +33,12 @@ public class Reservation implements Serializable {
         this.reservationTime = reservationTime;
     }
 
-    public int getBoxId() {
-        return boxId;
+    public ShopBox getBox() {
+        return box;
     }
 
-    public void setBoxId(int boxId) {
-        this.boxId = boxId;
+    public void setBox(ShopBox box) {
+        this.box = box;
     }
 
     public int getOrderId() {
@@ -49,12 +49,5 @@ public class Reservation implements Serializable {
         this.orderId = orderId;
     }
 
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "reservationTime=" + reservationTime +
-                ", boxId=" + boxId +
-                ", orderId=" + orderId +
-                '}';
-    }
+
 }

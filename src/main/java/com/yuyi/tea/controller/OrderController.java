@@ -139,7 +139,7 @@ public class OrderController {
             //计算总价
             float ingot = 0;
             float credit = 0;
-            ShopBox box = shopBoxService.getShopBoxByUid(order.getReservations().get(0).getBoxId());
+            ShopBox box = shopBoxService.getShopBoxByUid(order.getReservations().get(0).getBox().getUid());
             final float priceIngot = box.getPrice().getIngot();
             final float priceCredit = box.getPrice().getCredit();
             for (Reservation reservation : order.getReservations()) {
@@ -316,7 +316,7 @@ public class OrderController {
             //计算总价
             float ingot = 0;
             float credit = 0;
-            ShopBox box = shopBoxService.getShopBoxByUid(order.getReservations().get(0).getBoxId());
+            ShopBox box = shopBoxService.getShopBoxByUid(order.getReservations().get(0).getBox().getUid());
             final float priceIngot = box.getPrice().getIngot();
             final float priceCredit = box.getPrice().getCredit();
             for (Reservation reservation : order.getReservations()) {
@@ -413,5 +413,57 @@ public class OrderController {
         return orders;
     }
 
+    /**
+     * 小程序获取客户所有未付款的预约（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/reservations/unpay/{page}/{customerId}")
+    public List<Order> getMpUnpayReservations(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getUnpayReservationOrder(page,customerId);
+        orderService.clearReservations(orders);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已付款的预约（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/reservations/payed/{page}/{customerId}")
+    public List<Order> getMpPayedReservations(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getPayedReservationOrder(page,customerId);
+        orderService.clearReservations(orders);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已完成的预约（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/reservations/complete/{page}/{customerId}")
+    public List<Order> getMpCompleteReservations(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getCompleteReservationOrder(page,customerId);
+        orderService.clearReservations(orders);
+        return orders;
+    }
+
+
+    /**
+     * 小程序获取客户所有已退款的预约（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/reservations/refund/{page}/{customerId}")
+    public List<Order> getMpRefundReservations(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getRefundReservationOrder(page,customerId);
+        orderService.clearReservations(orders);
+        return orders;
+    }
 
 }

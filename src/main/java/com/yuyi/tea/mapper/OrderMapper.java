@@ -167,7 +167,13 @@ public interface OrderMapper {
                     @Result(id = true,column = "uid",property = "uid"),
                     @Result(column = "uid",property = "reservations",
                             many = @Many(select="com.yuyi.tea.mapper.ShopBoxMapper.getReservationByOrderId",
-                                    fetchType = FetchType.LAZY))
+                                    fetchType = FetchType.LAZY)),
+                    @Result(column = "uid",property = "status",
+                            one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderCurrentStatus",
+                                    fetchType = FetchType.LAZY)),
+                    @Result(column = "uid",property = "orderStatusHistory",
+                            one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderStatusHistory",
+                                    fetchType = FetchType.LAZY)),
             })
     List<Order> getUnpayReservationOrder(int customerId);
 
@@ -296,4 +302,61 @@ public interface OrderMapper {
             " order by orderTime desc limit #{offset},10")
     @ResultMap("order")
     List<Order> getRefundOrders(int offset, int customerId);
+
+    /**
+     * 小程序获取客户所有未付款的预约（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid  in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='unpay')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("reservation")
+    List<Order> getUnpayReservations(int offset, int customerId);
+
+
+    /**
+     * 小程序获取客户所有已付款的预约（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid  in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='payed')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("reservation")
+    List<Order> getPayedReservations(int offset, int customerId);
+
+    /**
+     * 小程序获取客户所有已完成的预约（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid  in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='complete')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("reservation")
+    List<Order> getCompleteReservations(int offset, int customerId);
+
+    /**
+     * 小程序获取客户所有已退款的预约（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid  in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='refunded')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("reservation")
+    List<Order> getRefundReservations(int offset, int customerId);
 }

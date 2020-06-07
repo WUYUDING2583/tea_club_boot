@@ -91,6 +91,11 @@ public interface ShopBoxMapper {
      * @return
      */
     @Select("select * from reservation where orderId=#{orderId}")
+    @Results(
+            @Result(column = "boxId",property = "box",
+                    one = @One(select="com.yuyi.tea.mapper.ShopBoxMapper.getShopBoxByUid",
+                            fetchType = FetchType.LAZY))
+    )
     List<Reservation> getReservationByOrderId(int orderId);
 
     /**

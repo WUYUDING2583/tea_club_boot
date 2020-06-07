@@ -372,7 +372,7 @@ public class OrderService {
             e.printStackTrace();
             String msg="以下时间段：";
             for(Reservation reservation:order.getReservations()){
-                Reservation result = shopBoxMapper.findReservation(reservation.getReservationTime(), reservation.getBoxId());
+                Reservation result = shopBoxMapper.findReservation(reservation.getReservationTime(), reservation.getBox().getUid());
                 if (result!=null){
                     msg+=TimeUtil.convertTimestampToTimeFormat(reservation.getReservationTime())+"\n";
                 }
@@ -708,6 +708,60 @@ public class OrderService {
      */
     public List<Order> getRefundOrders(int page, int customerId) {
         List<Order> orders=orderMapper.getRefundOrders(page*10,customerId);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有未付款的预约（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getUnpayReservationOrder(int page, int customerId) {
+        List<Order> orders=orderMapper.getUnpayReservations(page*10,customerId);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已付款的预约（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getPayedReservationOrder(int page, int customerId) {
+        List<Order> orders=orderMapper.getPayedReservations(page*10,customerId);
+        return orders;
+    }
+
+    public void clearReservations(List<Order> orders) {
+        for(Order order:orders){
+            for(Reservation reservation:order.getReservations()){
+                List<Photo> photos=new ArrayList<>();
+                photos.add(reservation.getBox().getPhotos().get(0));
+                reservation.getBox().setPhotos(photos);
+            }
+        }
+    }
+
+    /**
+     * 小程序获取客户所有已完成的预约（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getCompleteReservationOrder(int page, int customerId) {
+        List<Order> orders=orderMapper.getCompleteReservations(page*10,customerId);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已退款的预约（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getRefundReservationOrder(int page, int customerId) {
+        List<Order> orders=orderMapper.getRefundReservations(page*10,customerId);
         return orders;
     }
 }
