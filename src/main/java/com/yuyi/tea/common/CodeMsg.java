@@ -47,6 +47,7 @@ public class CodeMsg {
     //订单模块 5008xx
     public static final CodeMsg PLACE_ORDER_FAIL=new CodeMsg(500800,"下单失败");
     public static final CodeMsg UPDATE_ORDER_STATUS_FAIL=new CodeMsg(500801,"修改订单状态失败");
+    public static final CodeMsg ORDER_DELETED = new CodeMsg(500802,"订单已失效");
     //注册模块 5009xx
     public static final CodeMsg REGISTER_FAIL=new CodeMsg(500900,"注册失败，请重试");
     public static final CodeMsg DUPLICATE_REGISTER=new CodeMsg(500901,"重复注册");

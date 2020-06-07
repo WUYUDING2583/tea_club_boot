@@ -348,6 +348,48 @@ public class OrderController {
     @GetMapping("/mp/orders/all/{page}/{customerId}")
     public List<Order> getMpOrders(@PathVariable int page,@PathVariable int customerId){
         List<Order> orders = orderService.getAllOrders(page,customerId);
+        orderService.clearOrders(orders);
         return orders;
     }
+
+    /**
+     * 小程序获取客户所有未付款的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/orders/unpay/{page}/{customerId}")
+    public List<Order> getMpUnpayOrders(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getUnpayOrders(page,customerId);
+        orderService.clearOrders(orders);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已付款的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/orders/payed/{page}/{customerId}")
+    public List<Order> getMpPayedOrders(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getPayedOrders(page,customerId);
+        orderService.clearOrders(orders);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已发货的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    @GetMapping("/mp/orders/shipped/{page}/{customerId}")
+    public List<Order> getMpShippedOrders(@PathVariable int page,@PathVariable int customerId){
+        List<Order> orders = orderService.getShippedOrders(page,customerId);
+        orderService.clearOrders(orders);
+        return orders;
+    }
+
+
 }

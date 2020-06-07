@@ -1,6 +1,7 @@
 package com.yuyi.tea.service;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.*;
 import com.yuyi.tea.common.utils.AmountUtil;
@@ -599,6 +600,9 @@ public class OrderService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteOrder(int orderId) {
         Order order = orderMapper.getOrder(orderId);
+        if(order==null){
+            throw new GlobalException(CodeMsg.ORDER_DELETED);
+        }
         for(OrderProduct orderProduct:order.getProducts()){
             orderMapper.deleteOrderProduct(orderProduct.getUid());
         }
@@ -629,5 +633,58 @@ public class OrderService {
     public List<Order> getAllOrders(int page, int customerId) {
         List<Order> orders=orderMapper.getAllOrders(page*10,customerId);
         return orders;
+    }
+
+    /**
+     * 小程序获取客户所有未付款的订单（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getUnpayOrders(int page, int customerId) {
+        List<Order> orders=orderMapper.getUnapyOrders(page*10,customerId);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已付款的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    public List<Order> getPayedOrders(int page, int customerId) {
+        List<Order> orders=orderMapper.getPayedOrders(page*10,customerId);
+        return orders;
+    }
+
+    /**
+     * 小程序获取客户所有已发货的订单（10条）
+     * @param page 分页数
+     * @param customerId 客户id
+     * @return
+     */
+    public List<Order> getShippedOrders(int page, int customerId) {
+        List<Order> orders=orderMapper.getShippedOrders(page*10,customerId);
+        return orders;
+    }
+
+    public void clearOrders(List<Order> orders){
+        for(Order order:orders){
+            Clerk processer=new Clerk();
+            processer.setUid(order.getClerk().getUid());
+            processer.setName(order.getClerk().getName());
+            order.setClerk(processer);
+            order.setCustomer(null);
+            for(OrderProduct orderProduct:order.getProducts()){
+                Photo photo=orderProduct.getProduct().getPhotos().get(0);
+                List<Photo> photos=new ArrayList<>();
+                photos.add(photo);
+                orderProduct.getProduct().setPhotos(photos);
+                orderProduct.getProduct().setProductDetails(null);
+                orderProduct.getProduct().setShop(null);
+                orderProduct.getProduct().setActivityRules(null);
+                orderProduct.getProduct().setActivities(null);
+            }
+        }
     }
 }

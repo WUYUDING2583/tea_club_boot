@@ -222,12 +222,56 @@ public interface OrderMapper {
 
 
     /**
-     * 小程序获取客户所有状态的订单（10条）
+     * 小程序获取客户所有状态的订单（10条，不含预约）
      * @param offset
      * @param customerId
      * @return
      */
-    @Select("select * from orders where customerId=#{customerId} limit #{offset},10")
+    @Select("select * from orders where customerId=#{customerId} and uid not in " +
+            "(select orderId from reservation) " +
+            " order by orderTime desc limit #{offset},10")
     @ResultMap("order")
     List<Order> getAllOrders(int offset, int customerId);
+    
+    /**
+     * 小程序获取客户所有未付款的订单（10条，不含预约）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid not in" +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='unpay')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("order")
+    List<Order> getUnapyOrders(int offset, int customerId);
+
+    /**
+     * 小程序获取客户所有已付款的订单（10条，不含预约）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid not in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='payed')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("order")
+    List<Order> getPayedOrders(int offset, int customerId);
+
+    /**
+     * 小程序获取客户所有已发货的订单（10条，不含预约）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid not in " +
+            "(select orderId from reservation)" +
+            " and uid in " +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='shipped')" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("order")
+    List<Order> getShippedOrders(int offset, int customerId);
 }
