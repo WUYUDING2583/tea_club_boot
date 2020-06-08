@@ -25,4 +25,10 @@ public interface AddressService {
      * @return
      */
     List<Address> updateAddress(Address address);
+
+    /**
+     * 删除地址
+     * @param addressId
+     */
+    void deleteAddress(int addressId);
 }

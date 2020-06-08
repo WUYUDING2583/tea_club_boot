@@ -5,6 +5,7 @@ import com.yuyi.tea.mapper.AddressMapper;
 import com.yuyi.tea.service.interfaces.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,5 +49,11 @@ public class AddressServiceImpl implements AddressService {
         addressMapper.updateAddress(address);
         List<Address> addresses=addressMapper.getAddresses(address.getCustomer().getUid());
         return addresses;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAddress(int addressId) {
+        addressMapper.deleteAddress(addressId);
     }
 }

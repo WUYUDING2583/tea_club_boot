@@ -42,4 +42,15 @@ public class AddressController {
         Address address=addressService.getAddress(addressId);
         return address;
     }
+
+    /**
+     * 删除地址
+     * @param addressId
+     * @return
+     */
+    @DeleteMapping("/mp/address/{addressId}")
+    public String deleteAddress(@PathVariable int addressId){
+        addressService.deleteAddress(addressId);
+        return "success";
+    }
 }

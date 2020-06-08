@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 08/06/2020 22:06:25
+ Date: 08/06/2020 23:33:52
 */
 
 SET NAMES utf8mb4;
@@ -189,8 +189,7 @@ CREATE TABLE `address`  (
 INSERT INTO `address` VALUES (9, '浙江省', '杭州市', '西湖区', '留下街道留和路288号浙江工业大学', '15868859587', 1, 17, '吴宇丁dage');
 INSERT INTO `address` VALUES (10, '浙江省', '杭州市', '下城区', '潮王路88号', '15868859587', 0, 17, '吴宇丁');
 INSERT INTO `address` VALUES (11, '浙江省', '杭州市', '拱墅区', 'sfasdsfasdfaaaasdf', '15798746352', 0, 17, 'hhhh');
-INSERT INTO `address` VALUES (13, '浙江省', '杭州市', '西湖区', 'asasfda', '111', 0, 17, '111');
-INSERT INTO `address` VALUES (14, '浙江省', '杭州市', '西湖区', 'aasdf', '12312334', 0, 17, 'asf');
+INSERT INTO `address` VALUES (15, '福建省', '厦门市', '海沧区', '男按摩', '15868859587', 0, 17, '凄凄切切');
 
 -- ----------------------------
 -- Table structure for article
@@ -419,6 +418,8 @@ INSERT INTO `billDetail` VALUES (5, 1591620944732, 12, 0, 3, 17);
 INSERT INTO `billDetail` VALUES (6, 1591621511222, 12, 0, 3, 17);
 INSERT INTO `billDetail` VALUES (7, 1591621599440, 12, 0, 3, 17);
 INSERT INTO `billDetail` VALUES (8, 1591621790738, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (9, 1591626972931, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (10, 1591627244708, 12, 0, 3, 17);
 
 -- ----------------------------
 -- Table structure for cartDetail
@@ -435,11 +436,6 @@ CREATE TABLE `cartDetail`  (
   CONSTRAINT `cartDetail_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `cartDetail_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车详情表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of cartDetail
--- ----------------------------
-INSERT INTO `cartDetail` VALUES (15, 17, 1, 2);
 
 -- ----------------------------
 -- Table structure for clerk
@@ -519,7 +515,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 129, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 45, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -632,6 +628,8 @@ INSERT INTO `notification` VALUES (1, 1, '退款成功', '您的订单退款成�
 INSERT INTO `notification` VALUES (6, 1, '退款成功', '您的订单，编号：286退款成功，退款12.0元宝0.0积分，请查收', 1591621511270, 17, 1);
 INSERT INTO `notification` VALUES (7, 1, '退款成功', '您的订单，编号：287退款成功，退款12.0元宝0.0积分，请查收', 1591621599467, 17, 1);
 INSERT INTO `notification` VALUES (8, 1, '退款成功', '您的订单，编号：288退款成功，退款12.0元宝0.0积分，请查收', 1591621790765, 17, 1);
+INSERT INTO `notification` VALUES (9, 1, '退款成功', '您的订单，编号：292退款成功，退款12.0元宝0.0积分，请查收', 1591626973077, 17, 1);
+INSERT INTO `notification` VALUES (10, 1, '退款成功', '您的订单，编号：293退款成功，退款12.0元宝0.0积分，请查收', 1591627244733, 17, 1);
 
 -- ----------------------------
 -- Table structure for openHour
@@ -739,6 +737,7 @@ INSERT INTO `orderProduct` VALUES (124, 1, 267, 1, 36);
 INSERT INTO `orderProduct` VALUES (125, 1, 268, 1, 36);
 INSERT INTO `orderProduct` VALUES (126, 2, 269, 2, 36);
 INSERT INTO `orderProduct` VALUES (128, 1, 271, 3, 36);
+INSERT INTO `orderProduct` VALUES (136, 1, 294, 1, 36);
 
 -- ----------------------------
 -- Table structure for orderStatus
@@ -835,6 +834,14 @@ INSERT INTO `orderStatus` VALUES (455, 287, 'refunded', 1591621599440, NULL);
 INSERT INTO `orderStatus` VALUES (456, 288, 'unpay', 1591621757234, NULL);
 INSERT INTO `orderStatus` VALUES (458, 288, 'payed', 1591621781270, NULL);
 INSERT INTO `orderStatus` VALUES (459, 288, 'refunded', 1591621790738, NULL);
+INSERT INTO `orderStatus` VALUES (460, 292, 'unpay', 1591626703225, NULL);
+INSERT INTO `orderStatus` VALUES (461, 292, 'payed', 1591626709217, NULL);
+INSERT INTO `orderStatus` VALUES (462, 292, 'refunded', 1591626972931, NULL);
+INSERT INTO `orderStatus` VALUES (463, 293, 'unpay', 1591627219764, NULL);
+INSERT INTO `orderStatus` VALUES (464, 293, 'payed', 1591627224741, NULL);
+INSERT INTO `orderStatus` VALUES (465, 293, 'refunded', 1591627244708, NULL);
+INSERT INTO `orderStatus` VALUES (466, 294, 'unpay', 1591628805836, NULL);
+INSERT INTO `orderStatus` VALUES (467, 294, 'payed', 1591628830708, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -913,6 +920,9 @@ INSERT INTO `orders` VALUES (285, 1591620894590, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (286, 1591621470447, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (287, 1591621574800, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (288, 1591621757234, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (292, 1591626703225, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (293, 1591627219764, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (294, 1591628805825, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'delivery', 84, 0, 100, NULL, 11);
 
 -- ----------------------------
 -- Table structure for photo

@@ -1,10 +1,7 @@
 package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.Address;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -57,4 +54,11 @@ public interface AddressMapper {
      */
     @Update("update address set province=#{province}, city=#{city},district=#{district},detail=#{detail},phone=#{phone},isDefaultAddress=#{isDefaultAddress},name=#{name} where uid=#{uid}")
     void updateAddress(Address address);
+
+    /**
+     * 删除地址
+     * @param addressId
+     */
+    @Delete("delete from address where uid=#{addressId}")
+    void deleteAddress(int addressId);
 }
