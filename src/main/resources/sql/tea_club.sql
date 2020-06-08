@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 08/06/2020 21:22:52
+ Date: 08/06/2020 22:06:25
 */
 
 SET NAMES utf8mb4;
@@ -628,10 +628,10 @@ CREATE TABLE `notification`  (
 -- ----------------------------
 -- Records of notification
 -- ----------------------------
-INSERT INTO `notification` VALUES (1, 0, '退款成功', '您的订单退款成功', 1591598316827, 17, 1);
-INSERT INTO `notification` VALUES (6, 0, '退款成功', '您的订单，编号：286退款成功，退款12.0元宝0.0积分，请查收', 1591621511270, 17, 1);
-INSERT INTO `notification` VALUES (7, 0, '退款成功', '您的订单，编号：287退款成功，退款12.0元宝0.0积分，请查收', 1591621599467, 17, 1);
-INSERT INTO `notification` VALUES (8, 0, '退款成功', '您的订单，编号：288退款成功，退款12.0元宝0.0积分，请查收', 1591621790765, 17, 1);
+INSERT INTO `notification` VALUES (1, 1, '退款成功', '您的订单退款成功', 1591598316827, 17, 1);
+INSERT INTO `notification` VALUES (6, 1, '退款成功', '您的订单，编号：286退款成功，退款12.0元宝0.0积分，请查收', 1591621511270, 17, 1);
+INSERT INTO `notification` VALUES (7, 1, '退款成功', '您的订单，编号：287退款成功，退款12.0元宝0.0积分，请查收', 1591621599467, 17, 1);
+INSERT INTO `notification` VALUES (8, 1, '退款成功', '您的订单，编号：288退款成功，退款12.0元宝0.0积分，请查收', 1591621790765, 17, 1);
 
 -- ----------------------------
 -- Table structure for openHour

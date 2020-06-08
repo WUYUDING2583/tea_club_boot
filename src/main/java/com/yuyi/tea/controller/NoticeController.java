@@ -5,6 +5,7 @@ import com.yuyi.tea.service.interfaces.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,5 +39,27 @@ public class NoticeController {
         List<Notification> notifications=noticeService.getNotifications(customerId,page);
         noticeService.clearNotifications(notifications);
         return notifications;
+    }
+
+    /**
+     * 设置通知为已读
+     * @param noticeId
+     * @return
+     */
+    @PutMapping("/mp/notice/{noticeId}")
+    public String setNotificationRead(@PathVariable int noticeId){
+        noticeService.setNotificationRead(noticeId);
+        return "success";
+    }
+
+    /**
+     * 清除客户所有未读通知
+     * @param customerId
+     * @return
+     */
+    @PutMapping("/mp/notice/clear/{customerId}")
+    public String clearUnread(@PathVariable int customerId){
+        noticeService.clearUnread(customerId);
+        return "success";
     }
 }

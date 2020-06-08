@@ -41,4 +41,18 @@ public interface NoticeMapper {
     @Insert("insert into notification(isRead,title,detail,time,type,customerId) values(#{isRead},#{title},#{detail},#{time},#{type},#{customer.uid})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveNotification(Notification notification);
+
+    /**
+     * 设置通知为已读
+     * @param noticeId
+     */
+    @Update("update notification set isRead=true where uid=#{noticeId}")
+    void setNotificationRead(int noticeId);
+
+    /**
+     * 清除客户所有未读通知
+     * @param customerId
+     */
+    @Update("update notification set isRead=true where customerId=#{customerId}")
+    void clearUnread(int customerId);
 }

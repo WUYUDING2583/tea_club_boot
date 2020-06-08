@@ -29,4 +29,16 @@ public interface NoticeService {
      * @param notification
      */
     void saveNotification(Notification notification);
+
+    /**
+     * 设置通知为已读
+     * @param noticeId
+     */
+    void setNotificationRead(int noticeId);
+
+    /**
+     * 清除客户所有未读通知
+     * @param customerId
+     */
+    void clearUnread(int customerId);
 }

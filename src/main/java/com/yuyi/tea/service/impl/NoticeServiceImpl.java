@@ -47,4 +47,16 @@ public class NoticeServiceImpl implements NoticeService {
     public void saveNotification(Notification notification) {
         noticeMapper.saveNotification(notification);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void setNotificationRead(int noticeId) {
+        noticeMapper.setNotificationRead(noticeId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void clearUnread(int customerId) {
+        noticeMapper.clearUnread(customerId);
+    }
 }
