@@ -7,11 +7,13 @@ import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.ShopBoxMapper;
 import com.yuyi.tea.service.*;
+import com.yuyi.tea.service.interfaces.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +42,18 @@ public class OrderController {
 
     @Autowired
     private WebSocketBalanceServer ws;
+
+    @Autowired
+    private ShopService shopService;
+
+    @Autowired
+    private NoticeService noticeService;
+
+    @Autowired
+    private  SMSService smsService;
+
+    @Autowired
+    private WebSocketMINAServer webSocketMINAServer;
 
     /**
      * 获取客户的订单列表
@@ -422,6 +436,9 @@ public class OrderController {
     @GetMapping("/mp/reservations/unpay/{page}/{customerId}")
     public List<Order> getMpUnpayReservations(@PathVariable int page,@PathVariable int customerId){
         List<Order> orders = orderService.getUnpayReservationOrder(page,customerId);
+        for(Order order:orders){
+            orderService.getReservationShopAddress(order);
+        }
         orderService.clearReservations(orders);
         return orders;
     }
@@ -435,6 +452,9 @@ public class OrderController {
     @GetMapping("/mp/reservations/payed/{page}/{customerId}")
     public List<Order> getMpPayedReservations(@PathVariable int page,@PathVariable int customerId){
         List<Order> orders = orderService.getPayedReservationOrder(page,customerId);
+        for(Order order:orders){
+            orderService.getReservationShopAddress(order);
+        }
         orderService.clearReservations(orders);
         return orders;
     }
@@ -448,6 +468,9 @@ public class OrderController {
     @GetMapping("/mp/reservations/complete/{page}/{customerId}")
     public List<Order> getMpCompleteReservations(@PathVariable int page,@PathVariable int customerId){
         List<Order> orders = orderService.getCompleteReservationOrder(page,customerId);
+        for(Order order:orders){
+            orderService.getReservationShopAddress(order);
+        }
         orderService.clearReservations(orders);
         return orders;
     }
@@ -489,9 +512,22 @@ public class OrderController {
         //设置订单为退款
         OrderStatus refunded=new OrderStatus(orderId,CommConstants.OrderStatus.REFUND,currentTime);
         orderService.saveOrderStatus(refunded);
+        //删除预约记录
+        orderService.deleteReservations(order);
         //添加账单记录
         BillDetail billDetail=new BillDetail(currentTime,ingot,credit,CommConstants.BillDescription.REFUND,order.getCustomer());
         customerService.saveBillDetail(billDetail);
+        //保存通知至数据库
+        Notification notification = CommConstants.Notification.REFUND_SUCCESS(order);
+        noticeService.saveNotification(notification);
+        //发送短信通知
+//        smsService.sendRefundSuccess(order);
+        //发送小程序通知
+        try {
+            webSocketMINAServer.sendInfo("success",order.getCustomer().getContact());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "success";
     }
 }

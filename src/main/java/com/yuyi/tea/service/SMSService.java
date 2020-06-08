@@ -1,7 +1,10 @@
 package com.yuyi.tea.service;
 
+import com.yuyi.tea.bean.Order;
+import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.utils.NumberUtil;
+import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.exception.GlobalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +34,12 @@ public class SMSService {
     // 短信应用 SDK AppKey
     private final String APP_KEY = "ebbe021156ca27d220e3cef80879ee1f";
     // 短信模板 ID，需要在短信应用中申请
-    private final int TEMPLATE_ID = 397475; // NOTE: 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
+    private final int OTP_ID = 397475; // NOTE: 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
+    private final int RESERVATION_CLOSE_ID=628630;
+    private final int REFUND_SUCCESS_ID=628632;
+    private final int ORDER_SHIPPED_ID=628635;
+    private final int ORDER_PREPARED_ID=628639;
+    private final int CHARGE_SUCCESS_ID=628815;
     // 签名
     private final String SMS_SIGN = "活趣公众号"; // NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`。这里的签名"腾讯云"只是示例，真实的签名需要在短信控制台申请
     //验证码过期时间5分钟
@@ -45,7 +53,7 @@ public class SMSService {
      * @return
      */
     public void sendOTP(String phone){
-//        try {
+        try {
             String otp=null;
             //查看五分钟内是否已经发送过验证码
             boolean hasKey=redisService.exists(OTP_TOKEN_NAME+":"+phone);
@@ -59,22 +67,171 @@ public class SMSService {
                 log.info("短信验证码存入缓存");
                 redisService.set(OTP_TOKEN_NAME+":"+phone,otp,SMS_EXPIRE, TimeUnit.MINUTES);
             }
-//            String[] params = {otp,String.valueOf(SMS_EXPIRE)};
-//            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
-//            SmsSingleSenderResult result = ssender.sendWithParam("86", contact,
-//                    TEMPLATE_ID, params, SMS_SIGN, "", "");
-//        } catch (HTTPException e) {
-//            // HTTP 响应码错误
-//            e.printStackTrace();
-//            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
-//        } catch (JSONException e) {
-//            // JSON 解析错误
-//            e.printStackTrace();
-//            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
-//        } catch (IOException e) {
-//            // 网络 IO 错误
-//            e.printStackTrace();
-//            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
-//        }
+            String[] params = {otp,String.valueOf(SMS_EXPIRE)};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", phone,
+                    OTP_ID, params, SMS_SIGN, "", "");
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
+    }
+
+    /**
+     * 预约临近短信通知
+     * @param order
+     */
+    public void sendReservationClose(Order order){
+        try {
+            String content="";
+            for(Reservation reservation:order.getReservations()){
+                content+= TimeUtil.convertTimestampToyyyMMdd(reservation.getReservationTime())+" "+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime())+"~"+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime()+reservation.getBox().getDuration()*1000*60)+"\n";
+            }
+            String[] params = {order.getReservations().get(0).getBox().getName(),content};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", order.getCustomer().getContact(),
+                    RESERVATION_CLOSE_ID, params, SMS_SIGN, "", "");
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
+
+    }
+
+
+    /**
+     * 退款成功短信通知
+     * @param order
+     */
+    public void sendRefundSuccess(Order order){
+        try {
+            String content="";
+            for(Reservation reservation:order.getReservations()){
+                content+= TimeUtil.convertTimestampToyyyMMdd(reservation.getReservationTime())+" "+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime())+"~"+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime()+reservation.getBox().getDuration()*1000*60)+"\n";
+            }
+            String[] params = {order.getUid()+"",order.getIngot()+"",order.getCredit()+""};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", order.getCustomer().getContact(),
+                    REFUND_SUCCESS_ID, params, SMS_SIGN, "", "");
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
+
+    }
+
+
+    /**
+     * 订单发货通知
+     * @param order
+     */
+    public void sendOrderShipped(Order order){
+        try {
+            String content="";
+
+            if(order.getTrackInfo().getCompanyName()!=null&&!order.getTrackInfo().getCompanyName().equals("")){
+                content+="物流公司："+order.getTrackInfo().getCompanyName()+"\n" +
+                        "物流单号："+order.getTrackInfo().getTrackingId()+"\n" ;
+            }else{
+                content+="配送人联系方式："+order.getTrackInfo().getPhone()+"\n" +
+                        "配送人信息："+order.getTrackInfo().getDescription()+"\n";
+            }
+            String[] params = {order.getUid()+"",content};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", order.getCustomer().getContact(),
+                    ORDER_SHIPPED_ID, params, SMS_SIGN, "", "");
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
+
+    }
+
+    /**
+     * 商品备好通知
+     * @param order
+     */
+    public void sendOrderPrepared(Order order){
+        try {
+            String[] params = {order.getUid()+"",order.getPlaceOrderWay().getName(),order.getPlaceOrderWay().getAddress()};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", order.getCustomer().getContact(),
+                    ORDER_PREPARED_ID, params, SMS_SIGN, "", "");
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
+
+    }
+
+    /**
+     * 充值成功通知
+     * @param order
+     */
+    public void sendChargeSuccess(long timestamp,float value,String contact){
+        try {
+            String[] params = {TimeUtil.convertTimestampToTimeFormat(timestamp),value+""};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", contact,
+                    CHARGE_SUCCESS_ID, params, SMS_SIGN, "", "");
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
+
     }
 }

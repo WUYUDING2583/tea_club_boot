@@ -65,6 +65,9 @@ public class OrderService {
     @Autowired
     private WebSocketBalanceServer ws;
 
+    @Autowired
+    private ShopService shopService;
+
     /**
      * 获取客户的订单列表
      * @param customerId
@@ -768,5 +771,27 @@ public class OrderService {
     public List<Order> getRefundReservationOrder(int page, int customerId) {
         List<Order> orders=orderMapper.getRefundReservations(page*10,customerId);
         return orders;
+    }
+
+    /**
+     * 获取预约包厢所属门店地址
+     * @param order
+     */
+    public void getReservationShopAddress(Order order) {
+        Shop shop = shopService.getShopByUid(order.getReservations().get(0).getBox().getShop().getUid());
+        shop.setShopBoxes(null);
+        shop.setClerks(null);
+        shop.setPhotos(null);
+        shop.setOpenHours(null);
+        order.setPlaceOrderWay(shop);
+    }
+
+    /**
+     * 删除预约记录
+     * @param order
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteReservations(Order order) {
+        orderMapper.deleteReservationsByOrderId(order.getUid());
     }
 }

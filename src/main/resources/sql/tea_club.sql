@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 07/06/2020 23:43:45
+ Date: 08/06/2020 21:22:52
 */
 
 SET NAMES utf8mb4;
@@ -205,7 +205,7 @@ CREATE TABLE `article`  (
   `isShowOnHome` tinyint(0) NULL DEFAULT 0 COMMENT '是否在小程序首页走马灯展示',
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章简介',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -226,7 +226,7 @@ CREATE TABLE `articleTag`  (
   INDEX `tagId`(`tagId`) USING BTREE,
   CONSTRAINT `articleTag_ibfk_1` FOREIGN KEY (`articleId`) REFERENCES `article` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `articleTag_ibfk_2` FOREIGN KEY (`tagId`) REFERENCES `tag` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章标签表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文章标签表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of articleTag
@@ -247,7 +247,7 @@ CREATE TABLE `authority`  (
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限标题',
   `icon` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限图标名称',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后台职员权限总类表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后台职员权限总类表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of authority
@@ -274,7 +274,7 @@ CREATE TABLE `authorityEnd`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `belongFront`(`belongFront`) USING BTREE,
   CONSTRAINT `authorityEnd_ibfk_1` FOREIGN KEY (`belongFront`) REFERENCES `authorityFront` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后端路由表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后端路由表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of authorityEnd
@@ -348,7 +348,7 @@ CREATE TABLE `authorityFront`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `belong`(`belong`) USING BTREE,
   CONSTRAINT `authorityFront_ibfk_1` FOREIGN KEY (`belong`) REFERENCES `authority` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '前端页面路由表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '前端页面路由表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of authorityFront
@@ -372,6 +372,55 @@ INSERT INTO `authorityFront` VALUES (16, 'articles', '文章管理', 'Admin/Arti
 INSERT INTO `authorityFront` VALUES (17, 'test', 'test', 'test', '这是文章管理', 8, 1);
 
 -- ----------------------------
+-- Table structure for billDescription
+-- ----------------------------
+DROP TABLE IF EXISTS `billDescription`;
+CREATE TABLE `billDescription`  (
+  `uid` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消费类型',
+  PRIMARY KEY (`uid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '消费类型表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of billDescription
+-- ----------------------------
+INSERT INTO `billDescription` VALUES (1, '购买商品');
+INSERT INTO `billDescription` VALUES (2, '预约包厢');
+INSERT INTO `billDescription` VALUES (3, '退款');
+INSERT INTO `billDescription` VALUES (4, '充值');
+INSERT INTO `billDescription` VALUES (5, '活动赠送');
+
+-- ----------------------------
+-- Table structure for billDetail
+-- ----------------------------
+DROP TABLE IF EXISTS `billDetail`;
+CREATE TABLE `billDetail`  (
+  `uid` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `time` bigint(0) NULL DEFAULT NULL COMMENT '时间',
+  `ingot` float(255, 0) NULL DEFAULT 0 COMMENT '消费元宝数 负值表示消费 正值表示充值/退款',
+  `credit` float(255, 0) NULL DEFAULT 0 COMMENT '消费积分数 负值表示消费 正值表示充值/退款',
+  `descriptionId` int(0) NULL DEFAULT NULL COMMENT '消费说明id',
+  `customerId` int(0) NULL DEFAULT NULL COMMENT '客户id',
+  PRIMARY KEY (`uid`) USING BTREE,
+  INDEX `descriptionId`(`descriptionId`) USING BTREE,
+  INDEX `customerId`(`customerId`) USING BTREE,
+  CONSTRAINT `billDetail_ibfk_1` FOREIGN KEY (`descriptionId`) REFERENCES `billDescription` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `billDetail_ibfk_2` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '消费记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of billDetail
+-- ----------------------------
+INSERT INTO `billDetail` VALUES (1, 1591589802426, 24, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (2, 1591618889112, 36, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (3, 1591620284060, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (4, 1591620713392, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (5, 1591620944732, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (6, 1591621511222, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (7, 1591621599440, 12, 0, 3, 17);
+INSERT INTO `billDetail` VALUES (8, 1591621790738, 12, 0, 3, 17);
+
+-- ----------------------------
 -- Table structure for cartDetail
 -- ----------------------------
 DROP TABLE IF EXISTS `cartDetail`;
@@ -385,7 +434,7 @@ CREATE TABLE `cartDetail`  (
   INDEX `productId`(`productId`) USING BTREE,
   CONSTRAINT `cartDetail_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `cartDetail_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `product` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cartDetail
@@ -436,7 +485,7 @@ CREATE TABLE `company`  (
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司地址',
   `rechargeRate` float NULL DEFAULT NULL COMMENT '元宝充值兑换比例',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公司信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公司信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of company
@@ -470,7 +519,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 27, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 129, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -501,7 +550,7 @@ CREATE TABLE `enterprise`  (
   `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业邮箱',
   `address` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业地址',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '企业信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '企业信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of enterprise
@@ -558,6 +607,31 @@ INSERT INTO `mutexActivity` VALUES (19, 26, 21);
 INSERT INTO `mutexActivity` VALUES (20, 21, 26);
 INSERT INTO `mutexActivity` VALUES (21, 26, 25);
 INSERT INTO `mutexActivity` VALUES (22, 25, 26);
+
+-- ----------------------------
+-- Table structure for notification
+-- ----------------------------
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE `notification`  (
+  `uid` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `isRead` tinyint(0) NULL DEFAULT NULL COMMENT '是否已读',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '通知标题',
+  `detail` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '通知内容',
+  `time` bigint(0) NULL DEFAULT NULL COMMENT '通知时间',
+  `customerId` int(0) NULL DEFAULT NULL COMMENT '通知所属客户',
+  `type` int(0) NULL DEFAULT NULL COMMENT '通知类型0 预约时间临近通知，1 退款成功通知，2 订单发货通知，3 门店自提订单准备完毕通知，4 充值成功通知',
+  PRIMARY KEY (`uid`) USING BTREE,
+  INDEX `customerId`(`customerId`) USING BTREE,
+  CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of notification
+-- ----------------------------
+INSERT INTO `notification` VALUES (1, 0, '退款成功', '您的订单退款成功', 1591598316827, 17, 1);
+INSERT INTO `notification` VALUES (6, 0, '退款成功', '您的订单，编号：286退款成功，退款12.0元宝0.0积分，请查收', 1591621511270, 17, 1);
+INSERT INTO `notification` VALUES (7, 0, '退款成功', '您的订单，编号：287退款成功，退款12.0元宝0.0积分，请查收', 1591621599467, 17, 1);
+INSERT INTO `notification` VALUES (8, 0, '退款成功', '您的订单，编号：288退款成功，退款12.0元宝0.0积分，请查收', 1591621790765, 17, 1);
 
 -- ----------------------------
 -- Table structure for openHour
@@ -681,7 +755,7 @@ CREATE TABLE `orderStatus`  (
   INDEX `handler`(`processer`) USING BTREE,
   CONSTRAINT `orderStatus_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `orders` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderStatus_ibfk_2` FOREIGN KEY (`processer`) REFERENCES `clerk` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 426 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 460 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orderStatus
@@ -701,15 +775,12 @@ INSERT INTO `orderStatus` VALUES (340, 209, 'unpay', 1590238593029, NULL);
 INSERT INTO `orderStatus` VALUES (341, 209, 'payed', 1590238624219, NULL);
 INSERT INTO `orderStatus` VALUES (343, 216, 'unpay', 1591171031490, NULL);
 INSERT INTO `orderStatus` VALUES (344, 216, 'payed', 1591171031550, NULL);
-INSERT INTO `orderStatus` VALUES (345, 216, 'complete', 1591171031550, NULL);
 INSERT INTO `orderStatus` VALUES (346, 217, 'unpay', 1591251610830, NULL);
 INSERT INTO `orderStatus` VALUES (358, 229, 'unpay', 1591254621332, NULL);
 INSERT INTO `orderStatus` VALUES (359, 230, 'unpay', 1591254707493, NULL);
 INSERT INTO `orderStatus` VALUES (360, 231, 'unpay', 1591254779619, NULL);
 INSERT INTO `orderStatus` VALUES (362, 233, 'unpay', 1591254836583, NULL);
 INSERT INTO `orderStatus` VALUES (363, 234, 'unpay', 1591255901625, NULL);
-INSERT INTO `orderStatus` VALUES (364, 235, 'unpay', 1591260857382, NULL);
-INSERT INTO `orderStatus` VALUES (365, 236, 'unpay', 1591261148067, NULL);
 INSERT INTO `orderStatus` VALUES (391, 253, 'unpay', 1591369033860, NULL);
 INSERT INTO `orderStatus` VALUES (392, 254, 'unpay', 1591422340722, NULL);
 INSERT INTO `orderStatus` VALUES (393, 255, 'unpay', 1591423799146, NULL);
@@ -736,6 +807,34 @@ INSERT INTO `orderStatus` VALUES (416, 271, 'unpay', 1591434702749, NULL);
 INSERT INTO `orderStatus` VALUES (426, 271, 'payed', 1591522497321, NULL);
 INSERT INTO `orderStatus` VALUES (427, 271, 'requestRefund', 1591529800917, NULL);
 INSERT INTO `orderStatus` VALUES (428, 263, 'payed', 1591533163857, NULL);
+INSERT INTO `orderStatus` VALUES (429, 234, 'payed', 1591583249332, NULL);
+INSERT INTO `orderStatus` VALUES (430, 233, 'payed', 1591583440418, NULL);
+INSERT INTO `orderStatus` VALUES (431, 231, 'payed', 1591583797967, NULL);
+INSERT INTO `orderStatus` VALUES (432, 230, 'payed', 1591583805456, NULL);
+INSERT INTO `orderStatus` VALUES (434, 281, 'unpay', 1591589384115, NULL);
+INSERT INTO `orderStatus` VALUES (435, 281, 'payed', 1591589505954, NULL);
+INSERT INTO `orderStatus` VALUES (437, 281, 'refunded', 1591589802426, NULL);
+INSERT INTO `orderStatus` VALUES (438, 282, 'unpay', 1591618848139, NULL);
+INSERT INTO `orderStatus` VALUES (439, 282, 'payed', 1591618861207, NULL);
+INSERT INTO `orderStatus` VALUES (440, 282, 'refunded', 1591618889112, NULL);
+INSERT INTO `orderStatus` VALUES (441, 283, 'unpay', 1591620248259, NULL);
+INSERT INTO `orderStatus` VALUES (442, 283, 'payed', 1591620254671, NULL);
+INSERT INTO `orderStatus` VALUES (443, 283, 'refunded', 1591620284060, NULL);
+INSERT INTO `orderStatus` VALUES (444, 284, 'unpay', 1591620671886, NULL);
+INSERT INTO `orderStatus` VALUES (445, 284, 'payed', 1591620678876, NULL);
+INSERT INTO `orderStatus` VALUES (446, 284, 'refunded', 1591620713392, NULL);
+INSERT INTO `orderStatus` VALUES (447, 285, 'unpay', 1591620894590, NULL);
+INSERT INTO `orderStatus` VALUES (448, 285, 'payed', 1591620901012, NULL);
+INSERT INTO `orderStatus` VALUES (449, 285, 'refunded', 1591620944732, NULL);
+INSERT INTO `orderStatus` VALUES (450, 286, 'unpay', 1591621470447, NULL);
+INSERT INTO `orderStatus` VALUES (451, 286, 'payed', 1591621475882, NULL);
+INSERT INTO `orderStatus` VALUES (452, 286, 'refunded', 1591621511222, NULL);
+INSERT INTO `orderStatus` VALUES (453, 287, 'unpay', 1591621574800, NULL);
+INSERT INTO `orderStatus` VALUES (454, 287, 'payed', 1591621579959, NULL);
+INSERT INTO `orderStatus` VALUES (455, 287, 'refunded', 1591621599440, NULL);
+INSERT INTO `orderStatus` VALUES (456, 288, 'unpay', 1591621757234, NULL);
+INSERT INTO `orderStatus` VALUES (458, 288, 'payed', 1591621781270, NULL);
+INSERT INTO `orderStatus` VALUES (459, 288, 'refunded', 1591621790738, NULL);
 
 -- ----------------------------
 -- Table structure for orders
@@ -790,8 +889,6 @@ INSERT INTO `orders` VALUES (230, 1591254707493, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (231, 1591254779619, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (233, 1591254836583, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (234, 1591255901625, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (235, 1591260857382, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
-INSERT INTO `orders` VALUES (236, 1591261148067, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (253, 1591369033771, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 252, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (254, 1591422340475, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 252, 0, 100, NULL, NULL);
 INSERT INTO `orders` VALUES (255, 1591423799081, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 252, 0, 100, NULL, NULL);
@@ -808,6 +905,14 @@ INSERT INTO `orders` VALUES (267, 1591434177322, 17, NULL, NULL, NULL, NULL, NUL
 INSERT INTO `orders` VALUES (268, 1591434397500, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'selfPick', 84, 0, 100, 26, NULL);
 INSERT INTO `orders` VALUES (269, 1591434493975, 17, NULL, NULL, NULL, NULL, NULL, NULL, 'delivery', 168, 0, 100, NULL, 9);
 INSERT INTO `orders` VALUES (271, 1591434702741, 17, NULL, NULL, NULL, NULL, NULL, '数量拍错了', NULL, 252, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (281, 1591589384115, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 24, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (282, 1591618848139, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 36, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (283, 1591620248259, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (284, 1591620671886, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (285, 1591620894590, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (286, 1591621470447, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (287, 1591621574800, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
+INSERT INTO `orders` VALUES (288, 1591621757234, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 12, 0, 100, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for photo
@@ -1085,7 +1190,7 @@ CREATE TABLE `recharge`  (
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `recharge_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户充值记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 58 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户充值记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of recharge
@@ -1130,6 +1235,8 @@ INSERT INTO `recharge` VALUES (52, 100, 1591434510399, 17);
 INSERT INTO `recharge` VALUES (53, 200, 1591522480781, 17);
 INSERT INTO `recharge` VALUES (54, 50, 1591522491922, 17);
 INSERT INTO `recharge` VALUES (55, 100, 1591533158787, 17);
+INSERT INTO `recharge` VALUES (56, 50, 1591583784529, 17);
+INSERT INTO `recharge` VALUES (57, 100, 1591618857893, 17);
 
 -- ----------------------------
 -- Table structure for reservation
@@ -1156,8 +1263,12 @@ INSERT INTO `reservation` VALUES (1591254000000, 4, 230);
 INSERT INTO `reservation` VALUES (1591318800000, 4, 231);
 INSERT INTO `reservation` VALUES (1591326000000, 4, 233);
 INSERT INTO `reservation` VALUES (1591333200000, 4, 234);
-INSERT INTO `reservation` VALUES (1591340400000, 4, 235);
-INSERT INTO `reservation` VALUES (1591347600000, 4, 236);
+INSERT INTO `reservation` VALUES (1591606800000, 4, 281);
+INSERT INTO `reservation` VALUES (1591614000000, 4, 281);
+INSERT INTO `reservation` VALUES (1591664400000, 4, 282);
+INSERT INTO `reservation` VALUES (1591671600000, 4, 282);
+INSERT INTO `reservation` VALUES (1591678800000, 4, 282);
+INSERT INTO `reservation` VALUES (1591686000000, 4, 283);
 
 -- ----------------------------
 -- Table structure for shop
@@ -1235,7 +1346,7 @@ CREATE TABLE `tag`  (
   `uid` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标签名称',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '标签表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '标签表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tag
@@ -1257,7 +1368,7 @@ CREATE TABLE `trackInfo`  (
   `description` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '个人配送信息描述',
   `phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '个人配送联系方式',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '物流信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '物流信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of trackInfo

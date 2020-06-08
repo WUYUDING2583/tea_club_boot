@@ -359,4 +359,11 @@ public interface OrderMapper {
             " order by orderTime desc limit #{offset},10")
     @ResultMap("reservation")
     List<Order> getRefundReservations(int offset, int customerId);
+
+    /**
+     * 删除预约记录
+     * @param uid
+     */
+    @Delete("delete from reservation where orderId=#{orderId}")
+    void deleteReservationsByOrderId(int orderId);
 }

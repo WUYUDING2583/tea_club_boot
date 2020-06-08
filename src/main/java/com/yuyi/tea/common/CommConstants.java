@@ -1,8 +1,8 @@
 package com.yuyi.tea.common;
 
-import com.yuyi.tea.bean.BillDescription;
-import com.yuyi.tea.bean.Customer;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.utils.StringUtil;
+import com.yuyi.tea.common.utils.TimeUtil;
 
 public class CommConstants {
 
@@ -46,5 +46,45 @@ public class CommConstants {
         public static final com.yuyi.tea.bean.BillDescription CHARGE=new com.yuyi.tea.bean.BillDescription(4,"充值");
         public static final com.yuyi.tea.bean.BillDescription PRESENT=new com.yuyi.tea.bean.BillDescription(5,"活动赠送");
     }
-///    public static final String[] FilterUrl={"/admin/*","/verifyToken"};
+
+    public static class Notification{
+        public static  com.yuyi.tea.bean.Notification RESERVATION_CLOSE(Order order){
+            String content="您预约的包厢"+order.getReservations().get(0).getBox().getName()+
+                    "\n预约时间：";
+            for(Reservation reservation:order.getReservations()){
+                content+=TimeUtil.convertTimestampToyyyMMdd(reservation.getReservationTime())+" "+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime())+"~"+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime()+reservation.getBox().getDuration()*1000*60)+"\n";
+            }
+            content+="已临近预约时间，请不要忘记哦";
+            return new com.yuyi.tea.bean.Notification(false,0,"预约临近",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
+        }
+        public static com.yuyi.tea.bean.Notification REFUND_SUCCESS(Order order){
+            String content="您的订单，编号："+order.getUid()+"退款成功，退款"+order.getIngot()+"元宝"+order.getCredit()+"积分，请查收";
+            return new com.yuyi.tea.bean.Notification(false,1,"退款成功",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
+        }
+        public static com.yuyi.tea.bean.Notification ORDER_SHIPPED(Order order){
+            String content="您购买的商品已发货\n" +
+                    "订单编号："+order.getUid()+"\n" ;
+            if(order.getTrackInfo().getCompanyName()!=null&&!order.getTrackInfo().getCompanyName().equals("")){
+                content+="物流公司："+order.getTrackInfo().getCompanyName()+"\n" +
+                        "物流单号："+order.getTrackInfo().getTrackingId()+"\n" ;
+            }else{
+                content+="配送人联系方式："+order.getTrackInfo().getPhone()+"\n" +
+                        "配送人信息："+order.getTrackInfo().getDescription()+"\n";
+            }
+            content+="请查收";
+            return new com.yuyi.tea.bean.Notification(false,2,"订单发货",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
+        }
+        public static com.yuyi.tea.bean.Notification ORDER_PREPARED(Order order){
+            String content="您购买的商品备好\n" +
+                    "订单编号："+order.getUid()+"\n"+
+                    "可前往"+order.getPlaceOrderWay().getName()+"\n" +
+                    "地址："+order.getPlaceOrderWay().getAddress()+"\n" +
+                    "领取";
+            return new com.yuyi.tea.bean.Notification(false,3,"订单备好",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
+        }
+        public static com.yuyi.tea.bean.Notification CHARGE(float value,long timestamp,int customerId){
+            String content="您于"+TimeUtil.convertTimestampToTimeFormat(timestamp)+"在研茶充值"+value+"元，若非本人操作，请与管理员联系";
+            return new com.yuyi.tea.bean.Notification(false,4,"充值完成",content, TimeUtil.getCurrentTimestamp(),new Customer(customerId));
+        }
+    }
 }

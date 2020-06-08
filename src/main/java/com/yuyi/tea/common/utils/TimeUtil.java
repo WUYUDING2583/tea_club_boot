@@ -40,7 +40,30 @@ public class TimeUtil {
         Timestamp ts = new Timestamp(timestamp);
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        //方法一:优势在于可以灵活的设置字符串的形式。
+        String tsStr = sdf.format(ts);
+        return tsStr;
+    }
+    /**
+     * 将时间戳转变为HH:mm格式时间字符串
+     * @param timestamp
+     * @return
+     */
+    public static String convertTimestampToHHmm(long timestamp){
+        Timestamp ts = new Timestamp(timestamp);
+        DateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        String tsStr = sdf.format(ts);
+        return tsStr;
+    }
+    /**
+     * 将时间戳转变为yyyy-MM-dd格式时间字符串
+     * @param timestamp
+     * @return
+     */
+    public static String convertTimestampToyyyMMdd(long timestamp){
+        Timestamp ts = new Timestamp(timestamp);
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         String tsStr = sdf.format(ts);
         return tsStr;
     }
