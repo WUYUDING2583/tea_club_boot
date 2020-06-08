@@ -330,4 +330,13 @@ public class CustomerService {
             throw new GlobalException(CodeMsg.REGISTER_FAIL);
         }
     }
+
+    /**
+     * 添加消费记录
+     * @param billDetail
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveBillDetail(BillDetail billDetail) {
+        customerMapper.saveBillDetail(billDetail);
+    }
 }

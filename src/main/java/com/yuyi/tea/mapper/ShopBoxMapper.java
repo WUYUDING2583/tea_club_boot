@@ -90,7 +90,7 @@ public interface ShopBoxMapper {
      * @param orderId
      * @return
      */
-    @Select("select * from reservation where orderId=#{orderId}")
+    @Select("select * from reservation where orderId=#{orderId} order by reservationTime")
     @Results(
             @Result(column = "boxId",property = "box",
                     one = @One(select="com.yuyi.tea.mapper.ShopBoxMapper.getShopBoxByUid",

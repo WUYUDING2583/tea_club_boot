@@ -466,4 +466,32 @@ public class OrderController {
         return orders;
     }
 
+    /**
+     * 小程序请求取消已付款预约
+     * @param orderId
+     * @return
+     */
+    @PostMapping("/mp/reservations/refund/{orderId}")
+    @Transactional(rollbackFor = Exception.class)
+    public String reservationRequestRefund(@PathVariable int orderId){
+        Order order = orderService.getOrder(orderId);
+        Reservation firstReservation = order.getReservations().get(0);
+        long currentTime = TimeUtil.getCurrentTimestamp();
+        //在预约开始的两小时内
+        if(firstReservation.getReservationTime()-currentTime<1000*60*120){
+            throw new GlobalException(CodeMsg.RESERVATION_REFUND_OUT_OF_TIME);
+        }
+        float credit = order.getAmount().getCredit();
+        float ingot = order.getAmount().getIngot();
+        //退款
+        customerService.addCredit(order.getCustomer().getUid(),credit);
+        customerService.addIngot(order.getCustomer().getUid(),ingot);
+        //设置订单为退款
+        OrderStatus refunded=new OrderStatus(orderId,CommConstants.OrderStatus.REFUND,currentTime);
+        orderService.saveOrderStatus(refunded);
+        //添加账单记录
+        BillDetail billDetail=new BillDetail(currentTime,ingot,credit,CommConstants.BillDescription.REFUND,order.getCustomer());
+        customerService.saveBillDetail(billDetail);
+        return "success";
+    }
 }

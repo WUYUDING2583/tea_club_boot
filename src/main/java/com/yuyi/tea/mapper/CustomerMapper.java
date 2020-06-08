@@ -1,9 +1,6 @@
 package com.yuyi.tea.mapper;
 
-import com.yuyi.tea.bean.Address;
-import com.yuyi.tea.bean.Customer;
-import com.yuyi.tea.bean.CustomerType;
-import com.yuyi.tea.bean.EnterpriseCustomerApplication;
+import com.yuyi.tea.bean.*;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -155,7 +152,7 @@ public interface CustomerMapper {
      * @param ingot
      */
     @Update("update customer set ingot=ingot+#{ingot} where uid=#{customerId}")
-    void addIngot(int userId, float ingot);
+    void addIngot(int customerId, float ingot);
 
     /**
      * 根据手机号获取客户信息
@@ -165,4 +162,12 @@ public interface CustomerMapper {
     @Select("select * from customer where contact=#{contact}")
     @ResultMap("customer")
     Customer getCustomerByContact(String contact);
+
+    /**
+     * 添加账单记录
+     * @param billDetail
+     */
+    @Insert("insert into billDetail(time,ingot,credit,descriptionId,customerId) values(#{time},#{ingot},#{credit},#{description.uid},#{customer.uid})")
+    void saveBillDetail(BillDetail billDetail);
+
 }

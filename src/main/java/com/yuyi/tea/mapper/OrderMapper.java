@@ -151,7 +151,7 @@ public interface OrderMapper {
      * @param reservation
      * @param orderId
      */
-    @Insert("insert into reservation(reservationTime,boxId,orderId) values(#{reservation.reservationTime},#{reservation.boxId},#{orderId})")
+    @Insert("insert into reservation(reservationTime,boxId,orderId) values(#{reservation.reservationTime},#{reservation.box.uid},#{orderId})")
     void saveReservation(Reservation reservation, int orderId);
 
     /**

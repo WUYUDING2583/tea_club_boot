@@ -38,6 +38,7 @@ public class CodeMsg {
     public static CodeMsg RESERVATION_DUPLICATE(String msg){
         return new CodeMsg(500600,msg);
     }
+    public static final CodeMsg RESERVATION_REFUND_OUT_OF_TIME =new CodeMsg(500601,"已超过可取消预约时间，无法取消此订单") ;
     //付费模块 5007xx
     public static CodeMsg INSUFFICIENT_BALANCE(String msg){
         return new CodeMsg(500700,"余额不足\n"+msg);

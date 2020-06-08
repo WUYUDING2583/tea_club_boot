@@ -97,6 +97,9 @@ public class PayController {
             order=orderService.getLatestUnpayOrder(customerId);
         }else{
             order=orderService.getOrder(orderId);
+            if(order==null){
+                throw new GlobalException(CodeMsg.ORDER_DELETED);
+            }
         }
         //查询账户余额
         Amount balance = customerService.getCustomerBalance(customerId);

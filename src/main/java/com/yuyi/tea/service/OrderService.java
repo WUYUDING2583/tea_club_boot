@@ -434,6 +434,11 @@ public class OrderService {
     public void saveOrderStatus(OrderStatus status) {
         try {
             orderMapper.saveOrderStatus(status);
+            Order order = getOrder(status.getOrderId());
+            order.setStatus(status);
+            order.getOrderStatusHistory().add(status);
+            log.info("更新缓存中的订单状态");
+            redisService.set(REDIS_ORDER_NAME+":"+order.getUid(),order);
         }catch (Exception e){
             throw new GlobalException(CodeMsg.UPDATE_ORDER_STATUS_FAIL);
         }
