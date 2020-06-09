@@ -153,6 +153,17 @@ public class ProductController {
         return products;
     }
 
+    /**
+     * 包厢扫码获取商品列表
+     * @return
+     */
+    @GetMapping("/mp/boxProduct")
+    public List<Product> getMpBoxProducts(){
+        List<Product> products=productService.getProducts();
+        return products;
+    }
+
+
     @GetMapping("/mp/product/{uid}")
     public Product getMpProduct(@PathVariable int uid){
         Product product = productService.getProduct(uid);

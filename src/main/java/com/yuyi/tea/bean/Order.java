@@ -31,6 +31,7 @@ public class Order implements Serializable {
     private float credit;
     private int clerkDiscount=100;
     private Shop placeOrderWay=null;
+    private ShopBox boxOrder;//在包厢内下的单
 
     public Order() {
     }
@@ -39,7 +40,7 @@ public class Order implements Serializable {
         this.uid = uid;
     }
 
-    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, Address address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount, Shop placeOrderWay) {
+    public Order(int uid, long orderTime, User customer, User clerk, OrderStatus status, List<OrderStatus> orderStatusHistory, List<OrderProduct> products, ActivityRule activityRule, List<Activity> activities, Amount amount, String buyerPs, String buyerRefundReason, String sellerPs, TrackInfo trackInfo, String deliverMode, Address address, List<Reservation> reservations, float ingot, float credit, int clerkDiscount, Shop placeOrderWay, ShopBox boxOrder) {
         this.uid = uid;
         this.orderTime = orderTime;
         this.customer = customer;
@@ -61,6 +62,15 @@ public class Order implements Serializable {
         this.credit = credit;
         this.clerkDiscount = clerkDiscount;
         this.placeOrderWay = placeOrderWay;
+        this.boxOrder = boxOrder;
+    }
+
+    public ShopBox getBoxOrder() {
+        return boxOrder;
+    }
+
+    public void setBoxOrder(ShopBox boxOrder) {
+        this.boxOrder = boxOrder;
     }
 
     public Shop getPlaceOrderWay() {

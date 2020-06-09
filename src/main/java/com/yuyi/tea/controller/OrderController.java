@@ -280,6 +280,12 @@ public class OrderController {
     @GetMapping("/mp/order/{orderId}")
     public Order getMpOrder(@PathVariable int orderId){
         Order order = orderService.getOrder(orderId);
+        if(order.getBoxOrder()!=null){
+            order.getBoxOrder().setPhotos(null);
+            order.getBoxOrder().setReservations(null);
+            order.getBoxOrder().setShop(null);
+            order.getBoxOrder().setInfos(null);
+        }
         return order;
     }
 

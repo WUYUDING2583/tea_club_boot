@@ -50,6 +50,12 @@ public interface OrderMapper {
                     @Result(column = "placeOrderWay",property = "placeOrderWay",
                             one = @One(select="com.yuyi.tea.mapper.ShopMapper.getShopName",
                                     fetchType = FetchType.LAZY)),
+                    @Result(column = "boxOrder",property = "boxOrder",
+                            one = @One(select="com.yuyi.tea.mapper.ShopBoxMapper.getShopBoxByUid",
+                                    fetchType = FetchType.LAZY)),
+                    @Result(column = "placeOrderWay",property = "placeOrderWay",
+                            one = @One(select="com.yuyi.tea.mapper.ShopMapper.getShopName",
+                                    fetchType = FetchType.LAZY)),
                     @Result(column = "deliverMode",property = "deliverMode"),
                     @Result(column = "uid",property = "products",
                             one = @One(select="com.yuyi.tea.mapper.OrderMapper.getOrderProducts",
@@ -182,7 +188,7 @@ public interface OrderMapper {
      * @param order
      */
     @Insert("<script>" +
-            "insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount,placeOrderWay,addressId,deliverMode,buyerPs) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount},#{placeOrderWay.uid},<if test='#{address}!=null'>#{address.uid}</if><if test='#{address}==null'>null</if>,#{deliverMode},#{buyerPs})" +
+            "insert into orders(orderTime,customerId,clerkId,ingot,credit,clerkDiscount,placeOrderWay,addressId,deliverMode,buyerPs,boxOrder) values(#{orderTime},#{customer.uid},#{clerk.uid},#{ingot},#{credit},#{clerkDiscount},#{placeOrderWay.uid},<if test='#{address}!=null'>#{address.uid}</if><if test='#{address}==null'>null</if>,#{deliverMode},#{buyerPs},#{boxOrder.uid})" +
             "</script>")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveOrder(Order order);
