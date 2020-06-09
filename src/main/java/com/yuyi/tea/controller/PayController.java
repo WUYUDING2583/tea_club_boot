@@ -69,17 +69,17 @@ public class PayController {
      * @return
      */
     @PostMapping("/mp/simulateCharge/{customerId}/{value}")
-    public String mpSimulatePay(@PathVariable int customerId,@PathVariable float value){
+    public Amount mpSimulatePay(@PathVariable int customerId,@PathVariable float value){
         try{
             //添加充值记录
             balanceService.recharge(customerId,value);
             //改变账户余额
             Amount balance = customerService.addBalance(customerId, value);
+            return balance;
         }catch (Exception e){
             e.printStackTrace();
             throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);
         }
-        return "success";
     }
 
     /**

@@ -208,4 +208,16 @@ public class CustomerController {
         return updatedCredit;
     }
 
+    /**
+     * 获取客户的消费记录（20条）
+     * @param customerId
+     * @param page
+     * @return
+     */
+    @GetMapping("/mp/bills/{customerId}/{page}")
+    public List<BillDetail> getMpBillDetails(@PathVariable int customerId,@PathVariable int page){
+        List<BillDetail> billDetails=customerService.getBillDetails(customerId,page);
+        return billDetails;
+    }
+
 }

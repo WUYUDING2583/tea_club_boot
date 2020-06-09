@@ -339,4 +339,15 @@ public class CustomerService {
     public void saveBillDetail(BillDetail billDetail) {
         customerMapper.saveBillDetail(billDetail);
     }
+
+    /**
+     * 获取客户的消费记录（20条）
+     * @param customerId
+     * @param page
+     * @return
+     */
+    public List<BillDetail> getBillDetails(int customerId, int page) {
+        List<BillDetail> billDetails=customerMapper.getBillDetails(customerId,page*20);
+        return  billDetails;
+    }
 }

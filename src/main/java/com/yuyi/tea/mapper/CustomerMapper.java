@@ -148,7 +148,7 @@ public interface CustomerMapper {
 
     /**
      * 新增元宝
-     * @param userId
+     * @param customerId
      * @param ingot
      */
     @Update("update customer set ingot=ingot+#{ingot} where uid=#{customerId}")
@@ -170,4 +170,30 @@ public interface CustomerMapper {
     @Insert("insert into billDetail(time,ingot,credit,descriptionId,customerId) values(#{time},#{ingot},#{credit},#{description.uid},#{customer.uid})")
     void saveBillDetail(BillDetail billDetail);
 
+    /**
+     * 获取客户的消费记录（20条）
+     * @param customerId
+     * @param offset
+     * @return
+     */
+    @Select("select * from billDetail where customerId=#{customerId} order by time desc limit #{offset},20")
+    @Results(id="billDetail",
+            value = {
+                    @Result(id = true,column = "uid",property = "uid"),
+                    @Result(column = "descriptionId",property = "description",
+                            one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getBillDescription",
+                                    fetchType = FetchType.LAZY)),
+                    @Result(column = "customerId",property = "customer",
+                            one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerByUid",
+                                    fetchType = FetchType.LAZY))
+            })
+    List<BillDetail> getBillDetails(int customerId, int offset);
+
+    /**
+     * 获取消费类型描述
+     * @param uid
+     * @return
+     */
+    @Select("select * from billDescription where uid=#{uid}")
+    BillDescription getBillDescription(int uid);
 }
