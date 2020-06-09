@@ -1,7 +1,6 @@
 package com.yuyi.tea.common;
 
 import com.yuyi.tea.bean.*;
-import com.yuyi.tea.common.utils.StringUtil;
 import com.yuyi.tea.common.utils.TimeUtil;
 
 public class CommConstants {
@@ -85,6 +84,17 @@ public class CommConstants {
         public static com.yuyi.tea.bean.Notification CHARGE(float value,long timestamp,int customerId){
             String content="您于"+TimeUtil.convertTimestampToTimeFormat(timestamp)+"在研茶充值"+value+"元，若非本人操作，请与管理员联系";
             return new com.yuyi.tea.bean.Notification(false,4,"充值完成",content, TimeUtil.getCurrentTimestamp(),new Customer(customerId));
+        }
+
+        public static com.yuyi.tea.bean.Notification ACTIVITY_PRESENT(String activityType, Amount amount, long currentTimestamp, int customerId) {
+            String content="您于"+TimeUtil.convertTimestampToTimeFormat(currentTimestamp)+"完成"+activityType+"任务，赠送您";
+            if(amount.getIngot()>0){
+                content+=amount.getIngot()+"元宝";
+            }
+            if(amount.getCredit()>0){
+                content+=amount.getCredit()+"积分";
+            }
+            return new com.yuyi.tea.bean.Notification(false,5,"活动赠送",content, currentTimestamp,new Customer(customerId));
         }
     }
 }

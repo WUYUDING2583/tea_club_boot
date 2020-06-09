@@ -196,4 +196,13 @@ public interface CustomerMapper {
      */
     @Select("select * from billDescription where uid=#{uid}")
     BillDescription getBillDescription(int uid);
+
+    /**
+     * 取客户的充值记录（20条）
+     * @param customerId
+     * @param offset
+     * @return
+     */
+    @Select("select * from recharge where customerId=#{customerId} order by time desc limit #{offset},20")
+    List<ChargeRecord> getChargeRecords(int customerId, int offset);
 }

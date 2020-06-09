@@ -350,4 +350,15 @@ public class CustomerService {
         List<BillDetail> billDetails=customerMapper.getBillDetails(customerId,page*20);
         return  billDetails;
     }
+
+    /**
+     * 获取客户的充值记录（20条）
+     * @param customerId
+     * @param page
+     * @return
+     */
+    public List<ChargeRecord> getChargeRecords(int customerId, int page) {
+        List<ChargeRecord> records=customerMapper.getChargeRecords(customerId,page*20);
+        return  records;
+    }
 }

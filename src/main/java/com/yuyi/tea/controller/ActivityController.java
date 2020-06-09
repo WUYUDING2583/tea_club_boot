@@ -95,6 +95,7 @@ public class ActivityController {
 
     /**
      * 获取阅读活动详情
+     * 默认阅读活动一次只有一个
      * @return
      */
     @GetMapping("/mp/reading/activity")

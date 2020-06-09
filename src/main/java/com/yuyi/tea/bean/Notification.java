@@ -9,7 +9,7 @@ public class Notification implements Serializable {
 
     private int uid;
     private boolean isRead;
-    private int type;//0 预约时间临近通知，1 退款成功通知，2 订单发货通知，3 门店自提订单准备完毕通知， 4 充值成功通知
+    private int type;//0 预约时间临近通知，1 退款成功通知，2 订单发货通知，3 门店自提订单准备完毕通知， 4 充值成功通知，5 活动赠送
     private String title;
     private String detail;
     private long time;

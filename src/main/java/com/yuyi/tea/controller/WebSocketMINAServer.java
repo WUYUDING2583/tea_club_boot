@@ -85,15 +85,15 @@ public class WebSocketMINAServer {
     /**
      * 群发自定义消息
      * */
-    public  void sendInfo(String text,@PathParam("sid") String sid) throws IOException {
-        log.info("推送消息到窗口"+sid+"，推送内容:"+text);
+    public  void sendInfo(@PathParam("sid") String sid) throws IOException {
+        log.info("推送消息到窗口"+sid+"，推送内容:success");
         for (WebSocketMINAServer item : webSocketSet) {
             try {
                 //这里可以设定只推送给这个sid的，为null则全部推送
                 if(sid==null) {
-                    item.sendMessage(text);
+                    item.sendMessage("success");
                 }else if(item.sid.equals(sid)){
-                    item.sendMessage(text);
+                    item.sendMessage("success");
                 }
             } catch (IOException e) {
                 continue;

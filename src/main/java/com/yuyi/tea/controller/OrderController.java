@@ -530,7 +530,7 @@ public class OrderController {
 //        smsService.sendRefundSuccess(order);
         //发送小程序通知
         try {
-            webSocketMINAServer.sendInfo("success",order.getCustomer().getContact());
+            webSocketMINAServer.sendInfo(order.getCustomer().getContact());
         } catch (IOException e) {
             e.printStackTrace();
         }

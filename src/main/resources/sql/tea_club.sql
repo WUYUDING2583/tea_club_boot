@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 09/06/2020 17:57:02
+ Date: 09/06/2020 21:07:29
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ CREATE TABLE `activity`  (
 -- Records of activity
 -- ----------------------------
 INSERT INTO `activity` VALUES (21, 'activity1', 'afdsfasdfasf', 1585315020000, 1588252620000, 1, 1, 1);
-INSERT INTO `activity` VALUES (25, 'activity2', 'asdfasdf', 1583845885000, 1589822892739, 0, 2, 0);
+INSERT INTO `activity` VALUES (25, 'activity2', 'asdfasdf', 1583845885000, 1599481357244, 0, 2, 0);
 INSERT INTO `activity` VALUES (26, 'hahah', 'hahahah', 1587042360000, 1589375160000, 0, 3, 0);
 INSERT INTO `activity` VALUES (30, 'asdfasdfasdfasdfas', 'asdfasdfasdf', 1585754344000, 1590247144000, 0, 4, 0);
 INSERT INTO `activity` VALUES (31, 'asldf', 'asdfasdf', 1590388527000, 1593498927000, 0, 0, 0);
@@ -67,6 +67,7 @@ INSERT INTO `activityApplyForCustomerType` VALUES (45, 37, 4);
 INSERT INTO `activityApplyForCustomerType` VALUES (46, 38, 1);
 INSERT INTO `activityApplyForCustomerType` VALUES (47, 42, 1);
 INSERT INTO `activityApplyForCustomerType` VALUES (48, 43, 3);
+INSERT INTO `activityApplyForCustomerType` VALUES (49, 34, 4);
 
 -- ----------------------------
 -- Table structure for activityApplyForProduct
@@ -515,7 +516,7 @@ CREATE TABLE `customer`  (
 -- ----------------------------
 INSERT INTO `customer` VALUES (1, 'customer1', 'askfjasdf', 'asdfiusahfa', 'asfs@asdf.com', 3, 0, 'safalss', 'adfuisf', 'aafslf', 617.5, 0);
 INSERT INTO `customer` VALUES (13, 'tt', '15847586985', NULL, NULL, 1, 0, NULL, NULL, NULL, 8, 0);
-INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 327, 0);
+INSERT INTO `customer` VALUES (17, '吴宇丁', '15868859587', '350723199610051010', NULL, 4, 1, '123456', NULL, NULL, 328, 0);
 
 -- ----------------------------
 -- Table structure for customerType
@@ -615,7 +616,7 @@ CREATE TABLE `notification`  (
   `detail` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '通知内容',
   `time` bigint(0) NULL DEFAULT NULL COMMENT '通知时间',
   `customerId` int(0) NULL DEFAULT NULL COMMENT '通知所属客户',
-  `type` int(0) NULL DEFAULT NULL COMMENT '通知类型0 预约时间临近通知，1 退款成功通知，2 订单发货通知，3 门店自提订单准备完毕通知，4 充值成功通知',
+  `type` int(0) NULL DEFAULT NULL COMMENT '通知类型0 预约时间临近通知，1 退款成功通知，2 订单发货通知，3 门店自提订单准备完毕通知，4 充值成功通知，5 活动赠送',
   PRIMARY KEY (`uid`) USING BTREE,
   INDEX `customerId`(`customerId`) USING BTREE,
   CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -630,6 +631,7 @@ INSERT INTO `notification` VALUES (7, 1, '退款成功', '您的订单，编号�
 INSERT INTO `notification` VALUES (8, 1, '退款成功', '您的订单，编号：288退款成功，退款12.0元宝0.0积分，请查收', 1591621790765, 17, 1);
 INSERT INTO `notification` VALUES (9, 1, '退款成功', '您的订单，编号：292退款成功，退款12.0元宝0.0积分，请查收', 1591626973077, 17, 1);
 INSERT INTO `notification` VALUES (10, 1, '退款成功', '您的订单，编号：293退款成功，退款12.0元宝0.0积分，请查收', 1591627244733, 17, 1);
+INSERT INTO `notification` VALUES (11, 0, '活动赠送', '您于2020-06-09 21:03完成阅读任务，赠送您1.0元宝', 1591707805468, 17, 5);
 
 -- ----------------------------
 -- Table structure for openHour

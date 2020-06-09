@@ -2,18 +2,22 @@ package com.yuyi.tea.controller;
 
 import com.google.gson.Gson;
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.Amount;
 import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.common.TimeRange;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.service.CustomerService;
 import com.yuyi.tea.service.OrderService;
+import com.yuyi.tea.service.interfaces.NoticeService;
 import com.yuyi.tea.service.interfaces.UserFaceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,6 +31,12 @@ public class CustomerController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private WebSocketMINAServer webSocketMINAServer;
+
+    @Autowired
+    private NoticeService noticeService;
 
     /**
      * 获取客户类型
@@ -218,6 +228,42 @@ public class CustomerController {
     public List<BillDetail> getMpBillDetails(@PathVariable int customerId,@PathVariable int page){
         List<BillDetail> billDetails=customerService.getBillDetails(customerId,page);
         return billDetails;
+    }
+    /**
+     * 获取客户的充值记录（20条）
+     * @param customerId
+     * @param page
+     * @return
+     */
+    @GetMapping("/mp/charge/{customerId}/{page}")
+    public List<ChargeRecord> getMpChargeRecords(@PathVariable int customerId,@PathVariable int page){
+        List<ChargeRecord> records=customerService.getChargeRecords(customerId,page);
+        return records;
+    }
+
+    /**
+     * 活动赠送金额
+     * @param customerId
+     * @param amount
+     * @return
+     */
+    @PutMapping("/mp/activity/present/{customerId}")
+    @Transactional(rollbackFor = Exception.class)
+    public Amount activityPresentMoney(@PathVariable int customerId,@RequestBody Amount amount){
+        customerService.addIngot(customerId,amount.getIngot());
+        customerService.addCredit(customerId,amount.getCredit());
+        //保存通知至数据库
+        Notification notification = CommConstants.Notification.ACTIVITY_PRESENT("阅读", amount, TimeUtil.getCurrentTimestamp(), customerId);
+        noticeService.saveNotification(notification);
+        //发送通知
+        Customer redisCustomer = customerService.getRedisCustomer(customerId);
+        try {
+            webSocketMINAServer.sendInfo(redisCustomer.getContact());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Amount customerBalance = customerService.getCustomerBalance(customerId);
+        return customerBalance;
     }
 
 }
