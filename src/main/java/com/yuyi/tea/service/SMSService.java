@@ -3,6 +3,7 @@ package com.yuyi.tea.service;
 import com.yuyi.tea.bean.Order;
 import com.yuyi.tea.bean.Reservation;
 import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.common.utils.NumberUtil;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.exception.GlobalException;
@@ -53,6 +54,9 @@ public class SMSService {
      * @return
      */
     public void sendOTP(String phone){
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
         try {
             String otp=null;
             //查看五分钟内是否已经发送过验证码
@@ -91,6 +95,9 @@ public class SMSService {
      * @param order
      */
     public void sendReservationClose(Order order){
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
         try {
             String content="";
             for(Reservation reservation:order.getReservations()){
@@ -122,6 +129,9 @@ public class SMSService {
      * @param order
      */
     public void sendRefundSuccess(Order order){
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
         try {
             String content="";
             for(Reservation reservation:order.getReservations()){
@@ -153,6 +163,9 @@ public class SMSService {
      * @param order
      */
     public void sendOrderShipped(Order order){
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
         try {
             String content="";
 
@@ -188,6 +201,9 @@ public class SMSService {
      * @param order
      */
     public void sendOrderPrepared(Order order){
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
         try {
             String[] params = {order.getUid()+"",order.getPlaceOrderWay().getName(),order.getPlaceOrderWay().getAddress()};
             SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
@@ -211,9 +227,14 @@ public class SMSService {
 
     /**
      * 充值成功通知
-     * @param order
+     * @param timestamp
+     * @param value
+     * @param contact
      */
     public void sendChargeSuccess(long timestamp,float value,String contact){
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
         try {
             String[] params = {TimeUtil.convertTimestampToTimeFormat(timestamp),value+""};
             SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);

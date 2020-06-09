@@ -170,9 +170,14 @@ public class ShopBoxService {
     public List<BoxReservation> getHotBoxes() {
         List<BoxReservation> boxes=shopBoxMapper.getHotBoxes();
         for(BoxReservation boxReservation:boxes){
-            boxReservation.getBox().setShop(null);
+            boxReservation.getBox().setShop(new Shop(boxReservation.getBox().getShop().getUid()));
             boxReservation.getBox().setReservations(null);
         }
+        return boxes;
+    }
+
+    public List<ShopBox> search(String value) {
+        List<ShopBox> boxes=shopBoxMapper.search("%"+value+"%");
         return boxes;
     }
 }

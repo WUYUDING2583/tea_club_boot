@@ -238,4 +238,9 @@ public class ProductService {
         }
         return products;
     }
+
+    public List<Product> search(String value) {
+        List<Product> products=productMapper.search("%"+value+"%");
+        return products;
+    }
 }

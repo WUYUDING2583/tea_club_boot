@@ -139,4 +139,15 @@ public class ArticleController {
         List<Article> articles = articleService.getArticles("valid", timeRange);
         return articles;
     }
+
+    /**
+     * 小程序获取文章
+     * @param articleId
+     * @return
+     */
+    @GetMapping("/mp/article/{articleId}")
+    public Article getArticle(@PathVariable int articleId){
+        Article article=articleService.getArticle(articleId);
+        return article;
+    }
 }

@@ -2,15 +2,11 @@ package com.yuyi.tea.controller;
 
 import com.google.gson.Gson;
 import com.yuyi.tea.bean.*;
-import com.yuyi.tea.common.Amount;
-import com.yuyi.tea.common.CodeMsg;
-import com.yuyi.tea.common.CommConstants;
-import com.yuyi.tea.common.TimeRange;
+import com.yuyi.tea.common.*;
 import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.exception.GlobalException;
-import com.yuyi.tea.service.CustomerService;
-import com.yuyi.tea.service.OrderService;
+import com.yuyi.tea.service.*;
 import com.yuyi.tea.service.interfaces.NoticeService;
 import com.yuyi.tea.service.interfaces.UserFaceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,6 +34,15 @@ public class CustomerController {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ShopBoxService shopBoxService;
+
+    @Autowired
+    private ArticleService articleService;
 
     /**
      * 获取客户类型
@@ -264,6 +270,41 @@ public class CustomerController {
         }
         Amount customerBalance = customerService.getCustomerBalance(customerId);
         return customerBalance;
+    }
+
+    /**
+     * 微信小程序搜索
+     * @param value
+     * @return
+     */
+    @GetMapping("/mp/search")
+    public SearchResult search(String value){
+        List<Product> products=productService.search(value);
+        List<ShopBox> boxes=shopBoxService.search(value);
+        List<Article> articles=articleService.search(value);
+        for(Product product:products){
+            product.setActivityRules(null);
+            product.setShop(null);
+            product.setProductDetails(null);
+            product.setActivities(null);
+            product.setSales(null);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(product.getPhotos().get(0));
+            product.setPhotos(photos);
+        }
+        for(ShopBox shopBox:boxes){
+            shopBox.setInfos(null);
+            shopBox.setShop(new Shop(shopBox.getShop().getUid()));
+            shopBox.setReservations(null);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(shopBox.getPhotos().get(0));
+            shopBox.setPhotos(photos);
+        }
+        for(Article article:articles){
+            article.setTags(null);
+        }
+        SearchResult result=new SearchResult(articles,products,boxes);
+        return result;
     }
 
 }

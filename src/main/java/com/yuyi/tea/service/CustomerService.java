@@ -279,7 +279,7 @@ public class CustomerService {
      * @return
      */
     public List<Customer> searchCustomers(String searchText) {
-        List<Customer> customers=customerMapper.searchCustomers(searchText);
+        List<Customer> customers=customerMapper.searchCustomers("%"+searchText+"%");
         for(Customer customer:customers){
             customer.setPassword(null);
         }

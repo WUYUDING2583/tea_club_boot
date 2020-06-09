@@ -118,4 +118,18 @@ public class ArticleService {
         return articles;
     }
 
+    public List<Article> search(String value) {
+        List<Article> articles=articleMapper.search("%"+value+"%");
+        return articles;
+    }
+
+    /**
+     * 小程序获取文章
+     * @param articleId
+     * @return
+     */
+    public Article getArticle(int articleId) {
+        Article article=articleMapper.getArticle(articleId);
+        return article;
+    }
 }

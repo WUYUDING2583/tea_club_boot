@@ -144,4 +144,8 @@ public interface ProductMapper {
      */
     @Select("select sales from lastMonthSalesView where productId=#{productId}")
     BigDecimal getProductMonthSales(int productId);
+
+    @Select("select * from product where name like #{value} or description like #{value}")
+    @ResultMap("product")
+    List<Product> search(String value);
 }

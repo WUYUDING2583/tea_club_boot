@@ -2,6 +2,7 @@ package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.bean.Shop;
+import com.yuyi.tea.bean.ShopBox;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -70,4 +71,5 @@ public interface ShopMapper {
 
     @Select("select uid,name from shop where uid=#{uid}")
     Shop getShopOfClerk(int uid);
+
 }

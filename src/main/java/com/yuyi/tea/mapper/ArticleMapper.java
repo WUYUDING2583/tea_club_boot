@@ -76,5 +76,16 @@ public interface ArticleMapper {
     @ResultMap("article")
     List<Article> getSwiperList();
 
+    @Select("select * from article where title like #{value} or description like #{value}")
+    @ResultMap("article")
+    List<Article> search(String value);
 
+    /**
+     * 小程序获取文章
+     * @param articleId
+     * @return
+     */
+    @Select("select * from article where uid=#{uid}")
+    @ResultMap("article")
+    Article getArticle(int articleId);
 }

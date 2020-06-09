@@ -143,6 +143,10 @@ public interface ShopBoxMapper {
                                     fetchType= FetchType.LAZY))
             })
     List<BoxReservation> getHotBoxes();
+
+    @Select("select * from shopBox where name like #{value} or description like #{value}")
+    @ResultMap("shopBox")
+    List<ShopBox> search(String value);
 }
 
 

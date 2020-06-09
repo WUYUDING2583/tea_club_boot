@@ -5,6 +5,8 @@ import com.yuyi.tea.common.utils.TimeUtil;
 
 public class CommConstants {
 
+    public static final boolean CLOSE_SMS = true;
+
     public static class UserException{
         public static final int USER_EXCEPTION_CODE=606;
         public static final class SHOP_INFO_NOT_EXIST{
