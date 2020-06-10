@@ -18,7 +18,7 @@ public class ShopBox implements Serializable {
     private int duration;//每泡茶时间
     private boolean enforceTerminal=false;
     private List<Reservation> reservations;
-    private boolean isShowOnHome=false;
+    private boolean showOnHome=false;
     private List<ShopBoxInfo> infos;
 
     public ShopBox() {
@@ -28,7 +28,7 @@ public class ShopBox implements Serializable {
         this.uid = uid;
     }
 
-    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, Price price, List<Photo> photos, int duration, boolean enforceTerminal, List<Reservation> reservations, boolean isShowOnHome, List<ShopBoxInfo> infos) {
+    public ShopBox(int uid, String name, String description, Shop shop, String boxNum, Price price, List<Photo> photos, int duration, boolean enforceTerminal, List<Reservation> reservations, boolean showOnHome, List<ShopBoxInfo> infos) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -39,7 +39,7 @@ public class ShopBox implements Serializable {
         this.duration = duration;
         this.enforceTerminal = enforceTerminal;
         this.reservations = reservations;
-        this.isShowOnHome = isShowOnHome;
+        this.showOnHome = showOnHome;
         this.infos = infos;
     }
 
@@ -68,11 +68,11 @@ public class ShopBox implements Serializable {
     }
 
     public boolean isShowOnHome() {
-        return isShowOnHome;
+        return showOnHome;
     }
 
     public void setShowOnHome(boolean showOnHome) {
-        isShowOnHome = showOnHome;
+        this.showOnHome = showOnHome;
     }
 
     public List<Reservation> getReservations() {

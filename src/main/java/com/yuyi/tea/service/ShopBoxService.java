@@ -9,6 +9,7 @@ import com.yuyi.tea.mapper.ShopMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,17 @@ public class ShopBoxService {
      * 新增包厢
      * @param shopBox
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveShopBox(ShopBox shopBox){
         priceMapper.savePrice(shopBox.getPrice());
         shopBoxMapper.saveShopBox(shopBox);
         for(Photo photo:shopBox.getPhotos()){
             photo.setShopBoxId(shopBox.getUid());
             photoMapper.saveShopBoxPhotos(photo);
+        }
+        for(ShopBoxInfo info:shopBox.getInfos()){
+            info.setBoxId(shopBox.getUid());
+            shopBoxMapper.saveBoxInfo(info);
         }
     }
 
@@ -62,14 +68,13 @@ public class ShopBoxService {
      * 失效包厢
      * @param uid
      */
+    @Transactional(rollbackFor = Exception.class)
     public void terminalShopBoxByUid(int uid){
         shopBoxMapper.terminalShopBoxByUid(uid);
-        log.info("将redis中对应"+uid+"包厢失效");
+        log.info("将redis中对应"+uid+"包厢删除");
         boolean hasKey=redisService.exists(REDIS_SHOP_BOX_NAME+":"+uid);
         if(hasKey){
-            ShopBox redisShopBox= (ShopBox) redisService.get(REDIS_SHOP_BOX_NAME+":"+uid);
-            redisShopBox.setEnforceTerminal(true);
-            redisService.set(REDIS_SHOP_BOX_NAME+":"+uid,redisShopBox);
+            redisService.remove(REDIS_SHOP_BOX_NAME+":"+uid);
         }
     }
 
@@ -97,7 +102,8 @@ public class ShopBoxService {
      * 修改包厢信息
      * @param shopBox
      */
-    public void updateShopBox(ShopBox shopBox){
+    @Transactional(rollbackFor = Exception.class)
+    public ShopBox updateShopBox(ShopBox shopBox){
         priceMapper.updatePrice(shopBox.getPrice());
         shopBoxMapper.updateShopBox(shopBox);
         ArrayList<Integer> photosUid=new ArrayList<Integer>();
@@ -119,11 +125,17 @@ public class ShopBoxService {
         List<Photo> currentPhotos = originPhotos.stream()
                 .filter((Photo photo)->photosUid.contains(photo.getUid()))
                 .collect(Collectors.toList());
-        Shop shop = shopMapper.getShopOfShopBox(shopBox.getShop().getUid());
-        shopBox.setShop(shop);
-        shopBox.setPhotos(currentPhotos);
+        //更新包厢须知
+        //首先删除包厢当前所有须知
+        shopMapper.deleteBoxInfos(shopBox.getUid());
+        for(ShopBoxInfo info:shopBox.getInfos()){
+            info.setBoxId(shopBox.getUid());
+            shopBoxMapper.saveBoxInfo(info);
+        }
+        shopBox=shopBoxMapper.getShopBoxByUid(shopBox.getUid());
         log.info("更新redis中包厢信息"+shopBox);
         redisService.set(REDIS_SHOP_BOX_NAME+":"+shopBox.getUid(),shopBox);
+        return shopBox;
     }
 
     /**

@@ -65,7 +65,6 @@ public class ShopService {
             shop = shopMapper.getShopByUid(uid);
             log.info("从数据库获取门店数据");
             log.info("将门店信息存入redis"+shop);
-            shop.setShopBoxes(null);
             redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
         }
         return shop;
@@ -76,6 +75,7 @@ public class ShopService {
      * 新增门店
      * @param shop
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveShop(Shop shop){
         shopMapper.saveShop(shop);
         for(OpenHour openHour:shop.getOpenHours()){
@@ -95,14 +95,13 @@ public class ShopService {
      * 门店失效，不再在商城展示
      * @param uid
      */
+    @Transactional(rollbackFor = Exception.class)
     public void terminalShop(int uid){
         boolean hasKey=redisService.exists(REDIS_SHOP_NAME+":"+uid);
         if(hasKey){
-            //若缓存中存在此商店，更新缓存中信息
-            log.info("更新缓存商店状态信息");
-            Shop shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
-            shop.setEnforceTerminal(true);
-            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
+            //若缓存中存在此商店，删除
+            log.info("删除缓存商店信息");
+            redisService.remove(REDIS_SHOP_NAME+":"+uid);
         }
         shopMapper.terminalShop(uid);
     }
@@ -111,6 +110,7 @@ public class ShopService {
      * 更改门店信息
      * @param shop
      */
+    @Transactional(rollbackFor = Exception.class)
     public Shop updateShop(Shop shop) {
         shopMapper.updateShop(shop);
         ArrayList<Integer> clerksUid=new ArrayList<Integer>();
@@ -181,6 +181,7 @@ public class ShopService {
             }
         }
         log.info("更新redis中门店信息"+shop);
+        shop = shopMapper.getShopByUid(shop.getUid());
         redisService.set(REDIS_SHOP_NAME+":"+shop.getUid(),shop);
         return shop;
     }

@@ -72,4 +72,10 @@ public interface ShopMapper {
     @Select("select uid,name from shop where uid=#{uid}")
     Shop getShopOfClerk(int uid);
 
+    /**
+     * 删除包厢须知
+     * @param boxId
+     */
+    @Delete("delete from shopBoxInfo where boxId=#{boxId}")
+    void deleteBoxInfos(int boxId);
 }

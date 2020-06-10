@@ -26,6 +26,14 @@ public class ShopBoxInfo implements Serializable {
         this.boxId = boxId;
     }
 
+    public int getBoxId() {
+        return boxId;
+    }
+
+    public void setBoxId(int boxId) {
+        this.boxId = boxId;
+    }
+
     public int getUid() {
         return uid;
     }

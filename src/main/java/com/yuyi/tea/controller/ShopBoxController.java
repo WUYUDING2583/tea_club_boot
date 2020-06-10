@@ -2,6 +2,7 @@ package com.yuyi.tea.controller;
 
 import com.yuyi.tea.bean.BoxReservation;
 import com.yuyi.tea.bean.Reservation;
+import com.yuyi.tea.bean.Shop;
 import com.yuyi.tea.bean.ShopBox;
 import com.yuyi.tea.service.RedisService;
 import com.yuyi.tea.service.ShopBoxService;
@@ -71,7 +72,8 @@ public class ShopBoxController {
     @PutMapping("/admin/shopBox")
     @Transactional(rollbackFor = Exception.class)
     public ShopBox updateShopBox(@RequestBody ShopBox shopBox){
-        shopBoxService.updateShopBox(shopBox);
+        shopBox = shopBoxService.updateShopBox(shopBox);
+        shopBox.setShop(new Shop(shopBox.getShop().getUid(),shopBox.getShop().getName()));
         return shopBox;
     }
 

@@ -19,8 +19,8 @@ public interface ShopBoxMapper {
      * 新增包厢
      * @param shopBox
      */
-    @Insert("insert into shopBox(uid,name,description,shopId,boxNum,priceId,duration) " +
-            "values(#{uid},#{name},#{description},#{shop.uid},#{boxNum},#{price.uid},#{duration})")
+    @Insert("insert into shopBox(name,description,shopId,boxNum,priceId,duration,showOnHome) " +
+            "values(#{name},#{description},#{shop.uid},#{boxNum},#{price.uid},#{duration},#{showOnHome})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveShopBox(ShopBox shopBox);
 
@@ -76,7 +76,7 @@ public interface ShopBoxMapper {
     @Select("select * from shopBoxInfo where boxId=#{boxId}")
     List<ShopBoxInfo> getShopBoxInfo(int boxId);
 
-    @Update("update shopBox set name=#{name},description=#{description},priceId=#{price.uid},duration=#{duration},boxNum=#{boxNum},shopId=#{shop.uid} where uid=#{uid}")
+    @Update("update shopBox set name=#{name},description=#{description},priceId=#{price.uid},duration=#{duration},boxNum=#{boxNum},shopId=#{shop.uid},showOnHome=#{showOnHome} where uid=#{uid}")
     void updateShopBox(ShopBox shopBox);
 
     @Update("update shopBox set shopId=#{shopId} where uid=#{uid}")
@@ -147,6 +147,13 @@ public interface ShopBoxMapper {
     @Select("select * from shopBox where name like #{value} or description like #{value}")
     @ResultMap("shopBox")
     List<ShopBox> search(String value);
+
+    /**
+     * 保存包厢须知
+     * @param info
+     */
+    @Insert("insert into shopBoxInfo(title,info,boxId) values(#{title},#{info},#{boxId})")
+    void saveBoxInfo(ShopBoxInfo info);
 }
 
 

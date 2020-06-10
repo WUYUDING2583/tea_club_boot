@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class CompanyService {
      * @param company
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Company updateCompany(Company company) {
         companyMapper.updateCompany(company);
         //更新缓存
