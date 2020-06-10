@@ -17,13 +17,13 @@ public class Product implements Serializable {
     private Price price;
     private int storage;
     private boolean enforceTerminal;
-    private List<Photo> photos;
-    private List<ActivityRule> activityRules;
-    private List<Activity> activities;
+    private List<Photo> photos=new ArrayList<>();
+    private List<ActivityRule> activityRules=new ArrayList<>();
+    private List<Activity> activities=new ArrayList<>();
     private Shop shop;
-    private boolean isShowOnHome=false;
+    private boolean showOnHome=false;
     private BigDecimal sales=BigDecimal.valueOf(0);
-    private List<Photo> productDetails;
+    private List<Photo> productDetails=new ArrayList<>();
 
     public Product() {
     }
@@ -38,7 +38,7 @@ public class Product implements Serializable {
         this.type = type;
     }
 
-    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean isShowOnHome, BigDecimal sales, List<Photo> productDetails) {
+    public Product(int uid, String name, ProductType type, String description, Price price, int storage, boolean enforceTerminal, List<Photo> photos, List<ActivityRule> activityRules, List<Activity> activities, Shop shop, boolean showOnHome, BigDecimal sales, List<Photo> productDetails) {
         this.uid = uid;
         this.name = name;
         this.type = type;
@@ -50,7 +50,7 @@ public class Product implements Serializable {
         this.activityRules = activityRules;
         this.activities = activities;
         this.shop = shop;
-        this.isShowOnHome = isShowOnHome;
+        this.showOnHome = showOnHome;
         this.sales = sales;
         this.productDetails = productDetails;
     }
@@ -88,11 +88,11 @@ public class Product implements Serializable {
     }
 
     public boolean isShowOnHome() {
-        return isShowOnHome;
+        return showOnHome;
     }
 
     public void setShowOnHome(boolean showOnHome) {
-        isShowOnHome = showOnHome;
+        this.showOnHome = showOnHome;
     }
 
     public Shop getShop() {

@@ -46,8 +46,8 @@ public interface ProductMapper {
     void saveProductType(ProductType productType);
 
     //创建商品
-    @Insert("insert into product(name,type,description,priceId,storage) " +
-            "values(#{name},#{type.uid},#{description},#{price.uid},#{storage})")
+    @Insert("insert into product(name,type,description,priceId,storage,showOnHome) " +
+            "values(#{name},#{type.uid},#{description},#{price.uid},#{storage},#{showOnHome})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveProduct(Product product);
 
