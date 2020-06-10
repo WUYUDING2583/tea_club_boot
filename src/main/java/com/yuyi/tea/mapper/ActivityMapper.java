@@ -26,7 +26,7 @@ public interface ActivityMapper {
      * 存储新增活动
      * @param activity
      */
-    @Insert("insert into activity(name,description,startTime,endTime,enforceTerminal,priority) values(#{name},#{description},#{startTime},#{endTime},#{enforceTerminal},#{priority})")
+    @Insert("insert into activity(name,description,startTime,endTime,enforceTerminal,priority,showOnHome) values(#{name},#{description},#{startTime},#{endTime},#{enforceTerminal},#{priority},#{showOnHome})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveActivity(Activity activity);
 
@@ -145,11 +145,11 @@ public interface ActivityMapper {
      * 更新活动信息
      * @param activity
      */
-    @Update("update activity set name=#{name},description=#{description},startTime=#{startTime},endTime=#{endTime} where uid=#{uid}")
+    @Update("update activity set name=#{name},description=#{description},startTime=#{startTime},endTime=#{endTime},showOnHome=#{showOnHome},priority=#{priority} where uid=#{uid}")
     void updateActivity(Activity activity);
 
     //根据uid删除该活动所有互斥活动
-    @Delete("delete from mutexActivity where activityId=#{uid}")
+    @Delete("delete from mutexActivity where activityId=#{uid} or mutexActivityId=#{uid}")
     void deleteMutexActivity(int uid);
 
     //根据uid删除该活动所有活动规则

@@ -49,4 +49,7 @@ public interface MybatisUserFaceInfoMapper {
      */
     @Update("update user_face_info set customerId=#{customerId} where uid=#{faceId}")
     void matchCustomer(int faceId, int customerId);
+
+    @Select("select uid,face_id,customerId,clerkId,face_feature,face from user_face_info where clerkId=#{clerkId}")
+    List<FaceUserInfo> getUserFaceInfoByClerkId(int clerkId);
 }

@@ -80,7 +80,7 @@ public class ClerkController {
     @PutMapping("/admin/clerk")
     @Transactional(rollbackFor = Exception.class)
     public Clerk updateClerk(@RequestBody Clerk clerk){
-        clerkService.updateClerk(clerk);
+        clerk = clerkService.updateClerk(clerk);
         return clerk;
     }
 

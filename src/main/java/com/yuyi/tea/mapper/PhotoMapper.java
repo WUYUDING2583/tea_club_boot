@@ -74,4 +74,6 @@ public interface PhotoMapper {
     void saveArticlePhoto(Photo photo);
 
 
+    @Select("select * from photo where uid=#{uid}")
+    Photo getPhotoByUid(int uid);
 }

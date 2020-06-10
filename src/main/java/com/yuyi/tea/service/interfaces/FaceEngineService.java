@@ -3,6 +3,7 @@ package com.yuyi.tea.service.interfaces;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.toolkit.ImageInfo;
+import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.dto.ProcessInfo;
 
@@ -32,4 +33,13 @@ public interface FaceEngineService {
     List<FaceUserInfo> compareFaceFeature(byte[] faceFeature, Integer groupId) throws InterruptedException, ExecutionException;
 
 
+    /**
+     * 职员人脸对比
+     * @param faceFeature
+     * @param clerk
+     * @return
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
+    boolean compareFaceFeature(FaceFeature faceFeature, Clerk clerk)throws InterruptedException, ExecutionException;
 }

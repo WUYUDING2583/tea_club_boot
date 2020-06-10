@@ -19,7 +19,7 @@ public class Activity implements Serializable {
     private List<Activity> mutexActivities;
     private List<ActivityRule> activityRules;
     private int priority;
-    private boolean isShowOnHome=false;
+    private boolean showOnHome=false;
 
     public Activity() {
     }
@@ -33,7 +33,7 @@ public class Activity implements Serializable {
         this.name = name;
     }
 
-    public Activity(int uid, String name, String description, long startTime, long endTime, boolean enforceTerminal, List<Photo> photos, List<Activity> mutexActivities, List<ActivityRule> activityRules, int priority, boolean isShowOnHome) {
+    public Activity(int uid, String name, String description, long startTime, long endTime, boolean enforceTerminal, List<Photo> photos, List<Activity> mutexActivities, List<ActivityRule> activityRules, int priority, boolean showOnHome) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -44,15 +44,15 @@ public class Activity implements Serializable {
         this.mutexActivities = mutexActivities;
         this.activityRules = activityRules;
         this.priority = priority;
-        this.isShowOnHome = isShowOnHome;
+        this.showOnHome = showOnHome;
     }
 
     public boolean isShowOnHome() {
-        return isShowOnHome;
+        return showOnHome;
     }
 
     public void setShowOnHome(boolean showOnHome) {
-        isShowOnHome = showOnHome;
+        this.showOnHome = showOnHome;
     }
 
     public int getPriority() {

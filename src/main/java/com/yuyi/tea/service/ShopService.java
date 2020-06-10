@@ -58,15 +58,15 @@ public class ShopService {
     public Shop getShopByUid(int uid){
         boolean hasKey=redisService.exists(REDIS_SHOP_NAME+":"+uid);
         Shop shop=null;
-        if(hasKey){
-            shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
-            log.info("从redis中获取门店信息"+shop);
-        }else {
+//        if(hasKey){
+//            shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
+//            log.info("从redis中获取门店信息"+shop);
+//        }else {
             shop = shopMapper.getShopByUid(uid);
             log.info("从数据库获取门店数据");
-            log.info("将门店信息存入redis"+shop);
-            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
-        }
+//            log.info("将门店信息存入redis"+shop);
+//            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
+//        }
         return shop;
     }
 
@@ -124,9 +124,9 @@ public class ShopService {
         List<Clerk> needDeleteClerks=originClerkss.stream()
                 .filter((Clerk clerk)->!clerksUid.contains(clerk.getUid()))
                 .collect(Collectors.toList());
-        //删除这些职员
+        //将这些职员的shopId设为null
         for(Clerk clerk:needDeleteClerks){
-            clerkMapper.terminalClerk(clerk.getUid());
+            clerkMapper.setShopIdNull(clerk.getUid());
         }
         //将更新后的职员返回
         List<Clerk> updateClerks=originClerkss.stream()
@@ -180,9 +180,9 @@ public class ShopService {
                 openHourMapper.insertOpenHourRepeat(date,openHour.getUid());
             }
         }
-        log.info("更新redis中门店信息"+shop);
+//        log.info("更新redis中门店信息"+shop);
         shop = shopMapper.getShopByUid(shop.getUid());
-        redisService.set(REDIS_SHOP_NAME+":"+shop.getUid(),shop);
+//        redisService.set(REDIS_SHOP_NAME+":"+shop.getUid(),shop);
         return shop;
     }
 }

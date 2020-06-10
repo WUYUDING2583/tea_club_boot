@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,17 +128,17 @@ public class ActivityService {
      * @return
      */
     public Activity getActivity(int uid) {
-        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+uid);
+//        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+uid);
         Activity activity;
-        if(hasKey){
-            activity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+uid);
-            log.info("从redis中获取活动信息"+activity);
-        }else{
+//        if(hasKey){
+//            activity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+uid);
+//            log.info("从redis中获取活动信息"+activity);
+//        }else{
             log.info("从数据库中获取活动信息");
             activity= activityMapper.getActivity(uid);
-            log.info("将获得信息存储到redis中"+activity);
-            redisService.set(REDIS_ACTIVITY_NAME+":"+uid,activity);
-        }
+//            log.info("将获得信息存储到redis中"+activity);
+//            redisService.set(REDIS_ACTIVITY_NAME+":"+uid,activity);
+//        }
         return activity;
     }
 
@@ -146,6 +147,7 @@ public class ActivityService {
      * @param activity
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Activity updateActivity(Activity activity) {
         activityMapper.updateActivity(activity);
         //更新照片
@@ -171,23 +173,20 @@ public class ActivityService {
         activityMapper.deleteMutexActivity(activity.getUid());
         List<Activity> mutexActivities = saveMutexActivity(activity);
         activity.setMutexActivities(mutexActivities);
-//        //更新活动规则
-//        //删除该活动当前所有规则
-//        activityMapper.deleteActivityRules(activity.getUid());
-//        //保存所有规则
-//        for(ActivityRule activityRule:activity.getActivityRules()) {
-//            activityRule.setActivityId(activity.getUid());
-//            saveActivityRule(activityRule);
-//        }
-//        List<ActivityRule> activityRules = activityMapper.getActivityRules(activity.getUid());
-//        activity.setActivityRules(activityRules);
-        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+activity.getUid());
-        if(hasKey){
-            log.info("更新redis中活动信息");
-            Activity redisActivity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+activity.getUid());
-            activity.setActivityRules(redisActivity.getActivityRules());
-            redisService.set(REDIS_ACTIVITY_NAME+":"+activity.getUid(),activity);
+        //更新活动规则
+        //删除该活动当前所有规则
+        activityMapper.deleteActivityRules(activity.getUid());
+        //保存所有规则
+        for(ActivityRule activityRule:activity.getActivityRules()) {
+            activityRule.setActivityId(activity.getUid());
+            saveActivityRule(activityRule);
         }
+//        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+activity.getUid());
+        activity=activityMapper.getActivity(activity.getUid());
+//        if(hasKey){
+//            log.info("更新redis中活动信息");
+//            redisService.set(REDIS_ACTIVITY_NAME+":"+activity.getUid(),activity);
+//        }
         return activity;
     }
 

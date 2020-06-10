@@ -6,6 +6,7 @@ import com.arcsoft.face.enums.DetectMode;
 import com.arcsoft.face.enums.DetectOrient;
 import com.arcsoft.face.toolkit.ImageInfo;
 import com.google.common.collect.Lists;
+import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.dto.ProcessInfo;
 import com.yuyi.tea.factory.FaceEngineFactory;
@@ -223,6 +224,32 @@ public class FaceEngineServiceImpl implements FaceEngineService {
         return resultFaceInfoList;
     }
 
+    @Override
+    public boolean compareFaceFeature(FaceFeature targetFaceFeature, Clerk clerk) throws InterruptedException, ExecutionException {
+        FaceEngine faceEngine = null;
+        try{
+            faceEngine = faceEngineObjectPool.borrowObject();
+            List<FaceUserInfo> faceInfoList =userFaceInfoMapper.getUserFaceInfoByClerkId(clerk.getUid());
+            for(FaceUserInfo faceUserInfo:faceInfoList){
+                FaceFeature sourceFaceFeature = new FaceFeature();
+                sourceFaceFeature.setFeatureData(faceUserInfo.getFaceFeature());
+                FaceSimilar faceSimilar = new FaceSimilar();
+                faceEngine.compareFaceFeature(targetFaceFeature, sourceFaceFeature, faceSimilar);
+                Integer similarValue = plusHundred(faceSimilar.getScore());//获取相似值
+                if (similarValue > passRate) {//相似值大于配置预期，加入到识别到人脸的列表
+                    return true;
+                }
+            }
+            return false;
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (faceEngine != null) {
+                faceEngineObjectPool.returnObject(faceEngine);
+            }
+        }
+        return false;
+    }
 
     private class CompareFaceTask implements Callable<List<FaceUserInfo>> {
 

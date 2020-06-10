@@ -33,7 +33,7 @@ public interface ClerkMapper {
      * 获取除管理远外的职员列表
      * @return
      */
-    @Select("select * from clerk where positionId!=1")
+    @Select("select * from clerk where positionId is null or positionId!=1")
     @ResultMap("clerk")
     List<Clerk> getAllClerks();
 
@@ -89,4 +89,11 @@ public interface ClerkMapper {
     @Select("select * from clerk where contact=#{contact}")
     @ResultMap("clerk")
     Clerk getClerkByContact(String contact);
+
+    /**
+     * 将职员的shopId设为null
+     * @param uid
+     */
+    @Update("update clerk set shopId=null where uid=#{uid}")
+    void setShopIdNull(int uid);
 }

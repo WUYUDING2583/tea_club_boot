@@ -5,6 +5,7 @@ import com.arcsoft.face.toolkit.ImageFactory;
 import com.arcsoft.face.toolkit.ImageInfo;
 import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.enums.ErrorCodeEnum;
 import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.ClerkMapper;
@@ -13,8 +14,6 @@ import com.yuyi.tea.mapper.ShopMapper;
 import com.yuyi.tea.service.interfaces.FaceEngineService;
 import com.yuyi.tea.service.interfaces.UserFaceInfoService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -55,10 +53,12 @@ public class ClerkService {
     public List<Clerk> getAllClerks(){
         List<Clerk> clerks = clerkMapper.getAllClerks();
         for(Clerk clerk:clerks){
-            clerk.getShop().setOpenHours(null);
-            clerk.getShop().setPhotos(null);
-            clerk.getShop().setClerks(null);
-            clerk.getShop().setShopBoxes(null);
+            if(clerk.getShop()!=null){
+                clerk.getShop().setOpenHours(null);
+                clerk.getShop().setPhotos(null);
+                clerk.getShop().setClerks(null);
+                clerk.getShop().setShopBoxes(null);
+            }
             clerk.setAvatar(null);
             clerk.setPassword(null);
             clerk.setPositionAutorityFrontDetails(null);
@@ -120,14 +120,13 @@ public class ClerkService {
      * 失效职员
      * @param uid
      */
+    @Transactional(rollbackFor = Exception.class)
     public void terminalClerk(int uid) {
         clerkMapper.terminalClerk(uid);
         boolean hasKey=redisService.exists(REDIS_CLERK_NAME+":"+uid);
         if(hasKey){
             log.info("职员"+uid+"离职");
-            Clerk  clerk= (Clerk) redisService.get(REDIS_CLERK_NAME+":"+uid);
-            clerk.setEnforceTerminal(true);
-            redisService.set(REDIS_CLERK_NAME+":"+uid,clerk);
+            redisService.remove(REDIS_CLERK_NAME+":"+uid);
         }
     }
 
@@ -169,26 +168,50 @@ public class ClerkService {
      * 更新职员信息
      * @param clerk
      */
-    public void updateClerk(Clerk clerk) {
+    @Transactional(rollbackFor = Exception.class)
+    public Clerk updateClerk(Clerk clerk) {
         clerkMapper.updateClerk(clerk);
-        Photo avatar = clerk.getAvatar();
+        Photo avatar = photoMapper.getPhotoByUid(clerk.getAvatar().getUid());
         Photo originAvatar = photoMapper.getAvatarByClerkId(clerk.getUid());
         if(originAvatar!=null&&originAvatar.getUid()!=avatar.getUid()){
-            photoMapper.deletePhoto(originAvatar.getUid());
+            //对比当前照片与之前照片是否是同一个人
+            boolean isSame=false;
+            try{
+                BufferedImage bufImage = ImageIO.read(new ByteArrayInputStream(avatar.getPhoto()));
+                ImageInfo imageInfo = ImageFactory.bufferedImage2ImageInfo(bufImage);
+
+
+                //人脸特征获取
+                List<FaceFeature> faceFeatureList = faceEngineService.extractFaceFeature(imageInfo);
+                if (faceFeatureList == null) {
+                    throw new GlobalException(CodeMsg.NOT_SAME_FACE);
+                }
+                for(FaceFeature faceFeature:faceFeatureList) {
+                    //人脸比对，获取比对结果
+                    if(faceEngineService.compareFaceFeature(faceFeature, clerk)){
+                        isSame=true;
+                    }
+                }
+            }catch (Exception e){
+                photoMapper.deletePhoto(avatar.getUid());
+                throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
+            }
+            //是同一人
+            if(isSame){
+                photoMapper.deletePhoto(originAvatar.getUid());
+                avatar.setClerkId(clerk.getUid());
+                photoMapper.saveClerkAvatar(avatar);
+            }else{
+                throw new GlobalException(CodeMsg.NOT_SAME_FACE);
+            }
         }
-        avatar.setClerkId(clerk.getUid());
-        photoMapper.saveClerkAvatar(avatar);
-        Photo updateAvatar = photoMapper.getAvatarByClerkId(clerk.getUid());
-        Shop updateClerkShop = shopMapper.getShopOfClerk(clerk.getShop().getUid());
-        Position updatePosition = clerkMapper.getPosition(clerk.getPosition().getUid());
-        clerk.setPosition(updatePosition);
-        clerk.setShop(updateClerkShop);
-        clerk.setAvatar(updateAvatar);
+        clerk = clerkMapper.getClerk(clerk.getUid());
         boolean hasKey=redisService.exists(REDIS_CLERK_NAME+":"+clerk.getUid());
         if(hasKey){
             log.info("更新redis中职员信息");
             redisService.set(REDIS_CLERK_NAME+":"+clerk.getUid(),clerk);
         }
+        return clerk;
     }
 
     /**
