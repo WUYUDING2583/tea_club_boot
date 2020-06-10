@@ -4,6 +4,7 @@ import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.exception.PhotoTooBigException;
 import com.yuyi.tea.exception.UserException;
 import com.yuyi.tea.service.PhotoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import javax.management.relation.Relation;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@Slf4j
 public class PhotoController {
 
     @Autowired
@@ -32,6 +34,7 @@ public class PhotoController {
         // 得到文件
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
         if(file.getSize()>1024*1024*1024){
+            log.info("图片太大");
             throw new PhotoTooBigException();
         }
         Photo photo = new Photo();

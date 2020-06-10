@@ -56,7 +56,7 @@ public interface ClerkMapper {
     List<Position> getPositions();
 
     //新增职员
-    @Insert("insert into clerk(name,positionId,contact,identityId,gender,address,shopId,password) values(#{name},#{position.uid},#{contact},#{identityId},#{gender},#{address},#{shop.uid},#{password})")
+    @Insert("insert into clerk(name,positionId,contact,identityId,gender,address,shopId,password,enforceTerminal) values(#{name},#{position.uid},#{contact},#{identityId},#{gender},#{address},#{shop.uid},#{password},#{enforceTerminal})")
     @Options(useGeneratedKeys=true, keyProperty="uid")
     void saveClerk(Clerk clerk);
 

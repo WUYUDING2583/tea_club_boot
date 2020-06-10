@@ -1,15 +1,28 @@
 package com.yuyi.tea.service;
 
+import com.arcsoft.face.FaceFeature;
+import com.arcsoft.face.toolkit.ImageFactory;
+import com.arcsoft.face.toolkit.ImageInfo;
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.CodeMsg;
+import com.yuyi.tea.enums.ErrorCodeEnum;
+import com.yuyi.tea.exception.GlobalException;
 import com.yuyi.tea.mapper.ClerkMapper;
 import com.yuyi.tea.mapper.PhotoMapper;
 import com.yuyi.tea.mapper.ShopMapper;
+import com.yuyi.tea.service.interfaces.FaceEngineService;
+import com.yuyi.tea.service.interfaces.UserFaceInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -31,6 +44,12 @@ public class ClerkService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    FaceEngineService faceEngineService;
+
+    @Autowired
+    UserFaceInfoService userFaceInfoService;
 
     //获取除管理员外的职员列表
     public List<Clerk> getAllClerks(){
@@ -70,11 +89,31 @@ public class ClerkService {
      * 新增职员
      * @param clerk
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveClerk(Clerk clerk) {
+        //密码默认为身份证后8为
         clerk.setPassword(clerk.getIdentityId().substring(clerk.getIdentityId().length()-8));
         clerkMapper.saveClerk(clerk);
         clerk.getAvatar().setClerkId(clerk.getUid());
         photoMapper.saveClerkAvatar(clerk.getAvatar());
+        //提取照片人脸特征值
+        Photo avatar = photoMapper.getAvatarByClerkId(clerk.getUid());
+        try {
+            BufferedImage bufImage = ImageIO.read(new ByteArrayInputStream(avatar.getPhoto()));
+            ImageInfo imageInfo = ImageFactory.bufferedImage2ImageInfo(bufImage);
+
+            //人脸特征获取
+            List<FaceFeature> faceFeatureList = faceEngineService.extractFaceFeature(imageInfo);
+            if (faceFeatureList == null||faceFeatureList.size()==0) {
+                throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
+            }
+            for(FaceFeature faceFeature:faceFeatureList){
+                userFaceInfoService.addFace(avatar.getPhoto(), 1, clerk);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.toolkit.ImageFactory;
 import com.arcsoft.face.toolkit.ImageInfo;
+import com.yuyi.tea.bean.Clerk;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.domain.UserFaceInfo;
 import com.yuyi.tea.dto.FaceUserInfo;
@@ -83,6 +84,49 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
             }
 
             log.info("faceAdd:" + name);
+            return userFaceInfoList;
+        } catch (Exception e) {
+            log.error("", e);
+            throw new GlobalException(new CodeMsg(ErrorCodeEnum.UNKNOWN));
+        }
+    }
+
+    /**
+     * 职员人脸添加,并返回人脸数据
+     * @param decode
+     * @param groupId
+     * @param clerk
+     * @return
+     */
+    @Override
+    public List<FaceUserInfo> addFace(byte[] decode, Integer groupId, Clerk clerk) {
+        try {
+            ImageInfo imageInfo = ImageFactory.getRGBData(decode);
+
+            //人脸特征获取
+            List<FaceFeature> faceFeatureList = faceEngineService.extractFaceFeature(imageInfo);
+            if (faceFeatureList == null||faceFeatureList.size()==0) {
+                throw new GlobalException(new CodeMsg(ErrorCodeEnum.NO_FACE_DETECTED));
+            }
+            List<FaceUserInfo> userFaceInfoList=new ArrayList<>();
+            for(FaceFeature faceFeature:faceFeatureList){
+
+                UserFaceInfo userFaceInfo = new UserFaceInfo();
+                userFaceInfo.setGroupId(groupId);
+                userFaceInfo.setFaceFeature(faceFeature.getFeatureData());
+                userFaceInfo.setFaceId(RandomUtil.randomString(10));
+                userFaceInfo.setFace(decode);
+                userFaceInfo.setClerk(clerk);
+
+                //人脸特征插入到数据库
+                insertSelective(userFaceInfo);
+                FaceUserInfo faceUserInfo=new FaceUserInfo();
+                faceUserInfo.setFaceId(userFaceInfo.getFaceId());
+                faceUserInfo.setFaceFeature(userFaceInfo.getFaceFeature());
+                userFaceInfoList.add(faceUserInfo);
+            }
+
+            log.info("faceAdd:" + clerk.getName());
             return userFaceInfoList;
         } catch (Exception e) {
             log.error("", e);
