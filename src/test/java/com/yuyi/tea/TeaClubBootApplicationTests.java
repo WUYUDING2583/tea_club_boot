@@ -7,6 +7,7 @@ import com.yuyi.tea.common.utils.TimeUtil;
 import com.yuyi.tea.mapper.*;
 import com.yuyi.tea.service.LoginService;
 import com.yuyi.tea.service.RedisService;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,20 +31,12 @@ import java.util.concurrent.TimeUnit;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TeaClubBootApplicationTests {
 
+    @Autowired
+    private ActivityMapper activityMapper;
     @Test
     void test(){
-        Runnable runnable = new Runnable() {
-            public void run() {
-                // task to run goes here
-                System.out.println("Hello !!"+ TimeUtil.getCurrentTimestamp());
-            }
-        };
-        ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
-        // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
-        System.out.println("start main thread"+ TimeUtil.getCurrentTimestamp());
-        executor.schedule(runnable, 10,  TimeUnit.SECONDS);
-        sleep(TimeUnit.SECONDS,30);
-        System.out.println("end main thread"+ TimeUtil.getCurrentTimestamp());
+        List<Activity> shoppingActivity = activityMapper.getShoppingActivity();
+        System.out.println(shoppingActivity);
 
     }
     private void sleep(TimeUnit unit, long time) {

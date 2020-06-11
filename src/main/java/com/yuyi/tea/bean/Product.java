@@ -16,7 +16,7 @@ public class Product implements Serializable {
     private String description;
     private Price price;
     private int storage;
-    private boolean enforceTerminal;
+    private boolean enforceTerminal=false;
     private List<Photo> photos=new ArrayList<>();
     private List<ActivityRule> activityRules=new ArrayList<>();
     private List<Activity> activities=new ArrayList<>();

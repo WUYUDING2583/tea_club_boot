@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,12 +90,17 @@ public class ProductService {
      * 创建商品
      * @param product
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveProduct(Product product) {
         priceMapper.savePrice(product.getPrice());
         productMapper.saveProduct(product);
         for(Photo photo:product.getPhotos()){
             photo.setProductId(product.getUid());
             photoMapper.saveProductPhoto(photo);
+        }
+        for(Photo photo:product.getProductDetails()){
+            photo.setProductDetailId(product.getUid());
+            photoMapper.saveProductDetailPhoto(photo);
         }
     }
 
@@ -139,6 +145,12 @@ public class ProductService {
             log.info("将产品详情存入redis"+product);
             redisService.set(REDIS_PRODUCT_NAME+":"+uid,product);
         }
+        //获取盖产品参与的活动
+        List<Activity> activities=activityService.getProductActivity(uid);
+        product.setActivities(activities);
+        //获取该产品的库存
+        int storage = productMapper.getProductStorage(uid);
+        product.setStorage(storage);
         return product;
     }
 
@@ -147,11 +159,12 @@ public class ProductService {
      * @param product
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Product updateProduct(Product product) {
         productMapper.updateProduct(product);
         priceMapper.updatePrice(product.getPrice());
         ArrayList<Integer> photosUid=new ArrayList<Integer>();
-        //先更新包厢照片数据
+        //先更新产品展示照片数据
         for(Photo photo:product.getPhotos()){
             photosUid.add(photo.getUid());
             photo.setProductId(product.getUid());
@@ -166,16 +179,26 @@ public class ProductService {
         for(Photo photo:needDeletePhotos){
             photoMapper.deletePhoto(photo.getUid());
         }
-        List<Photo> currentPhotos = originPhotos.stream()
-                .filter((Photo photo)->photosUid.contains(photo.getUid()))
+        //更新产品详情照片数据
+        ArrayList<Integer> productDetails=new ArrayList<Integer>();
+        for(Photo photo:product.getProductDetails()){
+            productDetails.add(photo.getUid());
+            photo.setProductDetailId(product.getUid());
+            photoMapper.saveProductDetailPhoto(photo);
+        }
+        //获取目前所有该产品照片再过滤出过滤后要删除的照片
+        List<Photo> originProductDetails = photoMapper.getProductDetailPhotos(product.getUid());
+        List<Photo> needDeleteProductDetails=originProductDetails.stream()
+                .filter((Photo photo)->!productDetails.contains(photo.getUid()))
                 .collect(Collectors.toList());
-        product.setPhotos(currentPhotos);
+        //删除这些照片
+        for(Photo photo:needDeleteProductDetails){
+            photoMapper.deletePhoto(photo.getUid());
+        }
         boolean hasKey=redisService.exists(REDIS_PRODUCT_NAME+":"+product.getUid());
+        product=productMapper.getProduct(product.getUid());
         if(hasKey){
             log.info("更新redis中产品信息");
-            Product redisProduct= (Product) redisService.get(REDIS_PRODUCT_NAME+":"+product.getUid());
-            product.setActivityRules(redisProduct.getActivityRules());
-            product.setActivities(redisProduct.getActivities());
             redisService.set(REDIS_PRODUCT_NAME+":"+product.getUid(),product);
         }
         return product;

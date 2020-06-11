@@ -25,6 +25,7 @@ public class ActivityService {
     public static final String REDIS_ACTIVITY_NAME=REDIS_ACTIVITIES_NAME+":activity";
     public static final String REDIS_ACTIVITY_RULES_NAME=REDIS_ACTIVITIES_NAME+":activityRules";
     public static final String REDIS_ACTIVITY_RULE_NAME=REDIS_ACTIVITY_RULES_NAME+":activityRule";
+    public static final String REDIS_PRODUCT_ACTIVITY_RULES_NAME=REDIS_ACTIVITY_RULES_NAME+":product";
 
     @Autowired
     private ActivityMapper activityMapper;
@@ -273,10 +274,26 @@ public class ActivityService {
 
     /**
      * 获取阅读活动详情
+     *
      * @return
      */
     public Activity getReadingActivity() {
         Activity activity=activityMapper.getReadingActivity();
         return activity;
+    }
+
+
+    /**
+     * 获取产品参与的活动
+     * @param uid
+     * @return
+     */
+    public List<Activity> getProductActivity(int uid) {
+        List<Activity> activitiesByProduct = activityMapper.getActivitiesByProduct(uid);
+        List<Activity> shoppingActivity = activityMapper.getShoppingActivity();
+        for (Activity activity : shoppingActivity) {
+            activitiesByProduct.add(activity);
+        }
+        return activitiesByProduct;
     }
 }

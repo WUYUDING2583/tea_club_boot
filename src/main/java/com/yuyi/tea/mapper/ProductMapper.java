@@ -103,7 +103,7 @@ public interface ProductMapper {
     Product getProduct(int uid);
 
     //更新产品信息
-    @Update("update product set name=#{name},type=#{type.uid},description=#{description},storage=#{storage} where uid=#{uid}")
+    @Update("update product set name=#{name},type=#{type.uid},description=#{description},storage=#{storage},showOnHome=#{showOnHome} where uid=#{uid}")
     void updateProduct(Product product);
 
     /**
@@ -148,4 +148,12 @@ public interface ProductMapper {
     @Select("select * from product where name like #{value} or description like #{value}")
     @ResultMap("product")
     List<Product> search(String value);
+
+    /**
+     * 获取产品库存
+     * @param uid
+     * @return
+     */
+    @Select("select storage from product where uid=#{uid}")
+    int getProductStorage(int uid);
 }

@@ -76,4 +76,7 @@ public interface PhotoMapper {
 
     @Select("select * from photo where uid=#{uid}")
     Photo getPhotoByUid(int uid);
+
+    @Update("update photo set productDetailId=#{productDetailId} where uid=#{uid}")
+    void saveProductDetailPhoto(Photo photo);
 }

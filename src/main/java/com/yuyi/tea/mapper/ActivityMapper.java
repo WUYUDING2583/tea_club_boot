@@ -241,4 +241,16 @@ public interface ActivityMapper {
             ") limit 1")
     @ResultMap("activity")
     Activity getReadingActivity();
+
+    /**
+     * 获取购物满减/赠活动，此活动适用于所有产品
+     * @return
+     */
+    @Select("select * from activity where enforceTerminal=false and " +
+            "UNIX_TIMESTAMP(NOW())*1000<endTime and UNIX_TIMESTAMP(NOW())*1000>startTime and " +
+            "uid in (" +
+            "select activityId from activityRule where typeId=2" +
+            ")")
+    @ResultMap("activity")
+    List<Activity> getShoppingActivity();
 }

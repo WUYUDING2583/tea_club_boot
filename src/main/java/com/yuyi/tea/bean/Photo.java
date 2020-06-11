@@ -17,6 +17,7 @@ public class Photo implements Serializable {
     private int activityId;
     private int productId;
     private int articleId;
+    private int productDetailId;
 
     public Photo() {
     }
@@ -28,6 +29,14 @@ public class Photo implements Serializable {
     public Photo(int uid, byte[] photo) {
         this.uid = uid;
         this.photo = photo;
+    }
+
+    public int getProductDetailId() {
+        return productDetailId;
+    }
+
+    public void setProductDetailId(int productDetailId) {
+        this.productDetailId = productDetailId;
     }
 
     public Photo(byte[] photo) {
