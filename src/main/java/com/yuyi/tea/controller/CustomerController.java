@@ -134,6 +134,15 @@ public class CustomerController {
         return customer;
     }
 
+    @GetMapping("/admin/customers/{uid}")
+    public Customer getCustomer(@PathVariable int uid){
+        Customer customer = customerService.getRedisCustomer(uid);
+        customer.setPassword(null);
+        customer.setEnterpriseCustomerApplications(null);
+        customer.setOrders(null);
+        return customer;
+    }
+
     /**
      * 若type==face
      * 根据user_face_info的uid获取客户信息

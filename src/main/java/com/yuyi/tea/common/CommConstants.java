@@ -5,7 +5,7 @@ import com.yuyi.tea.common.utils.TimeUtil;
 
 public class CommConstants {
 
-    public static final boolean CLOSE_SMS = true;
+    public static final boolean CLOSE_SMS = false;
 
     public static class UserException{
         public static final int USER_EXCEPTION_CODE=606;
@@ -51,9 +51,9 @@ public class CommConstants {
     public static class Notification{
         public static  com.yuyi.tea.bean.Notification RESERVATION_CLOSE(Order order){
             String content="您预约的包厢"+order.getReservations().get(0).getBox().getName()+
-                    "\n预约时间：";
+                    " 预约时间：";
             for(Reservation reservation:order.getReservations()){
-                content+=TimeUtil.convertTimestampToyyyMMdd(reservation.getReservationTime())+" "+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime())+"~"+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime()+reservation.getBox().getDuration()*1000*60)+"\n";
+                content+=TimeUtil.convertTimestampToyyyMMdd(reservation.getReservationTime())+" "+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime())+"~"+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime()+reservation.getBox().getDuration()*1000*60)+" ";
             }
             content+="已临近预约时间，请不要忘记哦";
             return new com.yuyi.tea.bean.Notification(false,0,"预约临近",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
@@ -63,23 +63,23 @@ public class CommConstants {
             return new com.yuyi.tea.bean.Notification(false,1,"退款成功",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
         }
         public static com.yuyi.tea.bean.Notification ORDER_SHIPPED(Order order){
-            String content="您购买的商品已发货\n" +
-                    "订单编号："+order.getUid()+"\n" ;
+            String content="您购买的商品已发货 " +
+                    "订单编号："+order.getUid()+" " ;
             if(order.getTrackInfo().getCompanyName()!=null&&!order.getTrackInfo().getCompanyName().equals("")){
-                content+="物流公司："+order.getTrackInfo().getCompanyName()+"\n" +
-                        "物流单号："+order.getTrackInfo().getTrackingId()+"\n" ;
+                content+="物流公司："+order.getTrackInfo().getCompanyName()+" " +
+                        "物流单号："+order.getTrackInfo().getTrackingId()+" " ;
             }else{
-                content+="配送人联系方式："+order.getTrackInfo().getPhone()+"\n" +
-                        "配送人信息："+order.getTrackInfo().getDescription()+"\n";
+                content+="配送人联系方式："+order.getTrackInfo().getPhone()+" " +
+                        "配送人信息："+order.getTrackInfo().getDescription()+" ";
             }
             content+="请查收";
             return new com.yuyi.tea.bean.Notification(false,2,"订单发货",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
         }
         public static com.yuyi.tea.bean.Notification ORDER_PREPARED(Order order){
-            String content="您购买的商品备好\n" +
-                    "订单编号："+order.getUid()+"\n"+
-                    "可前往"+order.getPlaceOrderWay().getName()+"\n" +
-                    "地址："+order.getPlaceOrderWay().getAddress()+"\n" +
+            String content="您购买的商品备好 " +
+                    "订单编号："+order.getUid()+" "+
+                    "可前往"+order.getPlaceOrderWay().getName()+" " +
+                    "地址："+order.getPlaceOrderWay().getAddress()+" " +
                     "领取";
             return new com.yuyi.tea.bean.Notification(false,3,"订单备好",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
         }

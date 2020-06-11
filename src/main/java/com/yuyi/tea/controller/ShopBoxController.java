@@ -1,9 +1,6 @@
 package com.yuyi.tea.controller;
 
-import com.yuyi.tea.bean.BoxReservation;
-import com.yuyi.tea.bean.Reservation;
-import com.yuyi.tea.bean.Shop;
-import com.yuyi.tea.bean.ShopBox;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.service.RedisService;
 import com.yuyi.tea.service.ShopBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +107,10 @@ public class ShopBoxController {
         List<BoxReservation> boxes=shopBoxService.getHotBoxes();
         List<BoxReservation> list=new ArrayList<>();
         for(int i=0;i<3;i++){
+            Photo photo = boxes.get(i).getBox().getPhotos().get(0);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(photo);
+            boxes.get(i).getBox().setPhotos(photos);
             list.add(boxes.get(i));
         }
         return list;

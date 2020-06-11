@@ -40,6 +40,7 @@ public class ShopService {
     @Autowired
     private RedisService redisService;
 
+
     /**
      * 获取门店列表
      * @return
@@ -58,15 +59,21 @@ public class ShopService {
     public Shop getShopByUid(int uid){
         boolean hasKey=redisService.exists(REDIS_SHOP_NAME+":"+uid);
         Shop shop=null;
-//        if(hasKey){
-//            shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
-//            log.info("从redis中获取门店信息"+shop);
-//        }else {
+        if(hasKey){
+            shop= (Shop) redisService.get(REDIS_SHOP_NAME+":"+uid);
+            log.info("从redis中获取门店信息"+shop);
+        }else {
             shop = shopMapper.getShopByUid(uid);
             log.info("从数据库获取门店数据");
-//            log.info("将门店信息存入redis"+shop);
-//            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
-//        }
+            log.info("将门店信息存入redis"+shop);
+            redisService.set(REDIS_SHOP_NAME+":"+uid,shop);
+        }
+        //获取门店职员
+        List<Clerk> clerks=clerkMapper.getClerksByShopId(uid);
+        shop.setClerks(clerks);
+        //获取门店包厢
+        List<ShopBox> boxes=shopBoxMapper.getShopBoxByShopId(uid);
+        shop.setShopBoxes(boxes);
         return shop;
     }
 

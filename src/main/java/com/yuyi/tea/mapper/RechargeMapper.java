@@ -13,6 +13,5 @@ public interface RechargeMapper {
      * @param time
      */
     @Insert("insert into recharge(customerId,amount,time) values(#{customerId},#{amount},#{time})")
-//    @Options(useGeneratedKeys=true, keyProperty="uid")
     void recharge(int customerId, float amount, long time);
 }

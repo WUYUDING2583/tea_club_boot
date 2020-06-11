@@ -72,7 +72,7 @@ public interface ArticleMapper {
      * 获取小程序走马灯展示的文章
      * @return
      */
-    @Select("select * from article where isShowOnHome=true")
+    @Select("select * from article where showOnHome=true")
     @ResultMap("article")
     List<Article> getSwiperList();
 

@@ -41,12 +41,17 @@ public interface OrderMapper {
      * @return
      */
     @Select("select * from orders where uid in " +
-            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status!='complete' and A.status!='refunded')")
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status!='complete' and A.status!='refunded' and A.status!='unpay')" +
+            "order by orderTime desc")
     @Results(id="order",
             value = {
                     @Result(id = true,column = "uid",property = "uid"),
-                    @Result(column = "customerId",property = "customer",typeHandler = CustomerTypeHandler.class),
-                    @Result(column = "clerkId",property = "clerk",typeHandler = ClerkTypeHandler.class),
+                    @Result(column = "customerId",property = "customer",
+                            one = @One(select="com.yuyi.tea.mapper.CustomerMapper.getCustomerByUid",
+                            fetchType = FetchType.LAZY)),
+                    @Result(column = "clerkId",property = "clerk",
+                            one = @One(select="com.yuyi.tea.mapper.ClerkMapper.getClerk",
+                                    fetchType = FetchType.LAZY)),
                     @Result(column = "placeOrderWay",property = "placeOrderWay",
                             one = @One(select="com.yuyi.tea.mapper.ShopMapper.getShopName",
                                     fetchType = FetchType.LAZY)),
@@ -229,7 +234,7 @@ public interface OrderMapper {
      * 设置收货地址和买家留言
      * @param order
      */
-    @Update("update orders set deliverMode=#{deliverMode}, placeOrderWay=#{placeOrderWay.uid},addressId=#{address.uid} where uid=#{uid}")
+    @Update("update orders set deliverMode=#{deliverMode}, placeOrderWay=#{placeOrderWay.uid},addressId=#{address.uid},buyerPs=#{buyerPs} where uid=#{uid}")
     void updateOrderAddressAndPs(Order order);
 
 

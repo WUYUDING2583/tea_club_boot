@@ -119,7 +119,7 @@ public interface ProductMapper {
      * 获取小程序走马灯展示的产品
      * @return
      */
-    @Select("select * from product where isShowOnHome=true")
+    @Select("select * from product where showOnHome=true")
     @ResultMap("product")
     List<Product> getSwiperList();
 
@@ -156,4 +156,20 @@ public interface ProductMapper {
      */
     @Select("select storage from product where uid=#{uid}")
     int getProductStorage(int uid);
+
+    /**
+     * 减少产品库存
+     * @param productId
+     * @param number
+     */
+    @Update("update product set storage=storage-#{number} where uid=#{productId}")
+    void reduceProductStorage(int productId, int number);
+
+    /**
+     * 恢复产品库存
+     * @param productId
+     * @param number
+     */
+    @Update("update product set storage=storage+#{number} where uid=#{productId}")
+    void addProductStorage(int productId, int number);
 }

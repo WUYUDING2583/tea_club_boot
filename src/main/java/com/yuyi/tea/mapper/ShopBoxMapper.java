@@ -126,7 +126,7 @@ public interface ShopBoxMapper {
      * 获取小程序走马灯展示的包厢
      * @return
      */
-    @Select("select * from shopBox where isShowOnHome=true")
+    @Select("select * from shopBox where showOnHome=true")
     @ResultMap("shopBox")
     List<ShopBox> getSwiperList();
 

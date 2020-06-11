@@ -14,7 +14,7 @@ public class User implements Serializable {
     private String identityId;
     private int gender;
     private String address;
-    private Photo avatar;
+    private Photo avatar=new Photo();
     private String password;
     private boolean enforceTerminal=false;
     private String token;

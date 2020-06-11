@@ -129,17 +129,20 @@ public class ActivityService {
      * @return
      */
     public Activity getActivity(int uid) {
-//        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+uid);
+        boolean hasKey=redisService.exists(REDIS_ACTIVITY_NAME+":"+uid);
         Activity activity;
-//        if(hasKey){
-//            activity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+uid);
-//            log.info("从redis中获取活动信息"+activity);
-//        }else{
+        if(hasKey){
+            activity= (Activity) redisService.get(REDIS_ACTIVITY_NAME+":"+uid);
+            log.info("从redis中获取活动信息"+activity);
+        }else{
             log.info("从数据库中获取活动信息");
             activity= activityMapper.getActivity(uid);
-//            log.info("将获得信息存储到redis中"+activity);
-//            redisService.set(REDIS_ACTIVITY_NAME+":"+uid,activity);
-//        }
+            log.info("将获得信息存储到redis中"+activity);
+            redisService.set(REDIS_ACTIVITY_NAME+":"+uid,activity);
+        }
+        //获取互斥活动
+        List<Activity> mutexActivities = activityMapper.getMutexActivities(uid);
+        activity.setMutexActivities(mutexActivities);
         return activity;
     }
 

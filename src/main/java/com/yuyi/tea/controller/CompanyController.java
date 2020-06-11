@@ -42,7 +42,6 @@ public class CompanyController {
     @PutMapping("/admin/company")
     @Transactional(rollbackFor = Exception.class)
     public Company updateCompany(@RequestBody Company company){
-        System.out.println("update company"+company);
         companyService.updateCompany(company);
         return company;
     }

@@ -179,6 +179,8 @@ public class CustomerService {
             redisService.set(REDIS_CUSTOMER_NAME+":"+uid,customer);
             log.info("数据插入缓存" + customer);
         }
+        Amount balance=customerMapper.getCustomerBalance(uid);
+        customer.setBalance(balance);
         return customer;
     }
 

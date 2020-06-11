@@ -238,4 +238,5 @@ public class ClerkService {
         Clerk clerkByContact = clerkMapper.getClerkByContact(contact);
         return clerkByContact;
     }
+
 }

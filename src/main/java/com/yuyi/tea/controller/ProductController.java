@@ -1,9 +1,6 @@
 package com.yuyi.tea.controller;
 
-import com.yuyi.tea.bean.ActivityRule;
-import com.yuyi.tea.bean.Product;
-import com.yuyi.tea.bean.ProductSale;
-import com.yuyi.tea.bean.ProductType;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.service.ProductService;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,9 +128,18 @@ public class ProductController {
      */
     @GetMapping("/mp/product/hot")
     public List<ProductSale> getHotProduct(){
-            List<ProductSale> products=productService.getHotPorducts();
+        List<ProductSale> products=productService.getHotPorducts();
         List<ProductSale> list=new ArrayList<>();
-        for(int i=0;i<3;i++){
+        int length=0;
+        if(products.size()<3){
+            length=products.size();
+        }
+        for(int i=0;i<length;i++){
+            products.get(i).getProduct().setProductDetails(null);
+            Photo photo = products.get(i).getProduct().getPhotos().get(0);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(photo);
+            products.get(i).getProduct().setPhotos(photos);
             list.add(products.get(i));
         }
         return list;
@@ -149,6 +155,11 @@ public class ProductController {
         for(Product product:products){
             product.setActivities(null);
             product.setActivityRules(null);
+            Photo photo = product.getPhotos().get(0);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(photo);
+            product.setPhotos(photos);
+            product.setProductDetails(null);
         }
         return products;
     }
@@ -167,10 +178,12 @@ public class ProductController {
     @GetMapping("/mp/product/{uid}")
     public Product getMpProduct(@PathVariable int uid){
         Product product = productService.getProduct(uid);
-        product.getShop().setShopBoxes(null);
-        product.getShop().setClerks(null);
-        product.getShop().setPhotos(null);
-        product.getShop().setOpenHours(null);
+        if(product.getShop()!=null){
+            product.getShop().setShopBoxes(null);
+            product.getShop().setClerks(null);
+            product.getShop().setPhotos(null);
+            product.getShop().setOpenHours(null);
+        }
         for(ActivityRule activityRule:product.getActivityRules()){
             activityRule.setActivityApplyForProduct(null);
             activityRule.getActivity().setActivityRules(null);

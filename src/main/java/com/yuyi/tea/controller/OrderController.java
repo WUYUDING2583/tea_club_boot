@@ -113,6 +113,24 @@ public class OrderController {
     @Transactional(rollbackFor = Exception.class)
     public Order updateOrderShipped(@RequestBody Order order){
         Order updatedOrder = orderService.updateOrderShipped(order);
+        //保存通知至数据库
+        Notification notification=null;
+        if(updatedOrder.getDeliverMode().equals("selfPick")){
+            notification=CommConstants.Notification.ORDER_PREPARED(updatedOrder);
+            //发送短信通知
+            smsService.sendOrderPrepared(updatedOrder);
+        }else {
+            notification = CommConstants.Notification.ORDER_SHIPPED(updatedOrder);
+            //发送短信通知
+            smsService.sendOrderShipped(updatedOrder);
+        }
+        noticeService.saveNotification(notification);
+        //发送小程序通知
+        try {
+            webSocketMINAServer.sendInfo(updatedOrder.getCustomer().getContact());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return updatedOrder;
     }
 
@@ -242,7 +260,10 @@ public class OrderController {
             float credit = order.getCredit();
             //保存订单
             orderService.saveOrder(order);
-            //TODO 减少产品库存
+            //减少产品库存
+            for (OrderProduct orderProduct : order.getProducts()) {
+                productService.reduceProductStorage(orderProduct.getProduct().getUid(),orderProduct.getNumber());
+            }
             //设置订单状态为未付款
             OrderStatus unpay=new OrderStatus(order.getUid(), CommConstants.OrderStatus.UNPAY, TimeUtil.getCurrentTimestamp(),order.getClerk());
             orderService.saveOrderStatus(unpay);
@@ -257,7 +278,10 @@ public class OrderController {
                             orderService.deleteOrderProduct(orderProduct.getUid());
                         }
                         orderService.deleteOrder(currentOrder.getUid());
-                        //TODO 恢复产品库存
+                        //恢复产品库存
+                        for (OrderProduct product : currentOrder.getProducts())
+                            productService.addProductStorage(product.getProduct().getUid(), product.getNumber());
+
                     }
                 }
             };
@@ -317,6 +341,12 @@ public class OrderController {
     }
 
 
+    /**
+     * 买家申请退款
+     * @param orderId
+     * @param reason
+     * @return
+     */
     @PostMapping("/mp/order/refund/{orderId}")
     public String mpRefundOrder(@PathVariable int orderId,@RequestBody String reason){
         Order order = orderService.getOrder(orderId);
@@ -527,7 +557,7 @@ public class OrderController {
         Notification notification = CommConstants.Notification.REFUND_SUCCESS(order);
         noticeService.saveNotification(notification);
         //发送短信通知
-//        smsService.sendRefundSuccess(order);
+        smsService.sendRefundSuccess(order);
         //发送小程序通知
         try {
             webSocketMINAServer.sendInfo(order.getCustomer().getContact());

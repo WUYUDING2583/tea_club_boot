@@ -180,19 +180,16 @@ public class OrderService {
         OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.SHIPPED,time,order.getClerk());
         orderMapper.saveOrderStatus(status);
         //在trackInfo表插入物流信息
-        orderMapper.saveTrackInfo(order.getTrackInfo());
-        //更新orders表的trackingId
-        orderMapper.updateOrderTrackingId(order);
-        //从缓存中获取该订单信息
-        Order redisOrder = getRedisOrder(order.getUid());
-        log.info("从缓存中获取订单信息"+redisOrder);
-        redisOrder.setStatus(status);
-        redisOrder.getOrderStatusHistory().add(status);
-        redisOrder.setTrackInfo(order.getTrackInfo());
+        if(order.getTrackInfo()!=null) {
+            orderMapper.saveTrackInfo(order.getTrackInfo());
+            //更新orders表的trackingId
+            orderMapper.updateOrderTrackingId(order);
+        }
+        order=orderMapper.getOrder(order.getUid());
         //更新redis数据
-        redisService.set("orders:order:"+order.getUid(),redisOrder);
-        log.info("更新缓存中的订单信息"+redisOrder);
-        return redisOrder;
+        redisService.set("orders:order:"+order.getUid(),order);
+        log.info("更新缓存中的订单信息"+order);
+        return order;
     }
 
     /**
@@ -218,6 +215,11 @@ public class OrderService {
             redisService.set(REDIS_ORDER_NAME+":"+uid,order);
             log.info("数据插入缓存" + order);
         }
+        //获取订单状态
+        List<OrderStatus> orderStatusHistory = orderMapper.getOrderStatusHistory(uid);
+        order.setOrderStatusHistory(orderStatusHistory);
+        OrderStatus status = orderMapper.getOrderCurrentStatus(uid);
+        order.setStatus(status);
         return order;
     }
 
@@ -226,16 +228,10 @@ public class OrderService {
      * @param order
      */
     public void getRedisOrderDetail(Order order){
-        Customer redisCustomer = customerService.getRedisCustomer(order.getCustomer().getUid());
-        redisCustomer.setPassword(null);
-//            redisCustomer.setAvatar(null);
-        order.setCustomer(redisCustomer);
-        //查询服务员信息
-        Clerk redisClerk = clerkService.getRedisClerk(order.getClerk().getUid());
-        if(redisClerk!=null) {
-            redisClerk.setPassword(null);
-            redisClerk.setAvatar(null);
-            order.setClerk(redisClerk);
+        order.getCustomer().setPassword(null);
+        if(order.getClerk()!=null) {
+            order.getClerk().setPassword(null);
+            order.getClerk().setAvatar(null);
         }
         //查询产品信息
         for(OrderProduct orderProduct:order.getProducts()){
@@ -422,7 +418,6 @@ public class OrderService {
             for(OrderProduct orderProduct:order.getProducts()) {
                 orderMapper.saveOrderProduct(orderProduct,order.getUid());
             }
-            //TODO 保存店员优惠
         }catch (Exception e){
             e.printStackTrace();
             throw new GlobalException(CodeMsg.PLACE_ORDER_FAIL);
@@ -437,9 +432,7 @@ public class OrderService {
     public void saveOrderStatus(OrderStatus status) {
         try {
             orderMapper.saveOrderStatus(status);
-            Order order = getOrder(status.getOrderId());
-            order.setStatus(status);
-            order.getOrderStatusHistory().add(status);
+            Order order = orderMapper.getOrder(status.getOrderId());
             log.info("更新缓存中的订单状态");
             redisService.set(REDIS_ORDER_NAME+":"+order.getUid(),order);
         }catch (Exception e){
@@ -468,7 +461,7 @@ public class OrderService {
                 //产品参与优惠活动
                 ActivityRule redisActivityRule = activityService.getRedisActivityRule(activityRule.getUid());
                 ActivityRule2 activityRule2 = redisActivityRule.getActivityRule2();
-                if(activityRule2==null){
+                if(activityRule2==null||activityRule2.getNumber()==0){
                     //折扣
                     ingot+=orderProduct.getNumber()*product.getPrice().getIngot()*(100-redisActivityRule.getActivityRule1())/100;
                     credit+=orderProduct.getNumber()*product.getPrice().getCredit();
@@ -596,9 +589,16 @@ public class OrderService {
      * 将订单状态更改为已付款
      * @param order
      */
+    @Transactional(rollbackFor = Exception.class)
     public void updateOrderPayed(Order order) {
         OrderStatus payed=new OrderStatus(order.getUid(),CommConstants.OrderStatus.PAYED,TimeUtil.getCurrentTimestamp());
         orderMapper.saveOrderStatus(payed);
+        boolean hasKey=redisService.exists(REDIS_ORDER_NAME+":"+order.getUid());
+        if(hasKey){
+            //更新redis中订单数据
+            order = orderMapper.getOrder(order.getUid());
+            redisService.set(REDIS_ORDER_NAME+":"+order.getUid(),order);
+        }
     }
 
     /**
@@ -629,6 +629,11 @@ public class OrderService {
     @Transactional(rollbackFor = Exception.class)
     public void updateOrderAddressAndPs(Order order) {
         orderMapper.updateOrderAddressAndPs(order);
+        boolean hasKey=redisService.exists("orders:order:"+order.getUid());
+        if(hasKey){
+            order=orderMapper.getOrder(order.getUid());
+            redisService.set("orders:order:"+order.getUid(),order);
+        }
     }
 
 
@@ -678,10 +683,14 @@ public class OrderService {
 
     public void clearOrders(List<Order> orders){
         for(Order order:orders){
-            Clerk processer=new Clerk();
-            processer.setUid(order.getClerk().getUid());
-            processer.setName(order.getClerk().getName());
-            order.setClerk(processer);
+//            Clerk processer=new Clerk();
+//            processer.setUid(order.getClerk().getUid());
+//            processer.setName(order.getClerk().getName());
+//            order.setClerk(processer);
+            if(order.getStatus().getProcesser()!=null) {
+                order.getStatus().getProcesser().setAvatar(null);
+                order.getStatus().getProcesser().setPassword(null);
+            }
             order.setCustomer(null);
             for(OrderProduct orderProduct:order.getProducts()){
                 Photo photo=orderProduct.getProduct().getPhotos().get(0);
@@ -706,6 +715,12 @@ public class OrderService {
         OrderStatus requestRefund=new OrderStatus(orderId,CommConstants.OrderStatus.REQUEST_REFUND,TimeUtil.getCurrentTimestamp(),null);
         orderMapper.saveOrderStatus(requestRefund);
         orderMapper.updateOrderRequestRefundReason(orderId,reason);
+        boolean hasKey=redisService.exists(REDIS_ORDER_NAME+":"+orderId);
+        if(hasKey){
+            //更新redis中订单数据
+            Order order = orderMapper.getOrder(orderId);
+            redisService.set(REDIS_ORDER_NAME+":"+orderId,order);
+        }
     }
 
     /**

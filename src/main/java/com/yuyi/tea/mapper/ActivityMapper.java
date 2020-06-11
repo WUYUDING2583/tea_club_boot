@@ -226,7 +226,7 @@ public interface ActivityMapper {
      * 获取小程序走马灯展示的活动
      * @return
      */
-    @Select("select * from activity where isShowOnHome=true")
+    @Select("select * from activity where showOnHome=true")
     @ResultMap("activity")
     List<Activity> getSwiperList();
 

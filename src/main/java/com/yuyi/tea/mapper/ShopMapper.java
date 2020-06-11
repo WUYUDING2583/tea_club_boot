@@ -47,7 +47,7 @@ public interface ShopMapper {
     @Select("select uid,name from shop where uid=#{uid}")
     Shop getShopOfShopBox(int uid);
 
-    @Select("select uid,name from shop where uid=#{uid}")
+    @Select("select uid,name,address from shop where uid=#{uid}")
     Shop getShopName(int uid);
 
     /**

@@ -1,6 +1,7 @@
 package com.yuyi.tea.mapper;
 
 import com.yuyi.tea.bean.*;
+import com.yuyi.tea.common.Amount;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -205,4 +206,7 @@ public interface CustomerMapper {
      */
     @Select("select * from recharge where customerId=#{customerId} order by time desc limit #{offset},20")
     List<ChargeRecord> getChargeRecords(int customerId, int offset);
+
+    @Select("select ingot,credit from customer where uid=#{uid}")
+    Amount getCustomerBalance(int uid);
 }

@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -151,6 +152,8 @@ public class ProductService {
         //获取该产品的库存
         int storage = productMapper.getProductStorage(uid);
         product.setStorage(storage);
+        BigDecimal monthSales = productMapper.getProductMonthSales(uid);
+        product.setSales(monthSales);
         return product;
     }
 
@@ -265,5 +268,25 @@ public class ProductService {
     public List<Product> search(String value) {
         List<Product> products=productMapper.search("%"+value+"%");
         return products;
+    }
+
+    /**
+     * 减少产品库存
+     * @param productId
+     * @param number
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void reduceProductStorage(int productId, int number) {
+        productMapper.reduceProductStorage(productId,number);
+    }
+
+    /**
+     * 恢复产品库存
+     * @param productId
+     * @param number
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void addProductStorage(int productId, int number) {
+        productMapper.addProductStorage(productId,number);
     }
 }
