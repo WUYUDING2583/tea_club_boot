@@ -363,8 +363,7 @@ public interface OrderMapper {
      * @param customerId
      * @return
      */
-    @Select("select * from orders where customerId=#{customerId} and uid  in " +
-            "(select orderId from reservation)" +
+    @Select("select * from orders where customerId=#{customerId} and deliverMode is null " +
             " and uid in " +
             "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='refunded')" +
             " order by orderTime desc limit #{offset},10")
@@ -373,7 +372,7 @@ public interface OrderMapper {
 
     /**
      * 删除预约记录
-     * @param uid
+     * @param orderId
      */
     @Delete("delete from reservation where orderId=#{orderId}")
     void deleteReservationsByOrderId(int orderId);

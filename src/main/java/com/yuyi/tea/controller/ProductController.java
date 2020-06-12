@@ -184,6 +184,10 @@ public class ProductController {
             product.getShop().setPhotos(null);
             product.getShop().setOpenHours(null);
         }
+        for (Activity activity : product.getActivities()) {
+            activity.setPhotos(null);
+        }
+
         for(ActivityRule activityRule:product.getActivityRules()){
             activityRule.setActivityApplyForProduct(null);
             activityRule.getActivity().setActivityRules(null);

@@ -184,7 +184,9 @@ public interface ActivityMapper {
     //根据productId获取产品适用活动规则
     @Select("select * from activityRule where uid in (" +
             "select activityRuleId from activityApplyForProduct where productId=#{productId}" +
-            ")")
+            ") and activityId in (" +
+            "select uid from activity where enforceTerminal=false" +
+            ") or typeId=2")
     @Results(
             id = "activityRule",
             value = {

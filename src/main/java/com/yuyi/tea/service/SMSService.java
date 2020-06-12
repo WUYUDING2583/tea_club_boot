@@ -36,7 +36,7 @@ public class SMSService {
     private final String APP_KEY = "ebbe021156ca27d220e3cef80879ee1f";
     // 短信模板 ID，需要在短信应用中申请
     private final int OTP_ID = 397475; // NOTE: 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
-    private final int RESERVATION_CLOSE_ID=628630;
+    private final int RESERVATION_CLOSE_ID=633767;
     private final int REFUND_SUCCESS_ID=628632;
     private final int ORDER_SHIPPED_ID=632632;
     private final int ORDER_PREPARED_ID=632633;
@@ -101,11 +101,9 @@ public class SMSService {
             return;
         }
         try {
-            String content="";
-            for(Reservation reservation:order.getReservations()){
-                content+= TimeUtil.convertTimestampToyyyMMdd(reservation.getReservationTime())+" "+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime())+"~"+TimeUtil.convertTimestampToHHmm(reservation.getReservationTime()+reservation.getBox().getDuration()*1000*60)+"\n";
-            }
-            String[] params = {order.getReservations().get(0).getBox().getName(),content};
+            String date=TimeUtil.convertTimestampToyyyMMdd(order.getReservations().get(0).getReservationTime());
+            String time=TimeUtil.convertTimestampToHHmm(order.getReservations().get(0).getReservationTime());
+            String[] params = {order.getReservations().get(0).getBox().getName(),date,time};
             SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
             SmsSingleSenderResult result = ssender.sendWithParam("86", order.getCustomer().getContact(),
                     RESERVATION_CLOSE_ID, params, SMS_SIGN, "", "");

@@ -335,6 +335,27 @@ public class OrderController {
     @GetMapping("/mp/order/{orderId}")
     public Order getMpOrder(@PathVariable int orderId){
         Order order = orderService.getOrder(orderId);
+        if(order.getStatus().getProcesser()!=null) {
+            order.getStatus().getProcesser().setAvatar(null);
+            order.getStatus().getProcesser().setPassword(null);
+        }
+        order.setCustomer(null);
+        for(OrderProduct orderProduct:order.getProducts()){
+            Photo photo=orderProduct.getProduct().getPhotos().get(0);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(photo);
+            orderProduct.getProduct().setPhotos(photos);
+            orderProduct.getProduct().setProductDetails(null);
+            orderProduct.getProduct().setShop(null);
+            orderProduct.getProduct().setActivities(null);
+            orderProduct.getProduct().setActivityRules(null);
+            if(orderProduct.getActivityRule()!=null){
+                orderProduct.getActivityRule().setActivityApplyForProduct(null);
+                orderProduct.getActivityRule().setActivityApplyForCustomerTypes(null);
+                orderProduct.getActivityRule().setActivity(null);
+            }
+        }
+
         if(order.getBoxOrder()!=null){
             order.getBoxOrder().setPhotos(null);
             order.getBoxOrder().setReservations(null);

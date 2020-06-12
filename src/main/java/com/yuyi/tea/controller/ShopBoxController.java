@@ -124,6 +124,13 @@ public class ShopBoxController {
     @GetMapping("/mp/shop/box/{shopId}")
     public List<ShopBox> getMpShopBoxList(@PathVariable int shopId){
         List<ShopBox> shopBoxes = shopBoxService.getShopBoxes(shopId);
+        for (ShopBox box : shopBoxes) {
+            List<Photo> photos=new ArrayList<>();
+            photos.add(box.getPhotos().get(0));
+            box.setPhotos(photos);
+            box.setShop(null);
+        }
+
         return shopBoxes;
     }
 

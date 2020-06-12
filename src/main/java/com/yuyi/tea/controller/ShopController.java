@@ -1,5 +1,6 @@
 package com.yuyi.tea.controller;
 
+import com.yuyi.tea.bean.Photo;
 import com.yuyi.tea.bean.Shop;
 import com.yuyi.tea.common.CommConstants;
 import com.yuyi.tea.exception.ShopNotExistException;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -102,14 +104,22 @@ public class ShopController {
         List<Shop> shopList = shopService.getShopList();
         for(Shop shop:shopList){
             shop.setClerks(null);
+            shop.setShopBoxes(null);
+            List<Photo> photos=new ArrayList<>();
+            photos.add(shop.getPhotos().get(0));
+            shop.setPhotos(photos);
         }
+
         return shopList;
     }
 
     @GetMapping("/mp/shop/{shopId}")
     public Shop getMpShop(@PathVariable int shopId){
-        Shop shopByUid = shopService.getShopByUid(shopId);
-        return shopByUid;
+        Shop shop = shopService.getShopByUid(shopId);
+        shop.setClerks(null);
+        shop.setPhotos(new ArrayList<>());
+        shop.setShopBoxes(new ArrayList<>());
+        return shop;
     }
 
 

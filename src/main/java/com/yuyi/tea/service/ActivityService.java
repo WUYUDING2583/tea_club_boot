@@ -299,4 +299,9 @@ public class ActivityService {
         }
         return activitiesByProduct;
     }
+
+    public List<ActivityRule> getActivityRuleByProduct(int productId) {
+        List<ActivityRule> activityRulesByProduct = activityMapper.getActivityRulesByProduct(productId);
+        return activityRulesByProduct;
+    }
 }

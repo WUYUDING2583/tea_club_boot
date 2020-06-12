@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class PayController {
@@ -121,7 +123,7 @@ public class PayController {
     }
 
     /**
-     * 小程序支付订单(无用)
+     * 小程序支付订单
      * @param customerId
      * @param orderId
      * @return
@@ -149,6 +151,35 @@ public class PayController {
         customerService.pay(ingot,credit,customerId);
         //改变订单状态
         orderService.updateOrderPayed(order);
+        long currentTimestamp = TimeUtil.getCurrentTimestamp();
+        //添加账单记录
+        BillDetail billDetail=null;
+        if(order.getReservations().size()>0) {
+            billDetail = new BillDetail(currentTimestamp, -ingot, -credit, CommConstants.BillDescription.RESERVATION, order.getCustomer());
+            //设置预约提醒
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    Order currentOrder = orderService.getOrder(order.getUid());
+                    if(currentOrder!=null) {
+                        smsService.sendReservationClose(currentOrder);
+                        Notification notification = CommConstants.Notification.RESERVATION_CLOSE(currentOrder);
+                        noticeService.saveNotification(notification);
+                        try {
+                            webSocketMINAServer.sendInfo(currentOrder.getCustomer().getContact());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            //提前两小时提醒
+            long delay=(order.getReservations().get(0).getReservationTime()-currentTimestamp)/1000+60*60*2;
+            ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
+            executor.schedule(runnable, delay,  TimeUnit.SECONDS);
+        }else{
+            billDetail = new BillDetail(currentTimestamp, -ingot, -credit, CommConstants.BillDescription.BUY_PRODUCT, order.getCustomer());
+        }
+        customerService.saveBillDetail(billDetail);
         return "success";
     }
 

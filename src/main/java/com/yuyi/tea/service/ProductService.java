@@ -148,6 +148,8 @@ public class ProductService {
         }
         //获取盖产品参与的活动
         List<Activity> activities=activityService.getProductActivity(uid);
+        List<ActivityRule> activityRuleByProduct = activityService.getActivityRuleByProduct(uid);
+        product.setActivityRules(activityRuleByProduct);
         product.setActivities(activities);
         //获取该产品的库存
         int storage = productMapper.getProductStorage(uid);

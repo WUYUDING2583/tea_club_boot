@@ -205,7 +205,7 @@ public class OrderService {
         if(uid==0){
             return null;
         }
-        Order order=null;
+        Order order =null;
         boolean hasKey = redisService.exists(REDIS_ORDER_NAME+":"+uid);
         if(hasKey){
             //获取缓存
@@ -214,7 +214,7 @@ public class OrderService {
         }else{
             //从数据库中获取信息
             log.info("从数据库中获取数据");
-            order = orderMapper.getOrder(uid);
+            order= orderMapper.getOrder(uid);
             getRedisOrderDetail(order);
             redisService.set(REDIS_ORDER_NAME+":"+uid,order);
             log.info("数据插入缓存" + order);
@@ -224,6 +224,12 @@ public class OrderService {
         order.setOrderStatusHistory(orderStatusHistory);
         OrderStatus status = orderMapper.getOrderCurrentStatus(uid);
         order.setStatus(status);
+        //获取订单产品参与的活动
+        for (OrderProduct product : order.getProducts()) {
+            ActivityRule activityRule = activityMapper.getActivityRule(product.getActivityRule().getUid());
+            product.setActivityRule(activityRule);
+        }
+
         return order;
     }
 
