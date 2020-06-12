@@ -25,8 +25,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private ShopBoxMapper shopBoxMapper;
 
     @Autowired
     private ShopBoxService shopBoxService;
@@ -142,8 +140,30 @@ public class OrderController {
     @PutMapping("/admin/orderrefunded")
     @Transactional(rollbackFor = Exception.class)
     public Order updateOrderRefunded(@RequestBody Order order){
-        Order updateOrderRefunded = orderService.updateOrderRefunded(order);
-        return updateOrderRefunded;
+        Order currentOrder= orderService.updateOrderRefunded(order);
+        //退款
+        customerService.addIngot(currentOrder.getCustomer().getUid(),currentOrder.getIngot());
+        customerService.addCredit(currentOrder.getCustomer().getUid(),currentOrder.getCredit());
+        //修改商品库存
+        for (OrderProduct product : order.getProducts()) {
+            productService.addProductStorage(product.getProduct().getUid(),product.getNumber());
+        }
+        long timestamp = TimeUtil.getCurrentTimestamp();
+        //添加账单记录
+        BillDetail billDetail=new BillDetail(timestamp,currentOrder.getIngot(),currentOrder.getCredit(),CommConstants.BillDescription.REFUND,currentOrder.getCustomer());
+        customerService.saveBillDetail(billDetail);
+        //保存通知至数据库
+        Notification notification = CommConstants.Notification.REFUND_SUCCESS(currentOrder);
+        noticeService.saveNotification(notification);
+        //发送短信通知
+        smsService.sendRefundSuccess(currentOrder);
+        //发送小程序通知
+        try {
+            webSocketMINAServer.sendInfo(currentOrder.getCustomer().getContact());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return currentOrder;
     }
 
     /**
@@ -155,6 +175,17 @@ public class OrderController {
     @Transactional(rollbackFor = Exception.class)
     public Order updateOrderRejectRefunded(@RequestBody Order order){
         Order updatedOrder = orderService.updateOrderRejectRefunded(order);
+        //保存通知至数据库
+        Notification notification = CommConstants.Notification.REFUND_REJECT(updatedOrder);
+        noticeService.saveNotification(notification);
+        //发送短信通知
+        smsService.sendRefundReject(updatedOrder);
+        //发送小程序通知
+        try {
+            webSocketMINAServer.sendInfo(updatedOrder.getCustomer().getContact());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return updatedOrder;
     }
 
@@ -564,6 +595,17 @@ public class OrderController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "success";
+    }
+
+    /**
+     * 小程序确认收货
+     * @param orderId
+     * @return
+     */
+    @PutMapping("/mp/orders/{orderId}")
+    public String confirmReceive(@PathVariable int orderId){
+        orderService.confirmReceive(orderId);
         return "success";
     }
 }

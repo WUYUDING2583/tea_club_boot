@@ -99,11 +99,13 @@ public class ActivityController {
      * @return
      */
     @GetMapping("/mp/reading/activity")
-    public ActivityRule getReadingActivity(){
+    public Activity getReadingActivity(){
         Activity activity=activityService.getReadingActivity();
         if(activity==null){
             return null;
         }
-        return activity.getActivityRules().get(0);
+        activity.setPhotos(null);
+        activity.setMutexActivities(null);
+        return activity;
     }
 }

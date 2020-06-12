@@ -98,5 +98,10 @@ public class CommConstants {
             }
             return new com.yuyi.tea.bean.Notification(false,5,"活动赠送",content, currentTimestamp,new Customer(customerId));
         }
+
+        public static com.yuyi.tea.bean.Notification REFUND_REJECT(Order order) {
+            String content="您的订单，编号："+order.getUid()+"申请退款失败，如有疑问请联系商家";
+            return new com.yuyi.tea.bean.Notification(false,6,"退款失败",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
+        }
     }
 }

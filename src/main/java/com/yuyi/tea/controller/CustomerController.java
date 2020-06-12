@@ -268,8 +268,13 @@ public class CustomerController {
         customerService.addIngot(customerId,amount.getIngot());
         customerService.addCredit(customerId,amount.getCredit());
         //保存通知至数据库
-        Notification notification = CommConstants.Notification.ACTIVITY_PRESENT("阅读", amount, TimeUtil.getCurrentTimestamp(), customerId);
+        long timestamp = TimeUtil.getCurrentTimestamp();
+        Notification notification = CommConstants.Notification.ACTIVITY_PRESENT("阅读", amount,timestamp , customerId);
         noticeService.saveNotification(notification);
+        //添加账单记录
+        Customer customer = customerService.getRedisCustomer(customerId);
+        BillDetail billDetail=new BillDetail(timestamp,amount.getIngot(),amount.getCredit(),CommConstants.BillDescription.PRESENT,customer);
+        customerService.saveBillDetail(billDetail);
         //发送通知
         Customer redisCustomer = customerService.getRedisCustomer(customerId);
         try {

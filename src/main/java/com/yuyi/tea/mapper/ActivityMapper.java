@@ -178,31 +178,16 @@ public interface ActivityMapper {
 
     //根据uid获取活动规则
     @Select("select * from activityRule where uid=#{uid}")
-    @Results({
-            @Result(id = true,column = "uid",property = "uid"),
-            @Result(column = "typeId",property = "activityRuleType",
-                    one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRuleType",
-                            fetchType = FetchType.LAZY)),
-            @Result(column = "uid",property = "activityApplyForProduct",
-                    many = @Many(select="com.yuyi.tea.mapper.ActivityMapper.getActivityApplyForProduct",
-                            fetchType = FetchType.LAZY)),
-            @Result(column = "uid",property = "activityApplyForCustomerTypes",
-                    many = @Many(select="com.yuyi.tea.mapper.ActivityMapper.getActivityApplyForCustomerTypes",
-                            fetchType = FetchType.LAZY)),
-            @Result(column = "uid",property = "activityRule2",
-                    one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRule2",
-                            fetchType = FetchType.LAZY)),
-            @Result(column = "activityId",property = "activity",
-                    one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivity",
-                            fetchType = FetchType.LAZY))
-    })
+    @ResultMap("activityRule")
     ActivityRule getActivityRule(int uid);
 
     //根据productId获取产品适用活动规则
     @Select("select * from activityRule where uid in (" +
             "select activityRuleId from activityApplyForProduct where productId=#{productId}" +
             ")")
-    @Results({
+    @Results(
+            id = "activityRule",
+            value = {
             @Result(id = true,column = "uid",property = "uid"),
             @Result(column = "typeId",property = "activityRuleType",
                     one = @One(select="com.yuyi.tea.mapper.ActivityMapper.getActivityRuleType",

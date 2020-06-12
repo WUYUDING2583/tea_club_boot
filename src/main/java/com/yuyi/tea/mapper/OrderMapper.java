@@ -287,7 +287,7 @@ public interface OrderMapper {
     @Select("select * from orders where customerId=#{customerId} and uid not in " +
             "(select orderId from reservation)" +
             " and uid in " +
-            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status='shipped')" +
+            "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and (A.status='shipped' or A.status='rejectRefund'))" +
             " order by orderTime desc limit #{offset},10")
     @ResultMap("order")
     List<Order> getShippedOrders(int offset, int customerId);

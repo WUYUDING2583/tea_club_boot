@@ -125,10 +125,14 @@ public class OrderService {
     private void clearOrderList(List<Order> orders){
         for(Order order:orders){
             order.setAmount(AmountUtil.computeAmount(order));
-            order.getCustomer().setAvatar(null);
-            order.getCustomer().setPassword(null);
-            order.getClerk().setAvatar(null);
-            order.getClerk().setPassword(null);
+            if(order.getCustomer()!=null) {
+                order.getCustomer().setAvatar(null);
+                order.getCustomer().setPassword(null);
+            }
+            if(order.getClerk()!=null) {
+                order.getClerk().setAvatar(null);
+                order.getClerk().setPassword(null);
+            }
             for(OrderProduct orderProduct:order.getProducts()){
                 Product product = orderProduct.getProduct();
                 product.setPhotos(null);
@@ -260,24 +264,13 @@ public class OrderService {
      * @param order
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Order updateOrderRefunded(Order order) {
         //在orderStatus表插入最新状态
         long time=TimeUtil.getCurrentTimestamp();
         OrderStatus status=new OrderStatus(0,order.getUid(), CommConstants.OrderStatus.REFUND,time,order.getClerk());
-        Order redisOrder = updateRedisOrderRefundStatus(order, status);
-//        orderMapper.saveOrderStatus(status);
-//        //更新卖家留言
-//        orderMapper.saveSellerPs(order);
-//        //从缓存中获取该订单信息
-//        Order redisOrder = getRedisOrder(order.getUid());
-//        log.info("从缓存中获取订单信息"+redisOrder);
-//        redisOrder.setStatus(status);
-//        redisOrder.getOrderStatusHistory().add(status);
-//        redisOrder.setSellerPs(order.getSellerPs());
-//        //更新redis数据
-//        redisService.set("orders:order:"+order.getUid(),redisOrder);
-//        log.info("更新缓存中的订单信息"+redisOrder);
-        return redisOrder;
+        Order currentOrder = updateRedisOrderRefundStatus(order, status);
+        return currentOrder;
     }
 
     /**
@@ -297,16 +290,11 @@ public class OrderService {
         orderMapper.saveOrderStatus(status);
         //更新卖家留言
         orderMapper.saveSellerPs(order);
-        //从缓存中获取该订单信息
-        Order redisOrder = getRedisOrder(order.getUid());
-        log.info("从缓存中获取订单信息"+redisOrder);
-        redisOrder.setStatus(status);
-        redisOrder.getOrderStatusHistory().add(status);
-        redisOrder.setSellerPs(order.getSellerPs());
+        Order currentOrder = orderMapper.getOrder(order.getUid());
         //更新redis数据
-        redisService.set("orders:order:"+order.getUid(),redisOrder);
-        log.info("更新缓存中的订单信息"+redisOrder);
-        return redisOrder;
+        redisService.set("orders:order:"+order.getUid(),currentOrder);
+        log.info("更新缓存中的订单信息"+currentOrder);
+        return currentOrder;
     }
 
     /**
@@ -808,5 +796,14 @@ public class OrderService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteReservations(Order order) {
         orderMapper.deleteReservationsByOrderId(order.getUid());
+    }
+
+    /**
+     * 小程序确认收货
+     * @param orderId
+     */
+    public void confirmReceive(int orderId) {
+        OrderStatus complete=new OrderStatus(orderId,CommConstants.OrderStatus.COMPLETE,TimeUtil.getCurrentTimestamp());
+        orderMapper.saveOrderStatus(complete);
     }
 }

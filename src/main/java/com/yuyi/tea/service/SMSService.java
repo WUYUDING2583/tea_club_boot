@@ -41,6 +41,7 @@ public class SMSService {
     private final int ORDER_SHIPPED_ID=632632;
     private final int ORDER_PREPARED_ID=632633;
     private final int CHARGE_SUCCESS_ID=632596;
+    private static final int REFUND_REJECT_ID = 632955;
     // 签名
     private final String SMS_SIGN = "活趣公众号"; // NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`。这里的签名"腾讯云"只是示例，真实的签名需要在短信控制台申请
     //验证码过期时间5分钟
@@ -251,5 +252,34 @@ public class SMSService {
             throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
         }
 
+    }
+
+    /**
+     * 商家拒绝退款通知
+     * @param order
+     */
+    public void sendRefundReject(Order order) {
+        if(CommConstants.CLOSE_SMS){
+            return;
+        }
+        try {
+            String[] params = {order.getUid()+""};
+            SmsSingleSender ssender = new SmsSingleSender(APP_ID, APP_KEY);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", order.getCustomer().getContact(),
+                    REFUND_REJECT_ID, params, SMS_SIGN, "", "");
+            log.info("发送短信结果："+result.toString());
+        } catch (HTTPException e) {
+            // HTTP 响应码错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (JSONException e) {
+            // JSON 解析错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        } catch (IOException e) {
+            // 网络 IO 错误
+            e.printStackTrace();
+            throw new GlobalException(CodeMsg.SMS_SEND_ERROR);
+        }
     }
 }
