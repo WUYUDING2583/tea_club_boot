@@ -113,7 +113,7 @@ public class OrderController {
         Order updatedOrder = orderService.updateOrderShipped(order);
         //保存通知至数据库
         Notification notification=null;
-        if(updatedOrder.getDeliverMode().equals("selfPick")){
+        if(updatedOrder.getBoxOrder()!=null||updatedOrder.getDeliverMode().equals("selfPick")){
             notification=CommConstants.Notification.ORDER_PREPARED(updatedOrder);
             //发送短信通知
             smsService.sendOrderPrepared(updatedOrder);

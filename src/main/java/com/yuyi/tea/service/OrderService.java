@@ -189,11 +189,11 @@ public class OrderService {
             //更新orders表的trackingId
             orderMapper.updateOrderTrackingId(order);
         }
-        order=orderMapper.getOrder(order.getUid());
+        Order currentOrder = orderMapper.getOrder(order.getUid());
         //更新redis数据
-        redisService.set("orders:order:"+order.getUid(),order);
-        log.info("更新缓存中的订单信息"+order);
-        return order;
+        redisService.set("orders:order:"+order.getUid(),currentOrder);
+        log.info("更新缓存中的订单信息"+currentOrder);
+        return currentOrder;
     }
 
     /**

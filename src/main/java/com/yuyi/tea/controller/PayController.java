@@ -192,10 +192,12 @@ public class PayController {
     public String payCart(@RequestBody Order order,@PathVariable boolean isCart){
         long currentTimestamp = TimeUtil.getCurrentTimestamp();
         Order currentOrder=orderService.getOrder(order.getUid());
-        currentOrder.setBuyerPs(order.getBuyerPs());
-        currentOrder.setDeliverMode(order.getDeliverMode());
-        currentOrder.setPlaceOrderWay(order.getPlaceOrderWay());
-        currentOrder.setAddress(order.getAddress());
+        if(currentOrder.getBoxOrder()==null) {
+            currentOrder.setBuyerPs(order.getBuyerPs());
+            currentOrder.setDeliverMode(order.getDeliverMode());
+            currentOrder.setPlaceOrderWay(order.getPlaceOrderWay());
+            currentOrder.setAddress(order.getAddress());
+        }
         //设置收货地址和买家留言
         orderService.updateOrderAddressAndPs(currentOrder); //查询账户余额
         Amount balance = customerService.getCustomerBalance(currentOrder.getCustomer().getUid());

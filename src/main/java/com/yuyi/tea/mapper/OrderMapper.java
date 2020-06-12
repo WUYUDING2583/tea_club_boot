@@ -40,7 +40,9 @@ public interface OrderMapper {
      * 获取未完成的订单列表
      * @return
      */
-    @Select("select * from orders where uid in " +
+    @Select("select * from orders where uid not in (" +
+            "select orderId from reservation" +
+            ") and uid in " +
             "(select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status!='complete' and A.status!='refunded' and A.status!='unpay')" +
             "order by orderTime desc")
     @Results(id="order",
@@ -91,7 +93,9 @@ public interface OrderMapper {
      * @return
      */
     @Select("<script>" +
-            "select * from orders where " +
+            "select * from orders where uid not in (" +
+            "select orderId from reservation" +
+            ") and " +
             "<if test='status!=\"all\"'> uid in (select A.orderId from orderStatus A, orderCurrentTime B where A.orderId=B.orderId and A.time=B.time and A.status=#{status}) and</if>" +
             "<if test='timeRange.startDate!=-1'> <![CDATA[orderTime>= #{timeRange.startDate}]]> and </if>" +
             "<![CDATA[orderTime<=#{timeRange.endDate}]]> order by orderTime desc" +

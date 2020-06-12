@@ -77,10 +77,12 @@ public class CommConstants {
         }
         public static com.yuyi.tea.bean.Notification ORDER_PREPARED(Order order){
             String content="您购买的商品备好 " +
-                    "订单编号："+order.getUid()+" "+
-                    "可前往"+order.getPlaceOrderWay().getName()+" " +
-                    "地址："+order.getPlaceOrderWay().getAddress()+" " +
-                    "领取";
+                    "订单编号："+order.getUid()+" ";
+            if(order.getBoxOrder()==null){
+                content+="可前往"+order.getPlaceOrderWay().getName()+" " +
+                                "地址："+order.getPlaceOrderWay().getAddress()+" " +
+                                "领取";
+            }
             return new com.yuyi.tea.bean.Notification(false,3,"订单备好",content, TimeUtil.getCurrentTimestamp(),(Customer)order.getCustomer());
         }
         public static com.yuyi.tea.bean.Notification CHARGE(float value,long timestamp,int customerId){
