@@ -143,14 +143,14 @@ public class CustomerController {
         return customer;
     }
 
-    /**
-     * 若type==face
-     * 根据user_face_info的uid获取客户信息
-     * 若此face有对应的customer则返回
-     * 否则返回null
-     * 若type==search
-     * uid为customer id，
-     * 据此返回对应customer
+        /**
+         * 若type==face
+         * 根据user_face_info的uid获取客户信息
+         * 若此face有对应的customer则返回
+         * 否则返回null
+         * 若type==search
+         * uid为customer id，
+         * 据此返回对应customer
      * @param uid
      * @param type
      * @return
@@ -164,11 +164,11 @@ public class CustomerController {
                     Customer customer = faceUserInfo.getCustomer();
                     customer.setPassword(null);
                     //获取该用户最近3个月的订单
-                    long startDate = TimeUtil.getNDayAgoStartTime(90);
-                    long endDate = TimeUtil.getNDayAgoStartTime(-1);
-                    TimeRange timeRange = new TimeRange(startDate, endDate);
-                    List<Order> orders = orderService.getOrdersByCustomer(customer.getUid(), timeRange);
-                    customer.setOrders(orders);
+//                    long startDate = TimeUtil.getNDayAgoStartTime(90);
+//                    long endDate = TimeUtil.getNDayAgoStartTime(-1);
+//                    TimeRange timeRange = new TimeRange(startDate, endDate);
+//                    List<Order> orders = orderService.getOrdersByCustomer(customer.getUid(), timeRange);
+//                    customer.setOrders(orders);
                     return customer;
                 }
                 break;
@@ -176,11 +176,11 @@ public class CustomerController {
                 Customer customer=customerService.getRedisCustomer(uid);
                 customer.setPassword(null);
                 //获取该用户最近3个月的订单
-                long startDate = TimeUtil.getNDayAgoStartTime(90);
-                long endDate = TimeUtil.getNDayAgoStartTime(-1);
-                TimeRange timeRange = new TimeRange(startDate, endDate);
-                List<Order> orders = orderService.getOrdersByCustomer(customer.getUid(), timeRange);
-                customer.setOrders(orders);
+//                long startDate = TimeUtil.getNDayAgoStartTime(90);
+//                long endDate = TimeUtil.getNDayAgoStartTime(-1);
+//                TimeRange timeRange = new TimeRange(startDate, endDate);
+//                List<Order> orders = orderService.getOrdersByCustomer(customer.getUid(), timeRange);
+//                customer.setOrders(orders);
                 return customer;
         }
         throw new GlobalException(CodeMsg.NON_REGISTER_CUSTOMER);
@@ -197,12 +197,28 @@ public class CustomerController {
         return customers;
     }
 
+    /**
+     * 移动端将客户与人脸信息关联
+     * @param faceId
+     * @param customer
+     * @return
+     */
     @PostMapping("/mobile/register/{faceId}")
     public Customer mobileRegister(@PathVariable int faceId,@RequestBody Customer customer){
-        //保存客户信息
-        customerService.saveCustomer(customer);
+        //查看客户是否已经注册
+        Customer currentCustomer = customerService.getCustomer(customer.getContact());
+        int customerId=0;
+        if(currentCustomer!=null){
+            //客户已注册
+            customerId=currentCustomer.getUid();
+        }else{
+            //客户未注册
+            //保存客户信息
+            customerService.saveCustomer(customer);
+            customerId=customer.getUid();
+        }
         //将人脸信息和客户信息匹配
-        userFaceInfoService.matchCustomer(faceId,customer.getUid());
+        userFaceInfoService.matchCustomer(faceId,customerId);
         FaceUserInfo faceUserInfo = userFaceInfoService.getFaceUserInfo(faceId);
         Customer faceUserInfoCustomer = faceUserInfo.getCustomer();
 //        faceUserInfoCustomer.setAvatar(new Photo(faceUserInfo.getFace()));

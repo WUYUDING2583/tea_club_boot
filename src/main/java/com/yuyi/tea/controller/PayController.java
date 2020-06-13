@@ -57,28 +57,30 @@ public class PayController {
     @Autowired
     private CompanyService companyService;
 
+    /**
+     * 移动端模拟支付
+     * @param customerId
+     * @param value
+     */
     @GetMapping("/mobile/simulatePay/{customerId}/{value}")
     public void simulatePay(@PathVariable int customerId,@PathVariable float value){
         try {
+            Customer customer = customerService.getRedisCustomer(customerId);
+            long timestamp = TimeUtil.getCurrentTimestamp();
             //添加充值记录
             balanceService.recharge(customerId,value);
+            //添加账单记录
+            float rechargeRate = companyService.getRechargeRate();
+            BillDetail billDetail=new BillDetail(timestamp,value*rechargeRate,0,CommConstants.BillDescription.CHARGE,customer);
+            customerService.saveBillDetail(billDetail);
             //改变账户余额
             Amount balance = customerService.addBalance(customerId, value);
-            //自动扣费所有未付款包厢预约订单，从最新记录开始
-            //查询所有未付款预约包厢订单
-            List<Order> unpayReserationOrders=orderService.getUnpayReservationOrder(customerId);
-            for(Order order:unpayReserationOrders){
-                float ingot = order.getIngot();
-                float credit = order.getCredit();
-                //检查账户余额
-                customerService.checkBalance(ingot,credit,balance);
-                //扣费
-                balance=customerService.pay(ingot,credit,customerId);
-                //改变订单状态
-                orderService.updateReservationComplete(order);
-            }
-            Amount currentBalance = customerService.getCustomerBalance(customerId);
-            Result result=new Result(currentBalance);
+            //保存通知至数据库
+            Notification notification = CommConstants.Notification.CHARGE(value, timestamp,customerId);
+            noticeService.saveNotification(notification);
+            //发送短信通知
+            smsService.sendChargeSuccess(timestamp,value,customer.getContact());
+            Result result=new Result(balance);
             ws.sendInfo(new Gson().toJson(result), customerId + "");
         }catch (Exception e){
             throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);

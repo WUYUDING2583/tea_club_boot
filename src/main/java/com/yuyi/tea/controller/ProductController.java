@@ -104,6 +104,13 @@ public class ProductController {
         return productService.updateProduct(product);
     }
 
+    /**
+     * 根据门店id获取该门店产品列表
+     * 目前未实现产品按门店分类
+     * 故只获取所有产品
+     * @param shopId
+     * @return
+     */
     @GetMapping("/mobile/products/{shopId}")
     public List<Product> getShopProductList(@PathVariable int shopId){
         List<Product> products=productService.getProducts(shopId);

@@ -186,7 +186,9 @@ public interface ActivityMapper {
             "select activityRuleId from activityApplyForProduct where productId=#{productId}" +
             ") and activityId in (" +
             "select uid from activity where enforceTerminal=false" +
-            ") or typeId=2")
+            ") or (typeId=2 and activityId in (" +
+            "select uid from activity where enforceTerminal=false" +
+            "))")
     @Results(
             id = "activityRule",
             value = {

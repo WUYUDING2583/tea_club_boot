@@ -248,13 +248,57 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/mobile/orders/{customerId}")
-    public List<Order> getRefreshOrders(@PathVariable int customerId){
-        //获取该用户最近3个月的订单
-        long startDate = TimeUtil.getNDayAgoStartTime(90);
-        long endDate = TimeUtil.getNDayAgoStartTime(-1);
-        TimeRange timeRange = new TimeRange(startDate, endDate);
-        List<Order> orders = orderService.getOrdersByCustomer(customerId, timeRange);
+    /**
+     * 移动端获取客户订单（10条）
+     * @param customerId
+     * @return
+     */
+    @GetMapping("/mobile/orders/{customerId}/{page}")
+    public List<Order> getRefreshOrders(@PathVariable int customerId,@PathVariable int page){
+        List<Order> orders = orderService.getAllOrders(page, customerId);
+        for (Order order : orders) {
+            order.setCustomer(null);
+            for (OrderProduct product : order.getProducts()) {
+                product.getProduct().setPhotos(null);
+                product.getProduct().setProductDetails(null);
+                product.setActivityRule(null);
+                product.getProduct().setActivityRules(null);
+                product.getProduct().setActivities(null);
+            }
+            if(order.getBoxOrder()!=null){
+                order.getBoxOrder().setPhotos(null);
+                order.getBoxOrder().setReservations(null);
+                order.getBoxOrder().setPhotos(null);
+                order.getBoxOrder().setInfos(null);
+            }
+
+        }
+
+        return orders;
+    }
+
+    /**
+     * 移动端获取客户预约（10条）
+     * @param customerId
+     * @return
+     */
+    @GetMapping("/mobile/reservations/{customerId}/{page}")
+    public List<Order> getCustomerReservations(@PathVariable int customerId,@PathVariable int page){
+        List<Order> orders = orderService.getAllReservationOrders(page, customerId);
+        for (Order order : orders) {
+            order.setCustomer(null);
+            if(order.getBoxOrder()!=null){
+                order.getBoxOrder().setPhotos(null);
+                order.getBoxOrder().setReservations(null);
+                order.getBoxOrder().setPhotos(null);
+                order.getBoxOrder().setInfos(null);
+            }
+            for (Reservation reservation : order.getReservations()) {
+                reservation.getBox().setPhotos(null);
+                reservation.getBox().setInfos(null);
+            }
+
+        }
         return orders;
     }
 

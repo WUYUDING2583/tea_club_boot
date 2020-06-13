@@ -513,7 +513,10 @@ public class OrderService {
             float credit = order.getCredit();
             //保存订单
             saveOrder(order);
-            //TODO 减少产品库存
+            //减少产品库存
+            for (OrderProduct product : order.getProducts()) {
+                productMapper.reduceProductStorage(product.getProduct().getUid(),product.getNumber());
+            }
             //设置订单状态为未付款
             OrderStatus unpay=new OrderStatus(order.getUid(), CommConstants.OrderStatus.UNPAY, TimeUtil.getCurrentTimestamp(),order.getClerk());
             saveOrderStatus(unpay);
@@ -527,8 +530,9 @@ public class OrderService {
                     //设置订单状态为付款
                     OrderStatus payed = new OrderStatus(order.getUid(), CommConstants.OrderStatus.PAYED, TimeUtil.getCurrentTimestamp(), order.getClerk());
                     saveOrderStatus(payed);
-//                    OrderStatus complete = new OrderStatus(order.getUid(), CommConstants.OrderStatus.COMPLETE, TimeUtil.getCurrentTimestamp(), order.getClerk());
-//                    saveOrderStatus(complete);
+                    //设置订单状态为完成
+                    OrderStatus complete = new OrderStatus(order.getUid(), CommConstants.OrderStatus.COMPLETE, TimeUtil.getCurrentTimestamp(), order.getClerk());
+                    saveOrderStatus(complete);
                 }
             }catch (GlobalException e){
                 if(e.getCodeMsg().getCode()!=500700){
@@ -545,7 +549,10 @@ public class OrderService {
                                     orderMapper.deleteOrderProduct(orderProduct.getUid());
                                 }
                                 orderMapper.deleteOrder(currentOrder.getUid());
-                                //TODO 恢复产品库存
+                                //恢复产品库存
+                                for (OrderProduct product : currentOrder.getProducts()) {
+                                    productMapper.addProductStorage(product.getProduct().getUid(),product.getNumber());
+                                }
                             }
                         }
                     };
@@ -811,5 +818,16 @@ public class OrderService {
     public void confirmReceive(int orderId) {
         OrderStatus complete=new OrderStatus(orderId,CommConstants.OrderStatus.COMPLETE,TimeUtil.getCurrentTimestamp());
         orderMapper.saveOrderStatus(complete);
+    }
+
+    /**
+     * 获取客户预约订单（10条）
+     * @param page
+     * @param customerId
+     * @return
+     */
+    public List<Order> getAllReservationOrders(int page, int customerId) {
+        List<Order> orders=orderMapper.getAllReservationOrders(page*10,customerId);
+        return orders;
     }
 }

@@ -243,7 +243,7 @@ public interface OrderMapper {
 
 
     /**
-     * 小程序获取客户所有状态的订单（10条，不含预约）
+     * 获取客户所有状态的订单（10条，不含预约）
      * @param offset
      * @param customerId
      * @return
@@ -255,7 +255,7 @@ public interface OrderMapper {
     List<Order> getAllOrders(int offset, int customerId);
     
     /**
-     * 小程序获取客户所有未付款的订单（10条，不含预约）
+     * 获取客户所有未付款的订单（10条，不含预约）
      * @param offset
      * @param customerId
      * @return
@@ -269,7 +269,7 @@ public interface OrderMapper {
     List<Order> getUnapyOrders(int offset, int customerId);
 
     /**
-     * 小程序获取客户所有已付款的订单（10条，不含预约）
+     * 获取客户所有已付款的订单（10条，不含预约）
      * @param offset
      * @param customerId
      * @return
@@ -283,7 +283,7 @@ public interface OrderMapper {
     List<Order> getPayedOrders(int offset, int customerId);
 
     /**
-     * 小程序获取客户所有已发货的订单（10条，不含预约）
+     * 获取客户所有已发货的订单（10条，不含预约）
      * @param offset
      * @param customerId
      * @return
@@ -305,7 +305,7 @@ public interface OrderMapper {
     void updateOrderRequestRefundReason(int orderId, String reason);
 
     /**
-     * 小程序获取客户所有申请退款的订单（10条）
+     * 获取客户所有申请退款的订单（10条）
      * @param offset
      * @param customerId
      * @return
@@ -319,7 +319,7 @@ public interface OrderMapper {
     List<Order> getRefundOrders(int offset, int customerId);
 
     /**
-     * 小程序获取客户所有未付款的预约（10条）
+     * 获取客户所有未付款的预约（10条）
      * @param offset
      * @param customerId
      * @return
@@ -334,7 +334,7 @@ public interface OrderMapper {
 
 
     /**
-     * 小程序获取客户所有已付款的预约（10条）
+     * 取客户所有已付款的预约（10条）
      * @param offset
      * @param customerId
      * @return
@@ -348,7 +348,7 @@ public interface OrderMapper {
     List<Order> getPayedReservations(int offset, int customerId);
 
     /**
-     * 小程序获取客户所有已完成的预约（10条）
+     * 获取客户所有已完成的预约（10条）
      * @param offset
      * @param customerId
      * @return
@@ -362,7 +362,7 @@ public interface OrderMapper {
     List<Order> getCompleteReservations(int offset, int customerId);
 
     /**
-     * 小程序获取客户所有已退款的预约（10条）
+     * 获取客户所有已退款的预约（10条）
      * @param offset
      * @param customerId
      * @return
@@ -380,4 +380,16 @@ public interface OrderMapper {
      */
     @Delete("delete from reservation where orderId=#{orderId}")
     void deleteReservationsByOrderId(int orderId);
+
+    /**
+     * 获取客户预约订单（10条）
+     * @param offset
+     * @param customerId
+     * @return
+     */
+    @Select("select * from orders where customerId=#{customerId} and uid  in " +
+            "(select orderId from reservation)" +
+            " order by orderTime desc limit #{offset},10")
+    @ResultMap("reservation")
+    List<Order> getAllReservationOrders(int offset, int customerId);
 }

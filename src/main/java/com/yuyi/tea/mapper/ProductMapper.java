@@ -111,7 +111,7 @@ public interface ProductMapper {
      * @param shopId
      * @return
      */
-    @Select("select * from product where shopId=#{shopId} and enforceTerminal=false")
+    @Select("select * from product where  enforceTerminal=false")
     @ResultMap("product")
     List<Product> getShopProducts(int shopId);
 

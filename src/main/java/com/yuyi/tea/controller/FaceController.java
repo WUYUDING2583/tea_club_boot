@@ -95,7 +95,7 @@ public class FaceController {
                     int top = faceInfoList.get(0).getRect().getTop();
                     int width = faceInfoList.get(0).getRect().getRight() - left;
                     int height = faceInfoList.get(0).getRect().getBottom() - top;
-
+                    //圈出人脸
                     Graphics2D graphics2D = bufImage.createGraphics();
                     graphics2D.setColor(Color.RED);//红色
                     BasicStroke stroke = new BasicStroke(5f);
@@ -104,6 +104,7 @@ public class FaceController {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     ImageIO.write(bufImage, "jpg", outputStream);
                     byte[] bytes1 = outputStream.toByteArray();
+
                     faceSearchResDto.setUid(faceUserInfo.getUid());
                     faceSearchResDto.setImage(file);
 //                    faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(bytes1));
@@ -113,6 +114,7 @@ public class FaceController {
 //                        faceSearchResDto.setImage("data:image/jpeg;base64," + Base64Utils.encodeToString(faceUserInfo.getCustomer().getAvatar().getPhoto()));
 //                    }
                 }
+                //只传输非职员人脸
                 if(faceSearchResDto.getClerk()==null)
                     faceSearchResDtoList.add(faceSearchResDto);
             }
