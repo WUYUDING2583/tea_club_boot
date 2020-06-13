@@ -82,6 +82,11 @@ public class ShopBoxController {
     @GetMapping("/mobile/boxes/{shopId}")
     public List<ShopBox> getMobileShopBoxes(@PathVariable int shopId){
         List<ShopBox> shopBoxes = shopBoxService.getShopBoxes(shopId);
+        for (ShopBox box : shopBoxes) {
+            box.setInfos(null);
+            box.setPhotos(null);
+        }
+
         return shopBoxes;
     }
 

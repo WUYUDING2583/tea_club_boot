@@ -147,7 +147,7 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
     @Override
     public FaceUserInfo getFaceUserInfo(FaceUserInfo faceUserInfo) {
         faceUserInfo=userFaceInfoMapper.getFaceUserInfoByFaceId(faceUserInfo.getFaceId());
-        if(faceUserInfo.getCustomer().getCustomerType()==null){
+        if(faceUserInfo.getCustomer()!=null&&faceUserInfo.getCustomer().getCustomerType()==null){
             CustomerType customerType=customerMapper.getCustomerTypeByCustomer(faceUserInfo.getCustomer().getUid());
             faceUserInfo.getCustomer().setCustomerType(customerType);
         }

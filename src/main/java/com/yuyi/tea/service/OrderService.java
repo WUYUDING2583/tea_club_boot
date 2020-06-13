@@ -354,10 +354,10 @@ public class OrderService {
             long time=TimeUtil.getCurrentTimestamp();
             order.setOrderTime(time);
             orderMapper.saveReservationOrder(order);
-            OrderStatus orderStatus=new OrderStatus(order.getUid(),CommConstants.OrderStatus.UNPAY,time,order.getClerk());
-            orderMapper.saveOrderStatus(orderStatus);
-            order.setStatus(orderStatus);
-            order.getOrderStatusHistory().add(orderStatus);
+            OrderStatus unpay=new OrderStatus(order.getUid(),CommConstants.OrderStatus.UNPAY,time,order.getClerk());
+            orderMapper.saveOrderStatus(unpay);
+            order.setStatus(unpay);
+            order.getOrderStatusHistory().add(unpay);
             for(Reservation reservation:order.getReservations()){
                 orderMapper.saveReservation(reservation,order.getUid());
             }
@@ -387,7 +387,7 @@ public class OrderService {
     }
 
     /**
-     * 设置包厢预约订单为付款完成
+     * 设置包厢预约订单为付款
      * @param order
      */
     @Transactional(rollbackFor = Exception.class)
@@ -692,6 +692,7 @@ public class OrderService {
                 order.getStatus().getProcesser().setAvatar(null);
                 order.getStatus().getProcesser().setPassword(null);
             }
+            order.setClerk(null);
             order.setCustomer(null);
             for(OrderProduct orderProduct:order.getProducts()){
                 Photo photo=orderProduct.getProduct().getPhotos().get(0);

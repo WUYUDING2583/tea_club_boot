@@ -196,6 +196,11 @@ public class OrderController {
         return updateOrderShipped;
     }
 
+    /**
+     * 移动端预约包厢
+     * @param order
+     * @return
+     */
     @PostMapping("/mobile/reserve")
     public Order reserve(@RequestBody Order order){
         try {
