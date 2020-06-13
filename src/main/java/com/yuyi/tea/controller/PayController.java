@@ -1,10 +1,7 @@
 package com.yuyi.tea.controller;
 
 import com.google.gson.Gson;
-import com.yuyi.tea.bean.BillDetail;
-import com.yuyi.tea.bean.Customer;
-import com.yuyi.tea.bean.Notification;
-import com.yuyi.tea.bean.Order;
+import com.yuyi.tea.bean.*;
 import com.yuyi.tea.common.Amount;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.common.CommConstants;
@@ -85,6 +82,72 @@ public class PayController {
         }catch (Exception e){
             throw new GlobalException(CodeMsg.FAIL_IN_PAYMENT);
         }
+    }
+
+    /**
+     * 移动端支付订单
+     * @param customerId
+     * @param orderId
+     * @return
+     */
+    @PostMapping("/mobile/pay/{customerId}/{orderId}")
+    @Transactional(rollbackFor = Exception.class)
+    public String mobilePay(@PathVariable int customerId,@PathVariable int orderId){
+        Order order;
+        if(orderId==-1){
+            //为最近一次未付款订单付款
+            order=orderService.getLatestUnpayOrder(customerId);
+        }else{
+            order=orderService.getOrder(orderId);
+            if(order==null){
+                throw new GlobalException(CodeMsg.ORDER_DELETED);
+            }
+        }
+        //查询账户余额
+        Amount balance = customerService.getCustomerBalance(customerId);
+        float ingot = order.getIngot();
+        float credit = order.getCredit();
+        //检查账户余额
+        customerService.checkBalance(ingot,credit,balance);
+        //扣费
+        customerService.pay(ingot,credit,customerId);
+        //改变订单状态
+        orderService.updateOrderPayed(order);
+        if(order.getPlaceOrderWay()!=null&&order.getDeliverMode()==null){
+            //门店下单，直接将订单状态更改为完成
+            OrderStatus complete = new OrderStatus(order.getUid(), CommConstants.OrderStatus.COMPLETE, TimeUtil.getCurrentTimestamp(), order.getClerk());
+            orderService.saveOrderStatus(complete);
+        }
+        long currentTimestamp = TimeUtil.getCurrentTimestamp();
+        //添加账单记录
+        BillDetail billDetail=null;
+        if(order.getReservations().size()>0) {
+            billDetail = new BillDetail(currentTimestamp, -ingot, -credit, CommConstants.BillDescription.RESERVATION, order.getCustomer());
+            //设置预约提醒
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    Order currentOrder = orderService.getOrder(order.getUid());
+                    if(currentOrder!=null) {
+                        smsService.sendReservationClose(currentOrder);
+                        Notification notification = CommConstants.Notification.RESERVATION_CLOSE(currentOrder);
+                        noticeService.saveNotification(notification);
+                        try {
+                            webSocketMINAServer.sendInfo(currentOrder.getCustomer().getContact());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            //提前两小时提醒
+            long delay=(order.getReservations().get(0).getReservationTime()-currentTimestamp)/1000+60*60*2;
+            ScheduledThreadPoolExecutor executor=new ScheduledThreadPoolExecutor(2);
+            executor.schedule(runnable, delay,  TimeUnit.SECONDS);
+        }else{
+            billDetail = new BillDetail(currentTimestamp, -ingot, -credit, CommConstants.BillDescription.BUY_PRODUCT, order.getCustomer());
+        }
+        customerService.saveBillDetail(billDetail);
+        return "success";
     }
 
     /**

@@ -209,4 +209,14 @@ public interface CustomerMapper {
 
     @Select("select ingot,credit from customer where uid=#{uid}")
     Amount getCustomerBalance(int uid);
+
+    /**
+     * 根据客户id获取客户类型
+     * @param customerId
+     * @return
+     */
+    @Select("select * from customerType where uid=(" +
+            "select type from customer where uid=#{customerId}" +
+            ")")
+    CustomerType getCustomerTypeByCustomer(int customerId);
 }

@@ -6,11 +6,13 @@ import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.toolkit.ImageFactory;
 import com.arcsoft.face.toolkit.ImageInfo;
 import com.yuyi.tea.bean.Clerk;
+import com.yuyi.tea.bean.CustomerType;
 import com.yuyi.tea.common.CodeMsg;
 import com.yuyi.tea.domain.UserFaceInfo;
 import com.yuyi.tea.dto.FaceUserInfo;
 import com.yuyi.tea.enums.ErrorCodeEnum;
 import com.yuyi.tea.exception.GlobalException;
+import com.yuyi.tea.mapper.CustomerMapper;
 import com.yuyi.tea.mapper.MybatisUserFaceInfoMapper;
 import com.yuyi.tea.service.interfaces.FaceEngineService;
 import com.yuyi.tea.service.interfaces.UserFaceInfoService;
@@ -34,6 +36,9 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
 
     @Autowired
     private FaceEngineService faceEngineService;
+
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Override
     public void insertSelective(UserFaceInfo userFaceInfo) {
@@ -142,6 +147,10 @@ public class UserFaceInfoServiceImpl implements UserFaceInfoService {
     @Override
     public FaceUserInfo getFaceUserInfo(FaceUserInfo faceUserInfo) {
         faceUserInfo=userFaceInfoMapper.getFaceUserInfoByFaceId(faceUserInfo.getFaceId());
+        if(faceUserInfo.getCustomer().getCustomerType()==null){
+            CustomerType customerType=customerMapper.getCustomerTypeByCustomer(faceUserInfo.getCustomer().getUid());
+            faceUserInfo.getCustomer().setCustomerType(customerType);
+        }
         return faceUserInfo;
     }
 

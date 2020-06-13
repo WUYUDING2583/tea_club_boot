@@ -249,6 +249,27 @@ public class OrderController {
     }
 
     /**
+     * 移动端获取订单详情
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/mobile/order/{orderId}")
+    public Order getMobileOrder(@PathVariable int orderId){
+        Order order = orderService.getOrder(orderId);
+        order.setCustomer(null);
+        order.setClerk(null);
+        for (OrderProduct product : order.getProducts()) {
+            product.getProduct().setProductDetails(null);
+            product.getProduct().setPhotos(null);
+            product.setActivityRule(null);
+            product.getProduct().setActivities(null);
+            product.getProduct().setActivityRules(null);
+        }
+
+        return order;
+    }
+
+    /**
      * 移动端获取客户订单（10条）
      * @param customerId
      * @return
