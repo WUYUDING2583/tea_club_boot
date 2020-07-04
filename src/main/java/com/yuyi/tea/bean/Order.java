@@ -267,4 +267,5 @@ public class Order implements Serializable {
                 ", placeOrderWay=" + placeOrderWay +
                 '}';
     }
+
 }

@@ -169,16 +169,16 @@ public class CustomerService {
      */
     public Customer getRedisCustomer(int uid){
         Customer customer=null;
-        boolean hasKey = redisService.exists(REDIS_CUSTOMER_NAME+":"+uid);
-        if(hasKey){
-            customer= (Customer) redisService.get(REDIS_CUSTOMER_NAME+":"+uid);
-            log.info("从缓存获取的数据"+ customer);
-        }else{
-            log.info("从数据库中获取数据");
+//        boolean hasKey = redisService.exists(REDIS_CUSTOMER_NAME+":"+uid);
+//        if(hasKey){
+//            customer= (Customer) redisService.get(REDIS_CUSTOMER_NAME+":"+uid);
+//            log.info("从缓存获取的数据"+ customer);
+//        }else{
+//            log.info("从数据库中获取数据");
             customer = customerMapper.getCustomerByUid(uid);
-            redisService.set(REDIS_CUSTOMER_NAME+":"+uid,customer);
-            log.info("数据插入缓存" + customer);
-        }
+//            redisService.set(REDIS_CUSTOMER_NAME+":"+uid,customer);
+//            log.info("数据插入缓存" + customer);
+//        }
         Amount balance=customerMapper.getCustomerBalance(uid);
         customer.setBalance(balance);
         return customer;
@@ -362,5 +362,24 @@ public class CustomerService {
     public List<ChargeRecord> getChargeRecords(int customerId, int page) {
         List<ChargeRecord> records=customerMapper.getChargeRecords(customerId,page*20);
         return  records;
+    }
+
+    /**
+     * 查看客户总充值金额
+     * @param customerId
+     * @return
+     */
+    public float getChargeTotal(int customerId) {
+        float total=customerMapper.getChargeTotal(customerId);
+        return total;
+    }
+
+    /**
+     * 升级成为充值用户
+     * @param customerId
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void upgradeToChargeCustomer(int customerId) {
+        customerMapper.upgradeToChargeCustomer(customerId);
     }
 }

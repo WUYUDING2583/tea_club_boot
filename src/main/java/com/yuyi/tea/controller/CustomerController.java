@@ -214,6 +214,7 @@ public class CustomerController {
         }else{
             //客户未注册
             //保存客户信息
+            customer.setCustomerType(new CustomerType(1));
             customerService.saveCustomer(customer);
             customerId=customer.getUid();
         }

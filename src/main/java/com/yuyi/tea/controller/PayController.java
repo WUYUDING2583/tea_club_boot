@@ -72,6 +72,22 @@ public class PayController {
             customerService.saveBillDetail(billDetail);
             //改变账户余额
             Amount balance = customerService.addBalance(customerId, value);
+            //查看客户等级
+            Company companyInfo = companyService.getCompanyInfo();
+            if(customer.getCustomerType().getUid()==1){
+                //是注册用户
+                if(value>companyInfo.getUpgradeLimit()){
+                    //升级成为充值用户
+                    customerService.upgradeToChargeCustomer(customer.getUid());
+                }else{
+                    //查看累计充值金额
+                    float total=customerService.getChargeTotal(customer.getUid());
+                    if(total>companyInfo.getUpgradeLimit()){
+                        //升级成为充值用户
+                        customerService.upgradeToChargeCustomer(customer.getUid());
+                    }
+                }
+            }
             //保存通知至数据库
             Notification notification = CommConstants.Notification.CHARGE(value, timestamp,customerId);
             noticeService.saveNotification(notification);
@@ -169,6 +185,22 @@ public class PayController {
             customerService.saveBillDetail(billDetail);
             //改变账户余额
             Amount balance = customerService.addBalance(customerId, value);
+            //查看客户等级
+            Company companyInfo = companyService.getCompanyInfo();
+            if(customer.getCustomerType().getUid()==1) {
+                //是注册用户
+                if (value > companyInfo.getUpgradeLimit()) {
+                    //升级成为充值用户
+                    customerService.upgradeToChargeCustomer(customer.getUid());
+                } else {
+                    //查看累计充值金额
+                    float total = customerService.getChargeTotal(customer.getUid());
+                    if (total > companyInfo.getUpgradeLimit()) {
+                        //升级成为充值用户
+                        customerService.upgradeToChargeCustomer(customer.getUid());
+                    }
+                }
+            }
             //保存通知至数据库
             Notification notification = CommConstants.Notification.CHARGE(value, timestamp,customerId);
             noticeService.saveNotification(notification);

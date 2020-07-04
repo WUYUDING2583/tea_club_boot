@@ -137,7 +137,7 @@ public class ProductController {
     public List<ProductSale> getHotProduct(){
         List<ProductSale> products=productService.getHotPorducts();
         List<ProductSale> list=new ArrayList<>();
-        int length=0;
+        int length=3;
         if(products.size()<3){
             length=products.size();
         }

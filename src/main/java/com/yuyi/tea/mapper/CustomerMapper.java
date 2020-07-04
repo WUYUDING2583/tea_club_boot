@@ -219,4 +219,19 @@ public interface CustomerMapper {
             "select type from customer where uid=#{customerId}" +
             ")")
     CustomerType getCustomerTypeByCustomer(int customerId);
+
+    /**
+     * 查看客户总充值金额
+     * @param customerId
+     * @return
+     */
+    @Select("SELECT SUM(amount) FROM `recharge` where customerId=#{customerId}")
+    float getChargeTotal(int customerId);
+
+    /**
+     * 升级成为充值用户
+     * @param customerId
+     */
+    @Update("update customer set type=2 where uid=#{customerId}")
+    void upgradeToChargeCustomer(int customerId);
 }

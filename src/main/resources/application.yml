@@ -33,7 +33,7 @@ logging:
 config:
   arcface-sdk:
     sdk-lib-path: D:\mine\SPRINGBOOT\workspace\tea_club_boot\lib\WIN64
-    app-id: 2e3QGNtMgCTxkWyXuwfLxPyT9AQes2o2XEiVpCCikCUW
-    sdk-key: 4hj7cT1fUBLhJ7qXqz9FXRxt3ecRrvzndGbTpET9RXGt
+    app-id: //appid
+    sdk-key: //sdk key
     thread-pool-size: 5
 
